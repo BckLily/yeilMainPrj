@@ -25,6 +25,7 @@ public class PlayerCtrl : MonoBehaviour
     private float walkSpeed; // 플레이어가 걷는 속도
     private float runSpeed; // 플레이어가 달리는 속도
     private float crouchSpeed; // 플레이어가 앉았을 때 속도
+    private float gravity; // 플레이어 적용 중력
 
     private float motionChangeSpeed; // 플레이어의 이동 속도 보간 값.
 
@@ -105,7 +106,8 @@ public class PlayerCtrl : MonoBehaviour
         crouchSpeed = walkSpeed * 0.35f;
         changedSpeed = walkSpeed;
         useSpeed = changedSpeed;
-
+        gravity = -0.098f;
+        
         motionChangeSpeed = 4f;
         /*
          * 플레이어들의 이동 속도는 6/s로 고정이며, 달리는 속도는 걷는 속도의 1.5배,
@@ -170,13 +172,13 @@ public class PlayerCtrl : MonoBehaviour
             {
                 // 앉아있을 때의 속도로 설정
                 changedSpeed = crouchSpeed;
-                cameraPosition.y -= cameraMoveValue;
+                //cameraPosition.y -= cameraMoveValue;
             }
             // 서 있으면
             else
             {
                 changedSpeed = walkSpeed;
-                cameraPosition.y += cameraMoveValue;
+                //cameraPosition.y += cameraMoveValue;
             }
 
         }
@@ -242,7 +244,7 @@ public class PlayerCtrl : MonoBehaviour
         playerAnim.SetFloat("Speed", useSpeed);
 
         //Debug.Log(dir);
-
+        dir.y = gravity;
         // 이거 찾아봐야 하고
         controller.Move(dir);
     }
