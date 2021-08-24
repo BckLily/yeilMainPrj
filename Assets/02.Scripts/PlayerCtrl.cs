@@ -281,7 +281,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         upperBodyRotation -= bodyRotation;
         // 이동의 최대치와 최소치를 upperBodyRoationLimit로 설정
         upperBodyRotation = Mathf.Clamp(upperBodyRotation, -upperBodyRotationLimit, upperBodyRotationLimit);
-
+        playerAnim.SetFloat("Looking", upperBodyRotation);
     }
 
     // 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)
