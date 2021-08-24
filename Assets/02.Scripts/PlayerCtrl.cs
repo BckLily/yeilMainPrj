@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using InterfaceSet;
 
-
-public class PlayerCtrl : MonoBehaviour
+public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 {
 
     #region 플레이어 Status 관련 변수
@@ -145,18 +145,22 @@ public class PlayerCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Player Move 함수 실행
         PlayerMove();
     }
 
     private void LateUpdate()
     {
+        // Player Rotation 함수 실행
         PlayerRotation();
+        // Upper Body Rotation 함수 실행
         UpperBodyRotation();
+        // Player Camera Move 함수 실행
         PlayerCameraMove();
     }
 
 
-
+    // 플레이어가 앉는 동작을 실행(시도)하는 함수
     private void TryCrouch()
     {
         // Left Ctrl 키가 눌리면 실행, doCrouch가 true일 경우 실행
@@ -184,6 +188,7 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
+    // 플레이어의 움직임을 조절하는 함수
     private void PlayerMove()
     {
         float h = Input.GetAxis("Horizontal");
@@ -239,6 +244,7 @@ public class PlayerCtrl : MonoBehaviour
         if (dir.magnitude >= 0.01f) { isMove = true; }
         else { isMove = false; }
 
+        // Animation 변경에 필요한 값을 Animator로 Set
         playerAnim.SetBool("IsMove", isMove);
         playerAnim.SetBool("IsCrouch", isCrouch);
         playerAnim.SetFloat("Speed", useSpeed);
@@ -249,32 +255,50 @@ public class PlayerCtrl : MonoBehaviour
         controller.Move(dir);
     }
 
+    // Player 회전 함수
     private void PlayerRotation()
     {
+        // 마우스의 회전 값을 입력 (값 >> - 1, 0, 1
         float yRotation = Input.GetAxisRaw("Mouse X");
+        // 캐릭터가 회전하는 값을 LookSensitivity를 곱하여 설정
         Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * lookSensitivity;
 
+        // 자기 자신을 기준으로 회전
         tr.Rotate(characterRotationY, Space.Self);
         
         //myRb.MoveRotation(myRb.rotation * Quaternion.Euler(characterRotationY));
     }
 
+    // 플레이어 상체 회전(위 아래) 함수
     private void UpperBodyRotation()
     {
+        // 마우스의 회전 값을 입력
         float rotation = Input.GetAxisRaw("Mouse Y");
+        // 회전하는 값을 lookSensitivity를 곱하여 설정
         float bodyRotation = rotation * lookSensitivity;
 
+        // 현재 회전 값에서 마우스가 이동한 값만큼 이동
         upperBodyRotation -= bodyRotation;
+        // 이동의 최대치와 최소치를 upperBodyRoationLimit로 설정
         upperBodyRotation = Mathf.Clamp(upperBodyRotation, -upperBodyRotationLimit, upperBodyRotationLimit);
-
 
     }
 
+    // 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)
     private void PlayerCameraMove()
     {
         // Slerp, 구형 보간, Lerp, 선형 보간
         playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
     }
 
+    public void Damaged()
+    {
+
+    }
+
+    public void Attack()
+    {
+
+    }
 
 }
