@@ -119,7 +119,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
          */
 
         upperBodyRotation = 0f;
-        lookSensitivity = 8f;
+        lookSensitivity = 6f;
         upperBodyRotationLimit = 35f;
         /*
          * 상체의 회전각은 게임이 시작할 때는 정면을 보고 있으므로 0이고
@@ -275,13 +275,14 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         // 마우스의 회전 값을 입력
         float rotation = Input.GetAxisRaw("Mouse Y");
         // 회전하는 값을 lookSensitivity를 곱하여 설정
-        float bodyRotation = rotation * lookSensitivity;
+        float bodyRotation = rotation * lookSensitivity / 2.32f;
 
         // 현재 회전 값에서 마우스가 이동한 값만큼 이동
         upperBodyRotation -= bodyRotation;
         // 이동의 최대치와 최소치를 upperBodyRoationLimit로 설정
         upperBodyRotation = Mathf.Clamp(upperBodyRotation, -upperBodyRotationLimit, upperBodyRotationLimit);
-        playerAnim.SetFloat("Looking", upperBodyRotation);
+        // upperBodyRotation으로 넣으면 상 하 반전 있음.
+        playerAnim.SetFloat("Looking", -upperBodyRotation);
     }
 
     // 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)

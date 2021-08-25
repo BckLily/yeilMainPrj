@@ -31,6 +31,8 @@ public class CameraCtrl : MonoBehaviour
 
     }
 
+    
+
     private void LateUpdate()
     {
         Vector3 pos = new Vector3();

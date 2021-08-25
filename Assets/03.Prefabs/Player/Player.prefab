@@ -92,6 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8605624648624536730}
+  - component: {fileID: 9109198102555188477}
   m_Layer: 0
   m_Name: WeaponPos
   m_TagString: Untagged
@@ -113,6 +114,19 @@ Transform:
   m_Father: {fileID: 5980483873653241856}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9109198102555188477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324726535081489013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1804070b04fc4e4eb0dcffe9692bed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCameraTr: {fileID: 963194228}
 --- !u!1 &3591126418459151641
 GameObject:
   m_ObjectHideFlags: 0
