@@ -572,6 +572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemGun: {fileID: 11400000, guid: 638271f0ad8379c469543f0f0fba19d3, type: 2}
   firePos: {fileID: 1320543653013192209}
+  handleTr: {fileID: 4192156724661662821}
   playerTr: {fileID: 0}
   fireTime: 0
 --- !u!1 &8580130702007269440

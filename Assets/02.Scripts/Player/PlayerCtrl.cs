@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using InterfaceSet;
+using System;
 
 public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 {
@@ -56,50 +57,63 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
     #region 플레이어 관련 변수
     private Transform tr; // 플레이어의 위치(Transform)
 
-    public enum PlayerClass // 플레이어의 직업 종류
-    {
-        Soldier = 0, Medic = 1, Engineer = 2,
-    }
-
     public string playerName { get; private set; } // 플레이어 이름(유저 닉네임)
-    public PlayerClass playerClass { get; private set; } // Player의 Class(직업)
+    public PlayerClass.ePlayerClass playerClass { get; private set; } // Player의 Class(직업)
     public Animator playerAnim; // 플레이어의 Animator
 
     #endregion
 
+    #region 플레이어 직업 관련 변수
+    Dictionary<string, string> classDict = null;
+
+    #endregion
+
+
+    #region 플레이어 무기 관련 변수
+    public WeaponManager weaponManager = null;
+
+
+    #endregion
 
 
     // Start is called before the first frame update
     void Start()
     {
         playerName = string.Format("Player1");
-        playerClass = PlayerClass.Soldier;
+        playerClass = PlayerClass.ePlayerClass.Soldier;
         // 플레이어의 이름 및 플레이어의 직업 설정
+        #region 주석
         /*
-         * DB를 통해서 플레이어의 아이디마다 닉네임을 정하고, 플레이어의 UID가 저장될 것.
-         * 저장된 데이터에서 플레이어 닉네임 >> 이름
-         * 플레이어의 직업은 게임을 시작할 때 설정하며
-         * 이후 메인 메뉴에서 선택에 따라 설정이 다르게 들어가면 된다. (함수 작성)
+         * 플레이어의 직업은 나중에 다른 입력값을 통해서 결정이 될 것이다.
+         * 현재는 플레이어의 결정된 직업에 따라서 
+         * 들어오는 데이터를 처리해야 한다.
          */
+        #endregion
 
         controller.enabled = true;
 
-        tr = GetComponent<Transform>();
-        myRb = controller.GetComponent<Rigidbody>();
+        tr = this.GetComponent<Transform>();
+        myRb = this.controller.GetComponent<Rigidbody>();
+        #region 주석
         // 캐릭터 컨트롤러에 붙어있는 Rigidbody를 받아오는 것??
+        #endregion
 
         // 나중에는 함수를 사용해서 체력 및 방어력, 공격력 등을 설정할 것.
         // DB에서 데이터를 받아오는 식으로.
+        // 그냥 프리팹에 기본 데이터를 설정해놓고 그대로 가져와서 처음 값을 설정하는 방식으로 변경.
+        // 저번에 쓴적 있는 데이터만 저장해놓는 부분을 만들고 거기서 가져오는 방식으로
         addHP = 0f;
         maxHP = 100f + addHP;
         currHP = maxHP;
         addDef = 0f;
         addAttack = 0f;
+        #region 주석
         /*
          * addHp >> 추가 Status에 영향을 주는 것은 초반엔 직업 밖에 없으므로
          * 직업을 설정할 때 추가 Status에 대한 증가 설정을 끝낸다.
          * 최대 체력은 100f + addHP이고 시작할 때 현재 체력은 maxHP이다.
          */
+        #endregion
 
         walkSpeed = 6f;
         runSpeed = walkSpeed * 1.5f;
@@ -107,8 +121,9 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         changedSpeed = walkSpeed;
         useSpeed = changedSpeed;
         gravity = -0.098f;
-        
+
         motionChangeSpeed = 4f;
+        #region 주석
         /*
          * 플레이어들의 이동 속도는 6/s로 고정이며, 달리는 속도는 걷는 속도의 1.5배,
          * 앉아서 이동하는 속도는 걷는 속도의 0.35배로 설정된다.
@@ -117,36 +132,94 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
          * moveSpeed를 changedSpeed로 설정한다.
          * 각각 달리거나 서거나 앉는 동작이 변화할 때의 보간 값은 4로 설정한다.
          */
+        #endregion
 
         upperBodyRotation = 0f;
         lookSensitivity = 6f;
         upperBodyRotationLimit = 35f;
+        #region 주석
         /*
          * 상체의 회전각은 게임이 시작할 때는 정면을 보고 있으므로 0이고
          * 플레이어의 카메라가 상하 및 좌우 회전을 할 때의 임계값을 8f설정하였다.
          * 한 번에 플레이어의 상체가 좌우로 회전할 수 있는 최대 각은 35이다.
          */
+        #endregion
 
         isMove = false;
         isCrouch = false;
         doCrouch = false;
+        #region 주석
         /*
          * 시작했을 때 플레이어는 가만히 서있을 것이기 때문에 imMove와 isCrouch에 false를 둔다.
          * 앉아있다가 달릴때 doCrouch가 true가 되어야 하므로 초기값은 doCrouch가 false가 된다
          */
+        #endregion
 
         cameraPosition = playerCameraTr.position;
+        #region 주석
         /*
          * 시작할 때 카메라의 현재 위치를 저장한다.
          */
+        #endregion
+
+
+        StartCoroutine(PlayerClassSetting());
     }
 
+    
+
+    #region 플레이어 직업을 세팅하고 직업 관련 데이터를 가져오는 함수
+    IEnumerator PlayerClassSetting()
+    {
+        yield return new WaitForSeconds(1f);
+        while (classDict == null)
+        {
+            classDict = DBManager.Instance.GetClassInfo(playerClass);
+            yield return null;
+        }
+
+        weaponManager.WeaponChange(classDict["WeaponUID"]);
+        //Debug.Log(classDict["ClassName"]);
+
+    }
+    #endregion
+
+    void PlayerWeaponChange()
+    {
+        // 상점에서 구매하려는 무기의 transform을 받아서 처리.
+        weaponManager.WeaponChange(classDict["WeaponUID"]);
+    }
 
     // Update is called once per frame
     void Update()
     {
         // Player Move 함수 실행
         PlayerMove();
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerClass = PlayerClass.ePlayerClass.Soldier;
+            classDict = null;
+            StartCoroutine(PlayerClassSetting());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerClass = PlayerClass.ePlayerClass.Medic;
+            classDict = null;
+            StartCoroutine(PlayerClassSetting());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            playerClass = PlayerClass.ePlayerClass.Engineer;
+            classDict = null;
+            StartCoroutine(PlayerClassSetting());
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            playerClass = PlayerClass.ePlayerClass.Engineer;
+            PlayerWeaponChange();
+        }
+
     }
 
     private void LateUpdate()
@@ -265,7 +338,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
         // 자기 자신을 기준으로 회전
         tr.Rotate(characterRotationY, Space.Self);
-        
+
         //myRb.MoveRotation(myRb.rotation * Quaternion.Euler(characterRotationY));
     }
 

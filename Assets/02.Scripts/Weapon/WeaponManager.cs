@@ -6,14 +6,24 @@ using UnityEngine;
 public class WeaponManager : MonoBehaviour
 {
     public Transform playerCameraTr; // 플레이어 카메라 Transform
+    public Transform leftHandTr; // 플레이어 왼손 위치
     private Transform weaponTr; //weapon Transform
+
 
     private GameObject currWeapon; // 현재 총
     private Guns currGun; // 현재 총이 가지고 있는 Gun Script
 
     private bool isReload; // 플레이어가 재장전을 하고 있는가?
 
+    private Dictionary<string, string> weaponDict = null; // 현재 무기의 정보를 저장하고 있는 dictionary
+    private string weaponPath; // Resources폴더의 weapon이 있는 Path.
 
+    public Animator anim;
+
+    private void Awake()
+    {
+        weaponPath = "Weapons/";
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +31,7 @@ public class WeaponManager : MonoBehaviour
         weaponTr = GetComponent<Transform>(); // 무기의 위치
 
         isReload = false; // 재장전 상태 false
-        WeaponChange(string.Format("00000000")); // 무기 변경(기본 무기 설정)
-
+                          //WeaponChange(string.Format("00000000")); // 무기 변경(기본 무기 설정)
 
 
     }
@@ -30,17 +39,56 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        weaponTr.forward = playerCameraTr.forward; // 총의 정면과 플레이어 카메라의 정면을 동일하게 설정(어색하지 않게)
+        //weaponTr.forward = playerCameraTr.forward; // 총의 정면과 플레이어 카메라의 정면을 동일하게 설정(어색하지 않게)
         TryReload(); // 재장전 시도 함수
         TryFire(); // 발사 시도 함수
+
+        try
+        {
+            weaponTr.LookAt(leftHandTr);
+        }
+        catch(Exception e)
+        {
+            
+        }
     }
 
-    private void WeaponChange(string UIDCode)
+
+    public void WeaponChange(string UIDCode)
     {
+        //Debug.Log(UIDCode);
         // UID 코드에 맞게 무기 가져옴.
-        currWeapon = weaponTr.GetChild(0).gameObject;
-        Debug.Log(currWeapon.name);
+        // UID 코드를 넘겨줬으니까 UID 코드에 맞는 무기를 DBManager를 통해서 찾고
+        // 거기의 Weapon_Name을 사용해서 Prefab을 찾아야 한다.
+        Dictionary<string, string> _weaponDict = null;
+        while (_weaponDict == null)
+        {
+            _weaponDict = DBManager.Instance.GetWeaponInfo(UIDCode);
+        }
+        weaponDict = _weaponDict;
+
+        // 현재 가지고 있는 무기가 있을 경우 무기를 제거하고
+        if (currWeapon != null)
+        {
+            Destroy(currWeapon.gameObject);
+        }
+
+        //Debug.Log(weaponPath + weaponDict["Weapon_Name"]);
+        // 새로 생성한 무기를 현재 무기로 만들어준다.
+        currWeapon = (GameObject)Instantiate(Resources.Load(weaponPath + weaponDict["Weapon_Name"]), this.transform);
+
+        //currWeapon = weaponTr.GetChild(0).gameObject;
+        //Debug.Log(currWeapon.name);
+        // 현재 무기의 Guns 컴포넌트를 받아온다.
         currGun = currWeapon.GetComponent<Guns>();
+
+        currWeapon.transform.rotation = weaponTr.rotation;
+        //currWeapon.transform.Translate(weaponTr.localPosition - currGun.handleTr.localPosition);
+        currWeapon.transform.Translate(-currGun.handleTr.localPosition);
+
+        //weaponTr.LookAt(leftHandTr);
+
+
     }
 
     private void TryReload()
@@ -58,8 +106,17 @@ public class WeaponManager : MonoBehaviour
 
     private void TryFire()
     {
-        // 총을 쏘고나서 지난 시간은 계속 증가한다.
-        currGun.fireTime += Time.deltaTime;
+        try
+        {
+            // 총을 쏘고나서 지난 시간은 계속 증가한다.
+            currGun.fireTime += Time.deltaTime;
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning(e);
+            return;
+        }
+        // 미완성 상태일 때 계속 에러가 나서 에러 발생시 그냥 함수 종료하게 함.
 
         // 재장전 중이 아닐 때
         if (isReload == false)
@@ -67,6 +124,7 @@ public class WeaponManager : MonoBehaviour
             // 마우스 좌클릭을 누른 경우
             if (Input.GetMouseButtonDown(0))
             {
+                Debug.Log("Try Fire");
                 // 총을 쏠 수 있는 상황이면 >> 첫 발사
                 if (CheckFire())
                 {
@@ -93,6 +151,7 @@ public class WeaponManager : MonoBehaviour
         // 현재 총알 수가 재장전 총알 수보다 작은 경우
         if (currGun.currBullet < currGun.itemGun.reloadBullet)
         {
+            Debug.Log("Reload");
             // 가지고 있는 총알이 0발보다 많은 경우
             if (currGun.carryBullet > 0)
             {
@@ -127,6 +186,7 @@ public class WeaponManager : MonoBehaviour
             // 총 발사 딜레이보다 총을 쏘고 지난 시간이 더 크거나 같을 경우
             if (currGun.fireDelay <= currGun.fireTime)
             {
+                anim.SetTrigger("IsFire");
                 canFire = true;
                 // 총 발사를 진행
                 currGun.currBullet -= 1;
