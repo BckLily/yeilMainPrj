@@ -8,6 +8,8 @@ using UnityEngine.UI;
 using System.IO;
 using LitJson;
 
+using UnityEngine.Video;
+
 
 public class DBManager : MonoBehaviour
 {
@@ -23,6 +25,7 @@ public class DBManager : MonoBehaviour
 
     [Header("File Path")]
     private string resourcePath;
+    private string streamingAssetPath;
     private string jsonPath;
     private string classPath;
     private string weaponPath;
@@ -48,6 +51,7 @@ public class DBManager : MonoBehaviour
         allWeaponUrl = "127.0.0.1/Unity/AllWeapon.php";
 
         resourcePath = "/Resources/";
+        streamingAssetPath = Application.streamingAssetsPath + "/";
         jsonPath = "JSON/";
         classPath = "Class/";
         weaponPath = "Weapon/";
@@ -55,12 +59,19 @@ public class DBManager : MonoBehaviour
         StartCoroutine(GetAllClassCo());
         StartCoroutine(GetAllWeaponCo());
 
+        //Debug.Log(streamingAssetPath); // Attsets/StreamingAssets/
+
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
+        //Debug.Log(Application.dataPath); // Assets
+        //Debug.Log(Application.streamingAssetsPath); // >> 런타임중 작성 불가 Assets/StreamingAssets
+        //Debug.Log(Application.persistentDataPath); // >> 로컬 폴더 // C:/Users/name/AppData/LocalLow/CompanyName/ProjectName
+
+
 
     }
 
@@ -153,7 +164,8 @@ public class DBManager : MonoBehaviour
         string jsonString = null;
         try
         {
-            jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
+            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
+            jsonString = File.ReadAllText(streamingAssetPath + jsonPath + classPath + playerClass.ToString() + ".json");
         }
         catch(Exception e)
         {
@@ -232,7 +244,8 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["ClassName"].Value;
                 JsonData classJson = JsonMapper.ToJson(classDic);
 
-                File.WriteAllText(Application.dataPath + resourcePath + jsonPath + classPath + fileName + ".json", classJson.ToString());
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + classPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + classPath + fileName + ".json", classJson.ToString());
                 classDic.Clear();
             }
         }
@@ -245,7 +258,10 @@ public class DBManager : MonoBehaviour
 
     public Dictionary<string, string> GetWeaponInfo(string _weaponUID)
     {
-        string jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
+        //string jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
+        string jsonString = File.ReadAllText(streamingAssetPath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
+
+
         JsonData weaponData = JsonMapper.ToObject(jsonString);
 
         //Debug.Log(weaponData["Weapon_UID"].ToString());
@@ -311,7 +327,9 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Weapon_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(weaponDict);
 
-                File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+
                 weaponDict.Clear();
             }
         }

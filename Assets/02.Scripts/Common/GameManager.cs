@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null)
+        if (instance != null)
         {
             Destroy(this.gameObject);
         }
@@ -25,27 +25,35 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        ExitGame();
 
+
+
+    }
+
+
+    private void ExitGame()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
 
 #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
 
+
+#elif UNITY_STANDALONE_WIN
+            Application.Quit();
 
 
 #endif
 
-    }
 
-    private void EditorMode()
-    {
-        if(Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            
         }
     }
 
