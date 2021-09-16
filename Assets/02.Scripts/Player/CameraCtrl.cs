@@ -12,11 +12,17 @@ public class CameraCtrl : MonoBehaviour
     public float up;
     public float right;
 
+
+    public Vector3 offset;
+
     // Start is called before the first frame update
     void Start()
     {
         tr = GetComponent<Transform>();
+        offset = new Vector3(0.1f, -0.06f, 0.01f);
+
     }
+
 
     // Update is called once per frame
     void Update()
@@ -31,16 +37,15 @@ public class CameraCtrl : MonoBehaviour
 
     }
 
-    
+
 
     private void LateUpdate()
     {
-        Vector3 pos = new Vector3();
-        Vector3 value = tr.forward * forward + tr.up * up + tr.right * right;
-        pos = value + neckTr.position;
+        // 목의 위치를 기준으로 Off Set 값 만큼 항상 상대적으로 위쪽에 있게 설정.
+        tr.position = neckTr.position - (neckTr.up * offset.y + neckTr.right * offset.x + neckTr.forward * offset.z);
 
-        tr.position = Vector3.Lerp(tr.position, pos, 4f * Time.deltaTime);
-        //tr.up = transform.up;
+        //Debug.Log("Cross: " + Vector3.Cross((neckTr.right * right + neckTr.up * up + neckTr.forward * forward), offset));
+        //Debug.Log("Dot: " + Vector3.Dot((neckTr.right * right + neckTr.up * up + neckTr.forward * forward), offset));
 
     }
 }

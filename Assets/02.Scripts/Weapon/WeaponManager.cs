@@ -20,6 +20,9 @@ public class WeaponManager : MonoBehaviour
 
     public Animator anim;
 
+    bool isFire = false; // 플레이어가 총을 발사하면 true가 된다.
+
+
     private void Awake()
     {
         weaponPath = "Weapons/";
@@ -53,6 +56,7 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
+    #region 무기 변경
 
     public void WeaponChange(string UIDCode)
     {
@@ -82,51 +86,99 @@ public class WeaponManager : MonoBehaviour
         // 현재 무기의 Guns 컴포넌트를 받아온다.
         currGun = currWeapon.GetComponent<Guns>();
 
+        // 현재 무기의 rotation을 현재 weaponPos의 rotation으로 맞춰준다.(왼손쪽을 보는 회전)
         currWeapon.transform.rotation = weaponTr.rotation;
         //currWeapon.transform.Translate(weaponTr.localPosition - currGun.handleTr.localPosition);
+        // 현재 총의 손잡이 부분을 오른손의 중앙에 맞게 이동
         currWeapon.transform.Translate(-currGun.handleTr.localPosition);
 
         //weaponTr.LookAt(leftHandTr);
-
+        // 받아온 무기 정보 딕셔너리를 현재 총에 넘겨준다.
+        currGun.weaponDict = this.weaponDict;
 
     }
 
+    #endregion
+
+
+    #region 재장전
+
+    // 재장전 시도 함수
     private void TryReload()
     {
+        // 재장전을 하는 중이면
         if (isReload == true)
         {
             return;
         }
-
+        // R키를 눌렀을 경우 재장전 시도
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
         }
     }
 
+    IEnumerator Reload()
+    {
+        // 현재 총알 수가 재장전 총알 수보다 작은 경우
+        if (currGun.currBullet < currGun.reloadBullet)
+        {
+            //Debug.Log("Reload");
+            // 가지고 있는 총알이 0발보다 많은 경우
+            if (currGun.carryBullet > 0)
+            {
+                isFire = false;
+                anim.SetBool("IsFire", isFire);
+                //Debug.Log("Reload");
+                // isReload를 true로 변경
+                isReload = true;
+                // 재장전 동작이 끝날 때까지 기다린다.
+                yield return new WaitForSeconds(currGun.reloadTime);
+
+                // 보유한 총알에 현재 총알만큼 더한 다음 재장전 총알만큼 빼준다.
+                currGun.carryBullet += (currGun.currBullet - currGun.reloadBullet);
+                // 현재 총알을 재장전 총알로 한다.
+                currGun.currBullet = currGun.reloadBullet;
+
+                // 총 탄 관련 UI 갱신
+
+            }
+        }
+
+        // 재장전을 하고 있는 상태가 아니다.
+        isReload = false;
+    }
+
+    #endregion
+
+
+    #region 발사
     private void TryFire()
     {
-        try
-        {
-            // 총을 쏘고나서 지난 시간은 계속 증가한다.
-            currGun.fireTime += Time.deltaTime;
-        }
-        catch (Exception e)
-        {
-            //Debug.LogWarning(e);
-            return;
-        }
         // 미완성 상태일 때 계속 에러가 나서 에러 발생시 그냥 함수 종료하게 함.
 
         // 재장전 중이 아닐 때
         if (isReload == false)
         {
+            try
+            {
+                // currGun이 null일 경우 NullException Error가 발생한다.
+                // 그러면 catch로 이동해서 함수를 종료.
+                // 총을 쏘고나서 지난 시간은 계속 증가한다.
+                currGun.fireTime += Time.deltaTime;
+            }
+            catch (Exception e)
+            {
+                //Debug.LogWarning(e);
+                return;
+            }
+
             // 마우스 좌클릭을 누른 경우
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("Try Fire");
+                //Debug.Log("Try Fire");
                 // 총을 쏠 수 있는 상황이면 >> 첫 발사
-                if (CheckFire())
+                if (CheckCanFire())
                 {
                     // fireTime을 0으로 초기화해서 fireTime을 다시 계산하게 한다.
                     currGun.fireTime = 0f;
@@ -136,47 +188,28 @@ public class WeaponManager : MonoBehaviour
             else if (Input.GetMouseButton(0))
             {
                 // 총을 쏠 수 있는 상황이면
-                if (CheckFire())
+                if (CheckCanFire())
                 {
                     // fireTime에서 delay만큼 감소시켜 공격 속도보다 빠른 발사를 할 수 없게 한다.
-                    currGun.fireTime -= currGun.fireDelay;
+                    currGun.fireTime = 0f;
 
                 }
             }
-        }
-    }
-
-    IEnumerator Reload()
-    {
-        // 현재 총알 수가 재장전 총알 수보다 작은 경우
-        if (currGun.currBullet < currGun.itemGun.reloadBullet)
-        {
-            Debug.Log("Reload");
-            // 가지고 있는 총알이 0발보다 많은 경우
-            if (currGun.carryBullet > 0)
+            // 마우스 좌클릭을 떼었을 경우
+            else if (Input.GetMouseButtonUp(0))
             {
-                Debug.Log("Reload");
-                // isReload를 true로 변경
-                isReload = true;
-                // 재장전 동작이 끝날 때까지 기다린다.
-                yield return new WaitForSeconds(currGun.itemGun.reloadTime);
-
-                // 보유한 총알에 현재 총알만큼 더한 다음 재장전 총알만큼 빼준다.
-                currGun.carryBullet += (currGun.currBullet - currGun.itemGun.reloadBullet);
-                // 현재 총알을 재장전 총알로 한다.
-                currGun.currBullet = currGun.itemGun.reloadBullet;
-
-                // 총 탄 관련 UI 갱신
-
+                // 발사가 끝났으므로 isFire은 false
+                isFire = false;
+                // animation에 bool값을 설정
+                anim.SetBool("IsFire", isFire);
+                // fireTime을 
+                currGun.fireTime = currGun.fireDelay;
             }
         }
-
-        // 재장전을 하고 있는 상태가 아니다.
-        isReload = false;
-
-
     }
-    private bool CheckFire()
+
+
+    private bool CheckCanFire()
     {
         bool canFire = false;
 
@@ -186,17 +219,26 @@ public class WeaponManager : MonoBehaviour
             // 총 발사 딜레이보다 총을 쏘고 지난 시간이 더 크거나 같을 경우
             if (currGun.fireDelay <= currGun.fireTime)
             {
-                anim.SetTrigger("IsFire");
+                isFire = true; // 총 발사가 가능한 경우
+                anim.SetBool("IsFire", isFire);
                 canFire = true;
                 // 총 발사를 진행
                 currGun.currBullet -= 1;
-                currGun.BulletRaycast();
-
-                // 발사 애니메이션 및 Effect Sound 등이 실행될 장소
+                // 발사 이펙트 생성
+                currGun.BulletFire();
+                // 레이 캐스트를 확인해서 판정하는 함수
+                CheckFireRaycast();
+            }
+            else
+            {
+                isFire = false;
+                anim.SetBool("IsFire", isFire);
             }
         }
         else
         {
+            isFire = false; // 발사 불가능한 경우
+            anim.SetBool("IsFire", isFire);
             // 장전된 총알이 0발인 경우 재장전을 수행한다.
             // 재장전 중이 아니기 때문에 재장전 중이라는 것을 알려주고,
             // 재장전 코루틴을 시작하면 된다.
@@ -204,8 +246,22 @@ public class WeaponManager : MonoBehaviour
             StartCoroutine(Reload());
         }
 
+
         return canFire;
     }
+
+    private void CheckFireRaycast()
+    {
+
+
+
+    }
+
+
+
+
+
+    #endregion
 
 
 

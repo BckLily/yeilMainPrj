@@ -158,6 +158,9 @@ public class DBManager : MonoBehaviour
 
 
     #region 미리 Json을 만들어 놓고 요청하면 값 반환
+    #endregion
+
+    #region Class
     // 플레이어의 직업을 받으면 그 직업에 관련된 Dictionary 데이터를 반환
     public Dictionary<string, string> GetClassInfo(ePlayerClass playerClass)
     {
@@ -254,8 +257,9 @@ public class DBManager : MonoBehaviour
             Debug.Log("없는 직업입니다.");
         }
     }
+    #endregion
 
-
+    #region Weapon
     public Dictionary<string, string> GetWeaponInfo(string _weaponUID)
     {
         //string jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
@@ -338,7 +342,6 @@ public class DBManager : MonoBehaviour
             Debug.Log("무기 데이터가 없습니다.");
         }
     }
-
 
     #endregion
 

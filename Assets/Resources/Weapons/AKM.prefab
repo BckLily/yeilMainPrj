@@ -628,8 +628,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: c326755b2e656044bb00eacd58b6cea6, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 7152527872203292621}
   handleTr: {fileID: 2656699790688436765}
   playerTr: {fileID: 0}
-  fireTime: 0

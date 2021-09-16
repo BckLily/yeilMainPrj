@@ -155,7 +155,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
          */
         #endregion
 
-        cameraPosition = playerCameraTr.position;
+        cameraPosition = playerCameraTr.localPosition;
         #region 주석
         /*
          * 시작할 때 카메라의 현재 위치를 저장한다.
@@ -166,12 +166,12 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         StartCoroutine(PlayerClassSetting());
     }
 
-    
+
 
     #region 플레이어 직업을 세팅하고 직업 관련 데이터를 가져오는 함수
     IEnumerator PlayerClassSetting()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         while (classDict == null)
         {
             classDict = DBManager.Instance.GetClassInfo(playerClass);
@@ -229,7 +229,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         // Upper Body Rotation 함수 실행
         UpperBodyRotation();
         // Player Camera Move 함수 실행
-        PlayerCameraMove();
+        //PlayerCameraMove(); // 기능 제거
     }
 
 
@@ -356,13 +356,19 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         upperBodyRotation = Mathf.Clamp(upperBodyRotation, -upperBodyRotationLimit, upperBodyRotationLimit);
         // upperBodyRotation으로 넣으면 상 하 반전 있음.
         playerAnim.SetFloat("Looking", -upperBodyRotation);
+
+        //playerCameraTr.localRotation = Quaternion.Euler(new Vector3(upperBodyRotation * 0.75f, playerCameraTr.rotation.y, playerCameraTr.localRotation.z));
+        // 자연스럽게 카메라가 위 아래를 보도록 값을 보정
+        playerCameraTr.localRotation = Quaternion.Euler(new Vector3(upperBodyRotation * 0.85f, -12.5f, 0));
+
     }
 
     // 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)
+    // 기능 제거
     private void PlayerCameraMove()
     {
         // Slerp, 구형 보간, Lerp, 선형 보간
-        playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
+        //playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
     }
 
     public void Damaged()

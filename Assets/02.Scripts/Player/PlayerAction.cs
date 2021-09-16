@@ -22,9 +22,9 @@ public class PlayerAction : MonoBehaviour
         isBuy = false;
         isHeal = false;
 
-        Cursor.visible = false; // 커서 보이지 않게 한다.
+        //Cursor.visible = false; // 커서 보이지 않게 한다.
         // Cursor.visible = true; // 커서를 보이게 한다.
-        Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
+        //Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
         // Cursor.lockState = CorsorLockMode.None; // 커서 고정을 끈다
         // Cursor.lockState = CorsorLockMode.Confine; // 커서를 경계를 벗어나지 못하게 한다.
     }
