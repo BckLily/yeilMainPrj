@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4815767225983965030}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: hk416_rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2791650615098798053}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4814411433227958984}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2918639608660271545}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4141665353537524717}
   - component: {fileID: 8303228728662619408}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: hk416
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 5392482811660103267}
   - component: {fileID: 4303995349352848010}
   - component: {fileID: 3409277979915101646}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Rear_sight_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 8108598742983819084}
   - component: {fileID: 2165532517307650614}
   - component: {fileID: -727751282096184930}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HK416
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,11 +365,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: 9dd0e682ffe34f44eaf3ddae11884632, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 2918639608660271545}
   handleTr: {fileID: 2791650615098798053}
-  playerTr: {fileID: 0}
-  fireTime: 0
 --- !u!1 &5933242227678562124
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,7 +383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7340788055781436499}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: output_bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5444130345140697486}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: main.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9072386538224093037}
   - component: {fileID: 1165127477427765946}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: 5,56x45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +533,7 @@ GameObject:
   - component: {fileID: 7923166030091361507}
   - component: {fileID: 412302673120382941}
   - component: {fileID: 1612407174054905516}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Rear_sight_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +612,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3558857471914525804}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: reload
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -638,7 +642,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 334026225954069494}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,7 +672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3856174368579337267}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}

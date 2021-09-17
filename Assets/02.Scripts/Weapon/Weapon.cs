@@ -29,12 +29,13 @@ public class Weapon : MonoBehaviour
         StartCoroutine(WeaponSetting());
     }
 
+    /// <summary>
+    /// 초기 무기 상태 값을 설정하는 코루틴<br/>
+    /// </summary>
+    /// <returns></returns>
     IEnumerator WeaponSetting()
     {
-        while (weaponDict == null)
-        {
-            yield return null;
-        }
+        while (weaponDict == null) { yield return null; }
 
         UID = weaponDict["Weapon_UID"];
         name = weaponDict["Weapon_Name"];
@@ -45,8 +46,6 @@ public class Weapon : MonoBehaviour
         carryBullet = maxCarryBullet - currBullet;
 
         // float.TryParse(weaponDict["Weapon_Damage"], out damage); // 시도해서 파싱에 실패하면 false 반환 성공하면 true반환 , out 값
-
-
         damage = float.Parse(weaponDict["Weapon_Damage"]); // 바로 값을 넣는것
         reloadTime = float.Parse(weaponDict["Weapon_ReloadTime"]);
         attackDistance = float.Parse(weaponDict["Weapon_AttackDistance"]);
@@ -55,7 +54,6 @@ public class Weapon : MonoBehaviour
         fireDelay = 60 / float.Parse(weaponDict["Weapon_AttackSpeed"]);
 
         Debug.Log(fireDelay);
-
 
         yield return null;
 

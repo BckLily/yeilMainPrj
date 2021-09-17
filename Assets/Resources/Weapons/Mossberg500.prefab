@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9158229079738554438}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: pump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1176550518665495073}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: output;bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7327661118235529445}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8502102880187540341}
   - component: {fileID: 7823614250221459533}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: pumpgun_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2058864857828829536}
   - component: {fileID: 7803586707603198810}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: 12gauge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -273,7 +273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4254485799920793054}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4888944376494332033}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,7 +336,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9126808527179595713}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: pumpgun_a_rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 8182683359123447045}
   - component: {fileID: 2235114625884041343}
   - component: {fileID: -3634449036775106638}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Mossberg500
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -427,11 +427,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: 7ae44880a7e98b3478815a19898fc3f9, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 7327661118235529445}
   handleTr: {fileID: 4254485799920793054}
-  playerTr: {fileID: 0}
-  fireTime: 0
 --- !u!1 &8099340561217546606
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +445,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4347795028673464779}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +475,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7488429794160974060}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}

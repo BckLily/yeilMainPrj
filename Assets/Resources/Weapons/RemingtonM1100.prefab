@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7556330601920407237}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: spas12_rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8175237797194977065}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8937134102976909150}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 242623749140172975}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 3329150443154223517}
   - component: {fileID: 4663907809293638887}
   - component: {fileID: 2242030757750746839}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RemingtonM1100
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,11 +193,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: c0cfc9b13354e9c44a101c3031b533ac, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 2428055456930987999}
   handleTr: {fileID: 7773138744066884438}
-  playerTr: {fileID: 0}
-  fireTime: 0
 --- !u!1 &3304036706647923595
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2908702057544922724}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +242,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5367882551491619430}
   - component: {fileID: 5568560592824533881}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: spas12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +328,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6099812867912707110}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +358,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2428055456930987999}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7773138744066884438}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -415,7 +419,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4841282977875559928}
   - component: {fileID: 3744416922333167554}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: 12gauge
   m_TagString: Untagged
   m_Icon: {fileID: 0}

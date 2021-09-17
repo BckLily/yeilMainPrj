@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5282797600596577147}
   - component: {fileID: 7151881909146418813}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: scar_h
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1088001965406024672}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2316418087172591243}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7000334283299719775}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6210695264617695917}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2601229118876456235}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4597121870100414931}
   - component: {fileID: 5039386720878289782}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: 7.62x51
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 682033286780875801}
   - component: {fileID: 7493165595207424355}
   - component: {fileID: -7500823970227034355}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FN_SCAR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -398,11 +398,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: cca49dea13392bb43b21e4661e951506, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 2982771975432799437}
   handleTr: {fileID: 2316418087172591243}
-  playerTr: {fileID: 0}
-  fireTime: 0
 --- !u!1 &5570281630370440471
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,7 +416,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2982771975432799437}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -444,7 +448,7 @@ GameObject:
   - component: {fileID: 4226483643793374881}
   - component: {fileID: 4806732523838544975}
   - component: {fileID: 275365327477125108}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: rear_sight_b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +527,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8350366837742070178}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +557,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8058711549569975702}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: scar_h_rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -586,7 +590,7 @@ GameObject:
   - component: {fileID: 6030575823431981720}
   - component: {fileID: 4818790854558645973}
   - component: {fileID: 4865864092966956050}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: rear_sight_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}

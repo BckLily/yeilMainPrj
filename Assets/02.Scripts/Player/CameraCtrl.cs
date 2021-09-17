@@ -37,8 +37,6 @@ public class CameraCtrl : MonoBehaviour
 
     }
 
-
-
     private void LateUpdate()
     {
         // 목의 위치를 기준으로 Off Set 값 만큼 항상 상대적으로 위쪽에 있게 설정.
@@ -48,4 +46,6 @@ public class CameraCtrl : MonoBehaviour
         //Debug.Log("Dot: " + Vector3.Dot((neckTr.right * right + neckTr.up * up + neckTr.forward * forward), offset));
 
     }
+
+
 }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4661140900944056690}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: mp5k_rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2335165987741781456}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1992841383034685895}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1014797177896454133}
   - component: {fileID: 4013867147561528295}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: 9mm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3505998098923024140}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 2146443514967756350}
   - component: {fileID: 8305676478730511172}
   - component: {fileID: -9106145150455893593}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MP5K
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,11 +279,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: 33ba46f0abc5fcd4ea68c9f3cf4953ae, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 8832800557504677835}
   handleTr: {fileID: 308098130913063912}
-  playerTr: {fileID: 0}
-  fireTime: 0
 --- !u!1 &3599522725244815642
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +297,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4795894657227026570}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6553389686374045519}
   - component: {fileID: 5952766462536389530}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: none_laser_cap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +414,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 308098130913063912}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +444,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8832800557504677835}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -470,7 +474,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7448061863320458117}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -501,7 +505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5000853742988946208}
   - component: {fileID: 2125789240528341484}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: mp5k
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -592,7 +596,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3052543845792950165}
   - component: {fileID: 7517778399512181226}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: laser_b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6091129830302360146}
   - component: {fileID: 2975385126264140342}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: lamp_b
   m_TagString: Untagged
   m_Icon: {fileID: 0}

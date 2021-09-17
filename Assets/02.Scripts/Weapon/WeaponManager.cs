@@ -57,7 +57,10 @@ public class WeaponManager : MonoBehaviour
     }
 
     #region 무기 변경
-
+    /// <summary>
+    /// 무기 변경에 사용하는 함수
+    /// </summary>
+    /// <param name="UIDCode">무기 UID</param>
     public void WeaponChange(string UIDCode)
     {
         //Debug.Log(UIDCode);
@@ -100,10 +103,10 @@ public class WeaponManager : MonoBehaviour
 
     #endregion
 
-
     #region 재장전
-
-    // 재장전 시도 함수
+    /// <summary>
+    /// 재장전 시도 함수
+    /// </summary>
     private void TryReload()
     {
         // 재장전을 하는 중이면
@@ -153,6 +156,9 @@ public class WeaponManager : MonoBehaviour
 
 
     #region 발사
+    /// <summary>
+    /// 발사를 시도하는 함수
+    /// </summary>
     private void TryFire()
     {
         // 미완성 상태일 때 계속 에러가 나서 에러 발생시 그냥 함수 종료하게 함.
@@ -208,7 +214,10 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 발사를 시도했을 때 발사할 수 있는 상황인지 판단하는 함수
+    /// </summary>
+    /// <returns>true: 가능 false: 불가능</returns>
     private bool CheckCanFire()
     {
         bool canFire = false;
@@ -249,6 +258,7 @@ public class WeaponManager : MonoBehaviour
 
         return canFire;
     }
+
 
     private void CheckFireRaycast()
     {

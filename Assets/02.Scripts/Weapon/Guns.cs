@@ -8,10 +8,7 @@ public class Guns : Weapon
     string muzzlePath; // 불꽃 이펙트 오브젝트 프리팹의 위치
 
     public Transform firePos; // 총구 Transform
-
     public Transform handleTr; // 오른손이 잡고 있어야 하는 손잡이 위치
-
-    [SerializeField]
     private Transform playerTr; // 플레이어 오브젝트의 Transform
 
     public ItemGun.GunRarity gunRarity { get; private set; } // 무기의 레어도
@@ -55,6 +52,9 @@ public class Guns : Weapon
     // 발사 조건의 확인은 WeaponManager에서 한다.
     // 발사 동작을 하면 WeaponManager에서 BulletFire()를 시행한다.
     // Effect 및 Sound 등을 재생할 장소.
+    /// <summary>
+    /// 총이 발사되면 실행되는 함수
+    /// </summary>
     public void BulletFire()
     {
         // 이미 MuzzleActive 코루틴이 실행되고 있으면 패스 아니면 실행
@@ -65,6 +65,7 @@ public class Guns : Weapon
         }
 
     }
+
     // 코루틴을 할당할 변수
     IEnumerator muzzleActive = null;
     // 미리 총구에 할당한 fireMuzzle을 활성화했다가 잠시후 비활성화하는 코루틴

@@ -159,9 +159,10 @@ public class DBManager : MonoBehaviour
 
     #region 미리 Json을 만들어 놓고 요청하면 값 반환
     #endregion
-
     #region Class
-    // 플레이어의 직업을 받으면 그 직업에 관련된 Dictionary 데이터를 반환
+    /// <summary>
+    /// 플레이어의 직업을 받으면 그 직업에 관련된 Dictionary 데이터를 반환
+    /// </summary>
     public Dictionary<string, string> GetClassInfo(ePlayerClass playerClass)
     {
         string jsonString = null;
@@ -197,7 +198,10 @@ public class DBManager : MonoBehaviour
         return _classDict;
     }
 
-
+    /// <summary>
+    /// 모든 직업 관련 데이터를 받아오는 코루틴<br/>
+    /// 받아올 데이터가 없을 경우 어떤 동작도 하지 않는다.
+    /// </summary>
     IEnumerator GetAllClassCo()
     {
         // POST 방식의 요청
@@ -216,7 +220,10 @@ public class DBManager : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 직업 관련 데이터를 읽어서 JSON으로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
     private void GetAllClassJson(string _jsonData)
     {
         // 입력받은 데이터를 Parsing 하는 단계
@@ -260,6 +267,12 @@ public class DBManager : MonoBehaviour
     #endregion
 
     #region Weapon
+    /// <summary>
+    /// 무기 관련 정보를 받아 딕셔너리 형식으로 반환하는 함수<br/>
+    /// 무기 UID를 매개변수로 사용한다.
+    /// </summary>
+    /// <param name="_weaponUID"></param>
+    /// <returns></returns>
     public Dictionary<string, string> GetWeaponInfo(string _weaponUID)
     {
         //string jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
@@ -285,6 +298,11 @@ public class DBManager : MonoBehaviour
         return _weaponDict;
     }
 
+    /// <summary>
+    /// DB에서 무기 관련 데이터를 모두 받아오는 코루틴<br/>
+    /// 없을 경우 변화가 없다.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GetAllWeaponCo()
     {
         // POST 방식의 요청
@@ -303,6 +321,10 @@ public class DBManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 모든 무기 정보를 JSON 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
     private void GetAllWeaponJson(string _jsonData)
     {
         // 입력받은 데이터를 Parsing 하는 단계

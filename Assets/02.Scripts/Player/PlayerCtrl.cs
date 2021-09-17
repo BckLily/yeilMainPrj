@@ -9,11 +9,26 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 {
 
     #region 플레이어 Status 관련 변수
-    public float maxHP { get; private set; } // 플레이어 최대 체력
-    public float addHP { get; private set; } // 플레이어 추가 체력
-    public float currHP { get; private set; } // 플레이어 현재 체력
-    public float addDef { get; private set; } // 플레이어 추가 방어력
-    public float addAttack { get; private set; } // 플레이어 추가 공격력
+    /// <summary>
+    /// 플레이어 최대 체력
+    /// </summary>
+    public float maxHP { get; private set; }
+    /// <summary>
+    /// 플레이어 추가 체력
+    /// </summary>
+    public float addHP { get; private set; }
+    /// <summary>
+    /// 플레이어 현재 체력
+    /// </summary>
+    public float currHP { get; private set; }
+    /// <summary>
+    /// 플레이어 추가 방어력
+    /// </summary>
+    public float addDef { get; private set; }
+    /// <summary>
+    /// 플레이어 추가 공격력
+    /// </summary>
+    public float addAttack { get; private set; }
 
     #endregion
 
@@ -38,12 +53,24 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
     private Rigidbody myRb; // 플레이어의 Rigidbody
 
-    private float upperBodyRotation; // 플레이어의 상체 회전 속도
-    private float upperBodyRotationLimit; // 상체 회전의 한계 값.
-    private float lookSensitivity; // 화면(카메라) 회전 속도
-    private float cameraMoveSpeed = 4f; // 카메라가 움직일 때 보간 값
+    /// <summary>
+    /// 플레이어의 상체 회전 속도
+    /// </summary>
+    private float upperBodyRotation;
+    /// <summary>
+    /// 상체 회전의 한계 값.
+    /// </summary>
+    private float upperBodyRotationLimit;
+    /// <summary>
+    /// 화면(카메라) 회전 속도
+    /// </summary>
+    /// <param name=""></param>
+    private float lookSensitivity;
+    /// <summary>
+    /// 카메라가 움직일 때 보간 값
+    /// </summary>
+    private float cameraMoveSpeed = 4f;
     private float cameraMoveValue = 0.375f;
-
 
     #endregion
 
@@ -233,7 +260,9 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
     }
 
 
-    // 플레이어가 앉는 동작을 실행(시도)하는 함수
+    /// <summary>
+    /// 플레이어가 앉는 동작을 실행(시도)하는 함수
+    /// </summary>
     private void TryCrouch()
     {
         // Left Ctrl 키가 눌리면 실행, doCrouch가 true일 경우 실행
@@ -261,7 +290,9 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         }
     }
 
-    // 플레이어의 움직임을 조절하는 함수
+    /// <summary>
+    /// 플레이어의 움직임을 조절하는 함수
+    /// </summary>
     private void PlayerMove()
     {
         float h = Input.GetAxis("Horizontal");
@@ -328,7 +359,9 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         controller.Move(dir);
     }
 
-    // Player 회전 함수
+    /// <summary>
+    /// Player 회전 함수
+    /// </summary>
     private void PlayerRotation()
     {
         // 마우스의 회전 값을 입력 (값 >> - 1, 0, 1
@@ -342,7 +375,9 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         //myRb.MoveRotation(myRb.rotation * Quaternion.Euler(characterRotationY));
     }
 
-    // 플레이어 상체 회전(위 아래) 함수
+    /// <summary>
+    /// 플레이어 상체 회전(위 아래) 함수
+    /// </summary>
     private void UpperBodyRotation()
     {
         // 마우스의 회전 값을 입력
@@ -363,15 +398,17 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
     }
 
-    // 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)
-    // 기능 제거
+    /// <summary>
+    /// 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)<br/>
+    /// 기능 제거
+    /// </summary>
     private void PlayerCameraMove()
     {
         // Slerp, 구형 보간, Lerp, 선형 보간
         //playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
     }
 
-    public void Damaged()
+    public void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
 
     }

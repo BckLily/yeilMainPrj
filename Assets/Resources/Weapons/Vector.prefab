@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5925284989985852449}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4341981616031892011}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1320543653013192209}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2870667311449997991}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4664316505024436329}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 796140050992401246}
   - component: {fileID: 2206570089315408399}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2788905214119529909}
   - component: {fileID: 5374171829591851747}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: vector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,7 +338,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4192156724661662821}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightHandPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,7 +368,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5928711626369421279}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: vector_rig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 4228088371294236501}
   - component: {fileID: 2142576075117091447}
   - component: {fileID: 7052484768790167980}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Rear_sight_b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -480,7 +480,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1842945641948897572}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 5103904985039118224}
   - component: {fileID: 2908961745178374890}
   - component: {fileID: 8245005626421672663}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Vector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,11 +570,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0fb5a58c9e52f47a3f09270301b1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemGun: {fileID: 11400000, guid: 638271f0ad8379c469543f0f0fba19d3, type: 2}
+  currBullet: 0
+  reloadBullet: 0
+  carryBullet: 0
+  maxCarryBullet: 0
+  reloadTime: 0
+  fireDelay: 0
+  fireTime: 0
   firePos: {fileID: 1320543653013192209}
   handleTr: {fileID: 4192156724661662821}
-  playerTr: {fileID: 0}
-  fireTime: 0
 --- !u!1 &8580130702007269440
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +590,7 @@ GameObject:
   - component: {fileID: 7807360323942423835}
   - component: {fileID: 436937330206397614}
   - component: {fileID: 1868034810075822101}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Rear_sight_a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -665,7 +669,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7762740357644844706}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
