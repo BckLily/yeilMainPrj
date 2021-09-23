@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class WeaponManager : MonoBehaviour
     public Transform leftHandTr; // 플레이어 왼손 위치
     private Transform weaponTr; //weapon Transform
 
+    public CameraRaycast cameraRaycast; // 플레이어 카메라의 CameraRaycast
 
     private GameObject currWeapon; // 현재 총
     private Guns currGun; // 현재 총이 가지고 있는 Gun Script
@@ -21,6 +23,12 @@ public class WeaponManager : MonoBehaviour
     public Animator anim;
 
     bool isFire = false; // 플레이어가 총을 발사하면 true가 된다.
+
+    [Space(5)]
+    [Header("Weapon Info")]
+    [Space(2)]
+    public Text weaponBulletText; // 현재 무기의 잔탄 텍스트
+    public Text weaponNameText; // 현재 무기의 이름 텍스트
 
 
     private void Awake()
@@ -50,9 +58,9 @@ public class WeaponManager : MonoBehaviour
         {
             weaponTr.LookAt(leftHandTr);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            
+
         }
     }
 
@@ -99,6 +107,8 @@ public class WeaponManager : MonoBehaviour
         // 받아온 무기 정보 딕셔너리를 현재 총에 넘겨준다.
         currGun.weaponDict = this.weaponDict;
 
+        WeaponNameChange();
+        WeaponBulletChange();
     }
 
     #endregion
@@ -150,6 +160,7 @@ public class WeaponManager : MonoBehaviour
 
         // 재장전을 하고 있는 상태가 아니다.
         isReload = false;
+        //WeaponBulletChange();
     }
 
     #endregion
@@ -212,6 +223,7 @@ public class WeaponManager : MonoBehaviour
                 currGun.fireTime = currGun.fireDelay;
             }
         }
+        WeaponBulletChange();
     }
 
     /// <summary>
@@ -262,11 +274,36 @@ public class WeaponManager : MonoBehaviour
 
     private void CheckFireRaycast()
     {
+        // 무기 사거리 내의 타겟 정보를 가져온다.
+        GameObject target = cameraRaycast.GetRaycastTarget(currGun.attackDistance);
+        // Raycast 했을 때 대상이 무엇인가
+        if (target.CompareTag("ENEMY"))
+        {
 
+        }
+        else if (target.CompareTag("WALL"))
+        {
+
+        }
 
 
     }
 
+    /// <summary>
+    /// 무기의 이름을 설정하여 UI에 표시하는 함수
+    /// </summary>
+    private void WeaponNameChange()
+    {
+        weaponNameText.text = weaponDict["Weapon_Name"];
+    }
+
+    /// <summary>
+    /// 무기의 총알 수를 UI에 표시하는 함수
+    /// </summary>
+    private void WeaponBulletChange()
+    {
+        weaponBulletText.text = string.Format($"<b>{currGun.currBullet} / {currGun.carryBullet}</b>");
+    }
 
 
 

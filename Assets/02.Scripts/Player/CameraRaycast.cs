@@ -12,7 +12,7 @@ public class CameraRaycast : MonoBehaviour
     LayerMask storeLayer;
     LayerMask playerLayer;
     LayerMask mainDoorLayer;
-
+    
     #endregion
 
 
@@ -46,10 +46,11 @@ public class CameraRaycast : MonoBehaviour
     /// <summary>
     /// 보고 있는 타겟 오브젝트를 그대로 넘겨주는 함수
     /// </summary>
+    /// <param name="_raycastRange">Raycast disance</param>
+    /// <returns>Return target GameObject<br/>If target is Empty return null </returns>
     public GameObject GetRaycastTarget(float _raycastRange)
     {
         GameObject target = null;
-
 
         RaycastHit hit;
 

@@ -14,7 +14,7 @@ public class Weapon : MonoBehaviour
 
     protected float damage = 0f; // 무기 데미지
     public float reloadTime = 0f; // 재장전 시간
-    protected float attackDistance = 0f; // 무기 공격 사거리
+    public float attackDistance = 0f; // 무기 공격 사거리
     protected float attackRange = 0f; // 공격 범위(원형)
 
     public float fireDelay = 0f; // 발사 딜레이 == attackSpeed

@@ -4,15 +4,19 @@ using UnityEngine;
 
 using InterfaceSet;
 using System;
+using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 {
+
+    public Image playerHpImage; // 플레이어 체력바
+    public Text playerHpText; // 플레이어 체력 텍스트
 
     #region 플레이어 Status 관련 변수
     /// <summary>
     /// 플레이어 최대 체력
     /// </summary>
-    public float maxHP { get; private set; }
+    public float maxHP { get { return addHP + 100f; } }
     /// <summary>
     /// 플레이어 추가 체력
     /// </summary>
@@ -47,8 +51,11 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
     #endregion
 
+    [Space(5)]
+    [Header("Player Camera", order = 1)]
     #region 플레이어 카메라 관련 변수
     public Transform playerCameraTr; // 플레이어 카메라 위치
+    private PlayerAction playerAction; // 플레이어의 동작과 관련 내용이 있는 스크립트
     private Vector3 cameraPosition; // 플레이어 카메라의 포지션 변경 값 저장 변수
 
     private Rigidbody myRb; // 플레이어의 Rigidbody
@@ -102,10 +109,22 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
     #endregion
 
+    private void Awake()
+    {
+        playerAction = playerCameraTr.GetComponent<PlayerAction>();
+        tr = this.GetComponent<Transform>();
+
+        myRb = this.controller.GetComponent<Rigidbody>();
+        #region 주석
+        // 캐릭터 컨트롤러에 붙어있는 Rigidbody를 받아오는 것??
+        #endregion
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+
+
         playerName = string.Format("Player1");
         playerClass = PlayerClass.ePlayerClass.Soldier;
         // 플레이어의 이름 및 플레이어의 직업 설정
@@ -117,20 +136,24 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
          */
         #endregion
 
+        // String을 Enum Type으로 변경하는 방법.
+        //playerClass = (PlayerClass.ePlayerClass)Enum.Parse(typeof(PlayerClass.ePlayerClass), classDict["ClassName"]);
+
+        // 플레이어가 선택한 직업을 가져와서 설정이 끝나면
+        // 그 직업과 관련된 데이터를 가져와서 Dictionary에 저장해야한다.
+        StartCoroutine(PlayerClassSetting());
+
+
         controller.enabled = true;
 
-        tr = this.GetComponent<Transform>();
-        myRb = this.controller.GetComponent<Rigidbody>();
-        #region 주석
-        // 캐릭터 컨트롤러에 붙어있는 Rigidbody를 받아오는 것??
-        #endregion
 
+
+        // 지금은 그냥 설정하고 있지만 나중에는 Init함수를 만들어서 PlayerClassSetting 코루틴의 마지막에 함수를 실행하는 방식으로 변경
         // 나중에는 함수를 사용해서 체력 및 방어력, 공격력 등을 설정할 것.
         // DB에서 데이터를 받아오는 식으로.
         // 그냥 프리팹에 기본 데이터를 설정해놓고 그대로 가져와서 처음 값을 설정하는 방식으로 변경.
         // 저번에 쓴적 있는 데이터만 저장해놓는 부분을 만들고 거기서 가져오는 방식으로
         addHP = 0f;
-        maxHP = 100f + addHP;
         currHP = maxHP;
         addDef = 0f;
         addAttack = 0f;
@@ -189,8 +212,8 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
          */
         #endregion
 
+        HPGaugeChange();
 
-        StartCoroutine(PlayerClassSetting());
     }
 
 
@@ -247,7 +270,20 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
             PlayerWeaponChange();
         }
 
+
+        damageTime += Time.deltaTime;
+        if(damageDelay <= damageTime)
+        {
+            damageTime -= damageDelay;
+            Damaged(10f, Vector3.zero, Vector3.zero);
+        }
+
     }
+
+    float damageDelay = 5f;
+    float damageTime = 0f;
+
+
 
     private void LateUpdate()
     {
@@ -410,12 +446,31 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
     public void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
+        currHP -= damage;
 
+        if (currHP <= 0f)
+        {
+            currHP = 0f;
+        }
+        HPGaugeChange();
     }
 
     public void Attack()
     {
 
     }
+
+    /// <summary>
+    /// 플레이어의 체력이 변경될 경우 체력 게이지를 변경시켜주는 함수<br/>
+    /// 체력 숫자 값도 같이 변경시켜준다.
+    /// </summary>
+    private void HPGaugeChange()
+    {
+
+        playerHpImage.fillAmount = currHP / maxHP;
+        playerHpText.text = string.Format($"<b>{currHP}</b>");
+
+    }
+
 
 }
