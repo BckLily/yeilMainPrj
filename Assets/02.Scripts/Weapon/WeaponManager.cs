@@ -276,6 +276,9 @@ public class WeaponManager : MonoBehaviour
     {
         // 무기 사거리 내의 타겟 정보를 가져온다.
         GameObject target = cameraRaycast.GetRaycastTarget(currGun.attackDistance);
+
+        if (target == null) { return; }
+
         // Raycast 했을 때 대상이 무엇인가
         if (target.CompareTag("ENEMY"))
         {
@@ -289,6 +292,10 @@ public class WeaponManager : MonoBehaviour
 
     }
 
+    #endregion
+
+
+    #region UI Setting
     /// <summary>
     /// 무기의 이름을 설정하여 UI에 표시하는 함수
     /// </summary>
@@ -302,14 +309,9 @@ public class WeaponManager : MonoBehaviour
     /// </summary>
     private void WeaponBulletChange()
     {
-        weaponBulletText.text = string.Format($"<b>{currGun.currBullet} / {currGun.carryBullet}</b>");
+        weaponBulletText.text = string.Format($"<b>{currGun.currBullet}</b> / <b>{currGun.carryBullet}</b>");
     }
 
-
-
-
     #endregion
-
-
 
 }
