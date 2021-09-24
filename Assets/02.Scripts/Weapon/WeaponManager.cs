@@ -31,6 +31,13 @@ public class WeaponManager : MonoBehaviour
     public Text weaponNameText; // 현재 무기의 이름 텍스트
 
 
+    #region LayerMask
+    // Target으로 사용할 Layer
+    LayerMask alllTargetLayerMask;
+
+    #endregion
+
+
     private void Awake()
     {
         weaponPath = "Weapons/";
@@ -43,6 +50,11 @@ public class WeaponManager : MonoBehaviour
 
         isReload = false; // 재장전 상태 false
                           //WeaponChange(string.Format("00000000")); // 무기 변경(기본 무기 설정)
+
+        LayerMask enemyLayer = LayerMask.NameToLayer("ENEMY");
+        LayerMask wallLayer = LayerMask.NameToLayer("WALL");
+
+        alllTargetLayerMask = (1 << enemyLayer) | (1 << wallLayer);
 
 
     }
@@ -165,7 +177,6 @@ public class WeaponManager : MonoBehaviour
 
     #endregion
 
-
     #region 발사
     /// <summary>
     /// 발사를 시도하는 함수
@@ -275,7 +286,7 @@ public class WeaponManager : MonoBehaviour
     private void CheckFireRaycast()
     {
         // 무기 사거리 내의 타겟 정보를 가져온다.
-        GameObject target = cameraRaycast.GetRaycastTarget(currGun.attackDistance);
+        GameObject target = cameraRaycast.GetRaycastTarget(currGun.attackDistance, alllTargetLayerMask);
 
         if (target == null) { return; }
 
@@ -293,7 +304,6 @@ public class WeaponManager : MonoBehaviour
     }
 
     #endregion
-
 
     #region UI Setting
     /// <summary>

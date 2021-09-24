@@ -22,6 +22,7 @@ public class DBManager : MonoBehaviour
     private string allClassUrl;
     private string weaponUrl;
     private string allWeaponUrl;
+    private string allSkillUrl;
 
     [Header("File Path")]
     private string resourcePath;
@@ -29,6 +30,7 @@ public class DBManager : MonoBehaviour
     private string jsonPath;
     private string classPath;
     private string weaponPath;
+    private string skillPath;
 
 
 
@@ -49,15 +51,19 @@ public class DBManager : MonoBehaviour
         allClassUrl = "127.0.0.1/Unity/AllClass.php";
         weaponUrl = "127.0.0.1/Unity/Weapon.php";
         allWeaponUrl = "127.0.0.1/Unity/AllWeapon.php";
+        allSkillUrl = "127.0.0.1/Unity/AllSkill.php";
+
 
         resourcePath = "/Resources/";
         streamingAssetPath = Application.streamingAssetsPath + "/";
         jsonPath = "JSON/";
         classPath = "Class/";
         weaponPath = "Weapon/";
+        skillPath = "Skill/";
 
         StartCoroutine(GetAllClassCo());
         StartCoroutine(GetAllWeaponCo());
+        StartCoroutine(GetAllSkill());
 
         //Debug.Log(streamingAssetPath); // Attsets/StreamingAssets/
 
@@ -171,7 +177,7 @@ public class DBManager : MonoBehaviour
             //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
             jsonString = File.ReadAllText(streamingAssetPath + jsonPath + classPath + playerClass.ToString() + ".json");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             //Debug.LogWarning(e);
             return null;
@@ -366,6 +372,127 @@ public class DBManager : MonoBehaviour
     }
 
     #endregion
+
+
+    #region Skill
+
+    /// <summary>
+    /// 스킬 정보를 받는게 이게 아닌 것 같은데
+    /// 스킬 정보를 받으려면 이게 아니라 스킬 효과를 받아와야 할 것 같은데
+    /// </summary>
+    /// <param name="skillUID">스킬 UID</param>
+    /// <returns>Skill Dict</returns>
+    public Dictionary<string, string> GetSkillInfo(string skillUID)
+    {
+        string jsonString = null;
+        try
+        {
+            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
+            jsonString = File.ReadAllText(streamingAssetPath + jsonPath + skillPath + skillUID.ToString() + ".json");
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning(e);
+            return null;
+        }
+
+        JsonData skillData = JsonMapper.ToObject(jsonString);
+
+        //Debug.Log(classData["ClassName"].ToString());
+
+        Dictionary<string, string> _skillDict = new Dictionary<string, string>();
+
+        _skillDict.Add("ClassName", skillData["ClassName"].ToString());
+        _skillDict.Add("WeaponUID", skillData["WeaponUID"].ToString());
+
+
+        return _skillDict;
+    }
+
+    /// <summary>
+    /// DB에서 모든 Skill 정보를 받아오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllSkill()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allSkillUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllSkillJson(webRequest.text);
+        }
+    }
+
+    /// <summary>
+    /// 스킬 정보를 Json파일로 만드는 함수
+    /// </summary>
+    /// <param name="_jsonData">Json Data</param>
+    private void GetAllSkillJson(string _jsonData)
+    {
+
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> skillDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                skillDict.Add("Skill_UID", arrayData[i]["Skill_UID"].Value);
+                skillDict.Add("Skill_Name", arrayData[i]["Skill_Name"].Value);
+
+
+                string fileName = arrayData[i]["Skill_UID"].Value;
+                JsonData classJson = JsonMapper.ToJson(skillDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + skillPath + fileName + ".json", classJson.ToString());
+
+                skillDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("스킬 데이터가 없습니다.");
+        }
+
+
+    }
+
+
+
+    #endregion
+
+
+
+    #region php를 통해 데이터를 받아오는 방식 통합 까먹음
+
+    /*
+     * var keys = arrayData[i].Keys
+     * 
+     * foreach(var key in keys)
+     * 
+     * 였나??
+     */
+
+
+    #endregion
+
+
+
 
 
 }

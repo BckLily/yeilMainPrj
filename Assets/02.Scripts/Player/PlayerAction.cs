@@ -41,6 +41,12 @@ public class PlayerAction : MonoBehaviour
     public GameObject gaugeRing; // 특정 동작시 0에서 1까지 Gauge가 찰 Ring
 
 
+    #region LayerMask
+    // 타겟으로 사용할 Layer
+    LayerMask allLayerMask;
+
+    #endregion
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +62,16 @@ public class PlayerAction : MonoBehaviour
         // Cursor.lockState = CorsorLockMode.None; // 커서 고정을 끈다
         // Cursor.lockState = CorsorLockMode.Confine; // 커서를 경계를 벗어나지 못하게 한다.
         Cursor.visible = true; // 커서를 보이게 한다.
-        //Cursor.visible = false; // 커서 보이지 않게 한다.
+                               //Cursor.visible = false; // 커서 보이지 않게 한다.
+
+        LayerMask enemyLayer = LayerMask.NameToLayer("ENEMY");
+        LayerMask defensiveGoodsLayer = LayerMask.NameToLayer("DEFENSIVEGOODS");
+        LayerMask storeLayer = LayerMask.NameToLayer("STORE");
+        LayerMask playerLayer = LayerMask.NameToLayer("PLAYER");
+        LayerMask mainDoorLayer = LayerMask.NameToLayer("MAINDOOR");
+        LayerMask wallLayer = LayerMask.NameToLayer("WALL");
+
+        allLayerMask = (1 << enemyLayer) | (1 << defensiveGoodsLayer) | (1 << storeLayer) | (1 << playerLayer) | (1 << mainDoorLayer) | (1 << wallLayer);
 
     }
 
@@ -78,7 +93,7 @@ public class PlayerAction : MonoBehaviour
         if (searchTime >= searchDelay)
         {
             searchTime -= searchDelay;
-            target = (GameObject)cameraRaycast.GetRaycastTarget(10f);
+            target = (GameObject)cameraRaycast.GetRaycastTarget(10f, allLayerMask);
 
             try
             {

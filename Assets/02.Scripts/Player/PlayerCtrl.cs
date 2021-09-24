@@ -246,6 +246,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         // Player Move 함수 실행
         PlayerMove();
 
+        // 무기 변경 테스트 코드
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             playerClass = PlayerClass.ePlayerClass.Soldier;
@@ -266,17 +267,18 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            playerClass = PlayerClass.ePlayerClass.Engineer;
             PlayerWeaponChange();
         }
+        //////
 
-
+        // 체력 감소 테스트 코드
         damageTime += Time.deltaTime;
         if(damageDelay <= damageTime)
         {
             damageTime -= damageDelay;
             Damaged(10f, Vector3.zero, Vector3.zero);
         }
+        //////
 
     }
 
