@@ -23,6 +23,14 @@ public class DBManager : MonoBehaviour
     private string weaponUrl;
     private string allWeaponUrl;
     private string allSkillUrl;
+    private string allPlayerSkillUrl;
+    private string allDefensiveStructureUrl;
+    private string allItemUrl;
+    private string allMonsterUrl;
+    private string allMonsterSkillUrl;
+    private string allStageSpawnUrl;
+
+
 
     [Header("File Path")]
     private string resourcePath;
@@ -31,6 +39,13 @@ public class DBManager : MonoBehaviour
     private string classPath;
     private string weaponPath;
     private string skillPath;
+    private string playerSkillPath;
+    private string defensiveStructurePath;
+    private string monsterPath;
+    private string monsterSkillPath;
+    private string stageSpawnPath;
+
+
 
 
 
@@ -63,7 +78,7 @@ public class DBManager : MonoBehaviour
 
         StartCoroutine(GetAllClassCo());
         StartCoroutine(GetAllWeaponCo());
-        StartCoroutine(GetAllSkill());
+        StartCoroutine(GetAllSkillCo());
 
         //Debug.Log(streamingAssetPath); // Attsets/StreamingAssets/
 
@@ -413,7 +428,7 @@ public class DBManager : MonoBehaviour
     /// DB에서 모든 Skill 정보를 받아오는 코루틴
     /// </summary>
     /// <returns></returns>
-    IEnumerator GetAllSkill()
+    IEnumerator GetAllSkillCo()
     {
         // POST 방식의 요청
         WWWForm form = new WWWForm();
@@ -473,25 +488,37 @@ public class DBManager : MonoBehaviour
     }
 
 
+    #endregion
+
+
+    #region PlayerSkill
+
+    #endregion
+
+    #region DefensiveStructure
+
+    #endregion
+
+    #region Item
+
+    #endregion
+
+    #region Monster
+
+    #endregion
+
+    #region MonsterSkill
+
+    #endregion
+
+    #region StageSpawn
 
     #endregion
 
 
 
-    #region php를 통해 데이터를 받아오는 방식 통합 까먹음
-
-    /*
-     * var keys = arrayData[i].Keys
-     * 
-     * foreach(var key in keys)
-     * 
-     * 였나??
-     */
-
-
-    #endregion
-
-
+    // 통합해서 php에서 데이터를 읽어오고 파일을 저장하려고 했는데 파일 이름을 정하는데 오류가 있어 그냥 포기함.
+    // 다른 방식이 있을 수 있으나 지금은 하나하나 작성하는 것으로 한다.
 
 
 
