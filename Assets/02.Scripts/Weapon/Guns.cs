@@ -15,14 +15,12 @@ public class Guns : Weapon
     public ItemGun.GunType gunType { get; private set; } // 무기의 타입
 
 
-
     // Start is called before the first frame update    
     protected override void Awake()
     {
         base.Awake();
 
     }
-
 
     private void OnEnable()
     {

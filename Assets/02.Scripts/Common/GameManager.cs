@@ -35,6 +35,15 @@ public class GameManager : MonoBehaviour
 
 
 
+        #region Get Skill Information Test Code
+        //List<float> skillInfo = FindSkill.GetSkillInfo("Healing", 2);
+        //for(int i = 0; i < skillInfo.Count; i++)
+        //{
+        //    Debug.Log(skillInfo[i]);
+        //}
+        #endregion
+
+
     }
 
 

@@ -31,7 +31,6 @@ public class DBManager : MonoBehaviour
     private string allStageSpawnUrl;
 
 
-
     [Header("File Path")]
     private string resourcePath;
     private string streamingAssetPath;
@@ -41,11 +40,10 @@ public class DBManager : MonoBehaviour
     private string skillPath;
     private string playerSkillPath;
     private string defensiveStructurePath;
+    private string itemPath;
     private string monsterPath;
     private string monsterSkillPath;
     private string stageSpawnPath;
-
-
 
 
 
@@ -67,6 +65,12 @@ public class DBManager : MonoBehaviour
         weaponUrl = "127.0.0.1/Unity/Weapon.php";
         allWeaponUrl = "127.0.0.1/Unity/AllWeapon.php";
         allSkillUrl = "127.0.0.1/Unity/AllSkill.php";
+        allPlayerSkillUrl = "127.0.0.1/Unity/AllPlayerSkill.php";
+        allDefensiveStructureUrl = "127.0.0.1/Unity/AllDefensiveStructure.php";
+        allItemUrl = "127.0.0.1/Unity/AllItem.php";
+        allMonsterUrl = "127.0.0.1/Unity/AllMonster.php";
+        allMonsterSkillUrl = "127.0.0.1/Unity/AllMonsterSkill.php";
+        allStageSpawnUrl = "127.0.0.1/Unity/AllStageSpawn.php";
 
 
         resourcePath = "/Resources/";
@@ -75,6 +79,13 @@ public class DBManager : MonoBehaviour
         classPath = "Class/";
         weaponPath = "Weapon/";
         skillPath = "Skill/";
+        playerSkillPath = "PlayerSkill/";
+        defensiveStructurePath = "DefensiveStructure/";
+        itemPath = "Item/";
+        monsterPath = "Monster/";
+        monsterSkillPath = "MonsterSkill/";
+        stageSpawnPath = "StageSpawn/";
+
 
         StartCoroutine(GetAllClassCo());
         StartCoroutine(GetAllWeaponCo());

@@ -16,7 +16,6 @@ public class CameraRaycast : MonoBehaviour
 
     #endregion
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -49,22 +48,23 @@ public class CameraRaycast : MonoBehaviour
     /// 보고 있는 타겟 오브젝트를 그대로 넘겨주는 함수
     /// </summary>
     /// <param name="_raycastRange">Raycast disance</param>
-    /// <returns>Return target GameObject<br/>If target is Empty return null </returns>
+    /// <param name="targerLayerMasks">Target layer mask. Need shift calculate</param>
+    /// <returns>Return target RaycastHit<br/>If target is Empty return null </returns>
     /// 매개변수에 Raycast 대상이 될 LayerMask도 같이 받아서 처리해야겠다.
     /// 그래야지 철책뒤의 적에 대해서 인식을 할 수 있을 것이다.
-    public GameObject GetRaycastTarget(float _raycastRange, LayerMask targerLayerMasks)
+    public RaycastHit GetRaycastTarget(float _raycastRange, LayerMask targerLayerMasks)
     {
-        GameObject target = null;
-
         RaycastHit hit;
 
         if(Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targerLayerMasks))
         {
-            target = hit.transform.gameObject;
+            //target = hit.transform.gameObject;
             //Debug.Log(target.tag);
-        }        
+        }
 
-        return target;
+        //Debug.Log(hit.point);
+
+        return hit;
     }
 
 

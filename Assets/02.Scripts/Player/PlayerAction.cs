@@ -34,7 +34,7 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     public GameObject targetInfoPanel;
 
-    [Space(5, order = 0)]
+    [Space(5, order = 0)] // Inspector View 여백
     // Order >> Serialize중 출력 순서?
     [Header("Aim Point", order = 1)]
     public GameObject crosshair; // 플레이어 공격의 조준점
@@ -93,11 +93,10 @@ public class PlayerAction : MonoBehaviour
         if (searchTime >= searchDelay)
         {
             searchTime -= searchDelay;
-            target = (GameObject)cameraRaycast.GetRaycastTarget(10f, allLayerMask);
 
             try
             {
-
+                target = (GameObject)cameraRaycast.GetRaycastTarget(10f, allLayerMask).transform.gameObject;
                 targetTag = target.tag;
             }
             catch (NullReferenceException e)
@@ -136,7 +135,6 @@ public class PlayerAction : MonoBehaviour
             // 건설된 상태이면? 수리 가능한 상황일 경우 따로 표시를 해서 수리 진행하게 처리.
             //Debug.Log("Defensive Goods State");
 
-
             // 건설할 수 있는 상황이면
             //if(canBuild && FillGauge(buildTime)){ // Build 과정 진행 }
             // 수리할 수 있는 상황이면
@@ -168,6 +166,10 @@ public class PlayerAction : MonoBehaviour
 
             //Debug.Log("Player Live State");
         }
+        //else if(targetTag == "MAINDOOR")
+        //{
+
+        //}
         // 보고있는 대상은 있는데 그 대상이 내가 원하는 대상이 아닐 경우 정보 표시가 필요없다.
         else
         {

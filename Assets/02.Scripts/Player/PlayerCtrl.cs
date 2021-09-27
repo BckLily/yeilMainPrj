@@ -6,7 +6,7 @@ using InterfaceSet;
 using System;
 using UnityEngine.UI;
 
-public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
+public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 {
 
     public Image playerHpImage; // 플레이어 체력바
@@ -16,7 +16,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
     /// <summary>
     /// 플레이어 최대 체력
     /// </summary>
-    public float maxHP { get { return addHP + 100f; } }
+    //public float maxHP { get { return addHP + 100f; } } 
     /// <summary>
     /// 플레이어 추가 체력
     /// </summary>
@@ -24,7 +24,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
     /// <summary>
     /// 플레이어 현재 체력
     /// </summary>
-    public float currHP { get; private set; }
+    //public float currHP { get; private set; } // LivingEntity 에서 받음
     /// <summary>
     /// 플레이어 추가 방어력
     /// </summary>
@@ -33,6 +33,8 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
     /// 플레이어 추가 공격력
     /// </summary>
     public float addAttack { get; private set; }
+
+    public Image bloodScreen;
 
     #endregion
 
@@ -102,7 +104,6 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
 
     #endregion
 
-
     #region 플레이어 무기 관련 변수
     public WeaponManager weaponManager = null;
 
@@ -154,7 +155,7 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         // 그냥 프리팹에 기본 데이터를 설정해놓고 그대로 가져와서 처음 값을 설정하는 방식으로 변경.
         // 저번에 쓴적 있는 데이터만 저장해놓는 부분을 만들고 거기서 가져오는 방식으로
         addHP = 0f;
-        currHP = maxHP;
+        currHP = maxHp;
         addDef = 0f;
         addAttack = 0f;
         #region 주석
@@ -246,6 +247,9 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         // Player Move 함수 실행
         PlayerMove();
 
+
+        #region Editor Test Code
+#if UNITY_EDITOR
         // 무기 변경 테스트 코드
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -269,16 +273,17 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         {
             PlayerWeaponChange();
         }
-        //////
 
-        // 체력 감소 테스트 코드
-        damageTime += Time.deltaTime;
-        if(damageDelay <= damageTime)
-        {
-            damageTime -= damageDelay;
-            Damaged(10f, Vector3.zero, Vector3.zero);
-        }
-        //////
+        //// 체력 감소 테스트 코드
+        //damageTime += Time.deltaTime;
+        //if(damageDelay <= damageTime)
+        //{
+        //    damageTime -= damageDelay;
+        //    Damaged(10f, Vector3.zero, Vector3.zero);
+        //}
+        ////
+#endif
+        #endregion
 
     }
 
@@ -446,21 +451,35 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
         //playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
     }
 
-    public void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
+    public override void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        currHP -= damage;
+        base.Damaged(damage, hitPoint, hitNormal);
 
-        if (currHP <= 0f)
-        {
-            currHP = 0f;
-        }
-        HPGaugeChange();
+        StartCoroutine(ShowBloodScreen()); // 피격시 피격했다는 의미로 붉은 테두리가 깜빡인다.
+        HPGaugeChange(); // HP 게이지를 변경시켜준다.
     }
 
-    public void Attack()
-    {
 
+    /// <summary>
+    /// 피격시 붉은 테두리가 잠깐 생겼다가 사라진다.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ShowBloodScreen()
+    {
+        //Debug.Log("____SHOW BLOOD SCREEN____");
+        //  BloodScreen 텍스처의 알파값을 불규칙하게 변경
+        bloodScreen.color = new Color(1, 0, 0, UnityEngine.Random.Range(0.25f, 0.4f));
+        yield return new WaitForSeconds(0.1f);
+        //  BloodScreen 텍스처의 색상을 모두 0으로 변경
+        bloodScreen.color = Color.clear;
     }
+
+
+
+    //public void Attack()
+    //{
+
+    //}
 
     /// <summary>
     /// 플레이어의 체력이 변경될 경우 체력 게이지를 변경시켜주는 함수<br/>
@@ -468,11 +487,12 @@ public class PlayerCtrl : MonoBehaviour, IAttack, IDamaged
     /// </summary>
     private void HPGaugeChange()
     {
-
-        playerHpImage.fillAmount = currHP / maxHP;
+        playerHpImage.fillAmount = currHP / maxHp;
         playerHpText.text = string.Format($"<b>{currHP}</b>");
 
     }
+
+
 
 
 }

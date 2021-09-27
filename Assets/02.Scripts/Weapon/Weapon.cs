@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour
     public int carryBullet = 0; // 현재 가지고 있는 총알 수
     public int maxCarryBullet = 0; // 최대 가지고 있을 수 있는 총알 수
 
-    protected float damage = 0f; // 무기 데미지
+    public float damage = 0f; // 무기 데미지
     public float reloadTime = 0f; // 재장전 시간
     public float attackDistance = 0f; // 무기 공격 사거리
     protected float attackRange = 0f; // 공격 범위(원형)
@@ -53,14 +53,11 @@ public class Weapon : MonoBehaviour
 
         fireDelay = 60 / float.Parse(weaponDict["Weapon_AttackSpeed"]);
 
-        Debug.Log(fireDelay);
+        //Debug.Log(fireDelay);
 
         yield return null;
 
-
     }
-
-
 
 
 

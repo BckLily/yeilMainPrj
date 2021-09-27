@@ -12,7 +12,7 @@ public class WeaponManager : MonoBehaviour
 
     public CameraRaycast cameraRaycast; // 플레이어 카메라의 CameraRaycast
 
-    private GameObject currWeapon; // 현재 총
+    private GameObject currWeaponObj; // 현재 총
     private Guns currGun; // 현재 총이 가지고 있는 Gun Script
 
     private bool isReload; // 플레이어가 재장전을 하고 있는가?
@@ -95,25 +95,25 @@ public class WeaponManager : MonoBehaviour
         weaponDict = _weaponDict;
 
         // 현재 가지고 있는 무기가 있을 경우 무기를 제거하고
-        if (currWeapon != null)
+        if (currWeaponObj != null)
         {
-            Destroy(currWeapon.gameObject);
+            Destroy(currWeaponObj.gameObject);
         }
 
         //Debug.Log(weaponPath + weaponDict["Weapon_Name"]);
         // 새로 생성한 무기를 현재 무기로 만들어준다.
-        currWeapon = (GameObject)Instantiate(Resources.Load(weaponPath + weaponDict["Weapon_Name"]), this.transform);
+        currWeaponObj = (GameObject)Instantiate(Resources.Load(weaponPath + weaponDict["Weapon_Name"]), this.transform);
 
         //currWeapon = weaponTr.GetChild(0).gameObject;
         //Debug.Log(currWeapon.name);
         // 현재 무기의 Guns 컴포넌트를 받아온다.
-        currGun = currWeapon.GetComponent<Guns>();
+        currGun = currWeaponObj.GetComponent<Guns>();
 
         // 현재 무기의 rotation을 현재 weaponPos의 rotation으로 맞춰준다.(왼손쪽을 보는 회전)
-        currWeapon.transform.rotation = weaponTr.rotation;
+        currWeaponObj.transform.rotation = weaponTr.rotation;
         //currWeapon.transform.Translate(weaponTr.localPosition - currGun.handleTr.localPosition);
         // 현재 총의 손잡이 부분을 오른손의 중앙에 맞게 이동
-        currWeapon.transform.Translate(-currGun.handleTr.localPosition);
+        currWeaponObj.transform.Translate(-currGun.handleTr.localPosition);
 
         //weaponTr.LookAt(leftHandTr);
         // 받아온 무기 정보 딕셔너리를 현재 총에 넘겨준다.
@@ -184,7 +184,6 @@ public class WeaponManager : MonoBehaviour
     private void TryFire()
     {
         // 미완성 상태일 때 계속 에러가 나서 에러 발생시 그냥 함수 종료하게 함.
-
         // 재장전 중이 아닐 때
         if (isReload == false)
         {
@@ -286,14 +285,33 @@ public class WeaponManager : MonoBehaviour
     private void CheckFireRaycast()
     {
         // 무기 사거리 내의 타겟 정보를 가져온다.
-        GameObject target = cameraRaycast.GetRaycastTarget(currGun.attackDistance, alllTargetLayerMask);
+        RaycastHit hitTarget = cameraRaycast.GetRaycastTarget(currGun.attackDistance, alllTargetLayerMask);
+        GameObject target;
 
-        if (target == null) { return; }
+        try
+        {
+            target = hitTarget.transform.gameObject;
+
+        }
+        catch (NullReferenceException e)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning(e);
+
+#endif
+            return;
+        }
+
+        //if (target == null) { return; }
 
         // Raycast 했을 때 대상이 무엇인가
         if (target.CompareTag("ENEMY"))
         {
+            //Debug.Log("____Gun Damage: " + currGun.damage + "____");
+            target.GetComponent<LivingEntity>().Damaged(currGun.damage, hitTarget.point, hitTarget.normal);
 
+            // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
+            //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 5f);
         }
         else if (target.CompareTag("WALL"))
         {
