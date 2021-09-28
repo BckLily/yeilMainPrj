@@ -116,22 +116,31 @@ public class WeaponManager : MonoBehaviour
         // 현재 총의 손잡이 부분을 오른손의 중앙에 맞게 이동
         currWeaponObj.transform.Translate(-currGun.handleTr.localPosition);
 
-        // 최대 총알 수 설정.
-        weaponDict["Weapon_CarryBullet"] = (Mathf.RoundToInt(float.Parse(weaponDict["Weapon_CarryBullet"]) * (1 + (playerCtrl.incCarryBullet * 0.01f)))).ToString();
-        // 무기 공격 속도 증가
-        weaponDict["Weapon_AttackSpeed"] = (float.Parse(weaponDict["Weapon_AttackSpeed"]) * (1 - (playerCtrl.incAttackSpeed * 0.01f))).ToString();
-        //Debug.Log(weaponDict["Weapon_AttackSpeed"]);
-        
+
         //weaponTr.LookAt(leftHandTr);
         // 받아온 무기 정보 딕셔너리를 현재 총에 넘겨준다.
         currGun.weaponDict = this.weaponDict;
 
 
-
+        StartCoroutine(WeaponStatusSetting());
         WeaponNameChange();
         WeaponBulletChange();
     }
 
+
+    public IEnumerator WeaponStatusSetting()
+    {
+        yield return new WaitForSeconds(0.5f);
+        // 최대 보유 총알 수 설정
+        currGun.maxCarryBullet = Mathf.RoundToInt(float.Parse(weaponDict["Weapon_CarryBullet"]) * (1 + (playerCtrl.incCarryBullet * 0.01f)));
+        // 무기 공격 속도 증가
+        //Debug.Log("Fire Delay: " + currGun.fireDelay);
+        currGun.fireDelay = ((60 / float.Parse(weaponDict["Weapon_AttackSpeed"])) * (1 - (playerCtrl.incAttackSpeed * 0.01f)));
+        //Debug.Log("Fire Delay: " + currGun.fireDelay);
+
+
+
+    }
 
 
     #endregion
@@ -258,6 +267,7 @@ public class WeaponManager : MonoBehaviour
         // 현재 장전된 총알이 1발 이상인 경우
         if (currGun.currBullet > 0)
         {
+            Debug.Log("Fire Delay On FIre: " + currGun.fireDelay);
             // 총 발사 딜레이보다 총을 쏘고 지난 시간이 더 크거나 같을 경우
             if (currGun.fireDelay <= currGun.fireTime)
             {
