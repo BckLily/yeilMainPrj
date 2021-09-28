@@ -54,7 +54,7 @@ public class SpiderSC : LivingEntity
     /// <param name="newDamage"></param>
     public void SetUp(float newHP = 20f, float newSpeed = 3f, float newDamage = 12f)
     {
-        maxHp = newHP;
+        startHp = newHP;
         currHP = newHP;
         damage = newDamage;
         pathFinder.speed = newSpeed;

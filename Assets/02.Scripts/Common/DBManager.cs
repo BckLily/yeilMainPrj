@@ -90,9 +90,14 @@ public class DBManager : MonoBehaviour
         StartCoroutine(GetAllClassCo());
         StartCoroutine(GetAllWeaponCo());
         StartCoroutine(GetAllSkillCo());
+        StartCoroutine(GetAllDefensiveStructureCo());
+        StartCoroutine(GetAllItemCo());
+        StartCoroutine(GetAllStageSpawnCo());
+        StartCoroutine(GetAllMonsterSkillCo());
+        StartCoroutine(GetAllMonsterCo());
+        StartCoroutine(GetAllPlayerSkillCo());
 
         //Debug.Log(streamingAssetPath); // Attsets/StreamingAssets/
-
     }
 
 
@@ -399,7 +404,6 @@ public class DBManager : MonoBehaviour
 
     #endregion
 
-
     #region Skill
 
     /// <summary>
@@ -418,7 +422,10 @@ public class DBManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            //Debug.LogWarning(e);
+#if UNITY_EDITOR
+            Debug.LogWarning(e);
+
+#endif
             return null;
         }
 
@@ -428,9 +435,8 @@ public class DBManager : MonoBehaviour
 
         Dictionary<string, string> _skillDict = new Dictionary<string, string>();
 
-        _skillDict.Add("ClassName", skillData["ClassName"].ToString());
-        _skillDict.Add("WeaponUID", skillData["WeaponUID"].ToString());
-
+        _skillDict.Add("Skill_UID", skillData["Skill_UID"].ToString());
+        _skillDict.Add("Skill_Name", skillData["Skill_Name"].ToString());
 
         return _skillDict;
     }
@@ -498,31 +504,440 @@ public class DBManager : MonoBehaviour
 
     }
 
-
     #endregion
 
-
     #region PlayerSkill
+
+    /// <summary>
+    /// 플레이어의 직업을 받으면 그 직업에 관련된 Dictionary 데이터를 반환
+    /// </summary>
+    public Dictionary<string, string> GetPlayerSkill(string _skillUID)
+    {
+        string jsonString = null;
+        try
+        {
+            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
+            jsonString = File.ReadAllText(streamingAssetPath + jsonPath + playerSkillPath + _skillUID.ToString() + ".json");
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning(e);
+            return null;
+        }
+
+        JsonData playerSkillData = JsonMapper.ToObject(jsonString);
+
+        //Debug.Log(classData["ClassName"].ToString());
+
+        Dictionary<string, string> _playerSkillDict = new Dictionary<string, string>();
+
+
+        _playerSkillDict.Add("PlayerSkill_UID", playerSkillData["PlayerSkill_UID"].ToString());
+        _playerSkillDict.Add("PlayerSkill_Name", playerSkillData["PlayerSkill_Name"].ToString());
+        _playerSkillDict.Add("PlayerSkill_SkillUID", playerSkillData["PlayerSkill_SkillUID"].ToString());
+        _playerSkillDict.Add("PlayerSkill_Coefficient", playerSkillData["PlayerSkill_Coefficient"].ToString());
+
+        return _playerSkillDict;
+    }
+
+    /// <summary>
+    /// DB에서 Player Skill 정보를 받아오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllPlayerSkillCo()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allPlayerSkillUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllPlayerSkillJson(webRequest.text);
+        }
+    }
+
+
+    /// <summary>
+    /// DB에서 받은 모든 데이터를 Json 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData">Player Skill Data가 저장된 json 형식의 string text</param>
+    private void GetAllPlayerSkillJson(string _jsonData)
+    {
+
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> playerSkillDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                playerSkillDict.Add("PlayerSkill_UID", arrayData[i]["PlayerSkill_UID"].Value);
+                playerSkillDict.Add("PlayerSkill_Name", arrayData[i]["PlayerSkill_Name"].Value);
+                playerSkillDict.Add("PlayerSkill_SkillUID", arrayData[i]["PlayerSkill_SkillUID"].Value);
+                playerSkillDict.Add("PlayerSkill_Coefficient", arrayData[i]["PlayerSkill_Coefficient"].Value);
+
+                string fileName = arrayData[i]["PlayerSkill_UID"].Value;
+                JsonData classJson = JsonMapper.ToJson(playerSkillDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + playerSkillPath + fileName + ".json", classJson.ToString());
+
+                playerSkillDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("플레이어 스킬이 없습니다.");
+        }
+    }
+
 
     #endregion
 
     #region DefensiveStructure
 
+
+
+    /// <summary>
+    /// DB에서 모든 방어 물자 정보를 가져오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllDefensiveStructureCo()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allDefensiveStructureUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllDefensiveStructureJson(webRequest.text);
+        }
+    }
+
+    /// <summary>
+    /// 받아온 정보를 Json 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    private void GetAllDefensiveStructureJson(string _jsonData)
+    {
+
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> structDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                structDict.Add("Defensive_UID", arrayData[i]["Defensive_UID"].Value);
+                structDict.Add("Defensive_Name", arrayData[i]["Defensive_Name"].Value);
+                structDict.Add("Defensive_Hp", arrayData[i]["Defensive_Hp"].Value);
+                structDict.Add("Defensive_Damage", arrayData[i]["Defensive_Damage"].Value);
+                structDict.Add("Defensive_Passable", arrayData[i]["Defensive_Passable"].Value);
+
+                string fileName = arrayData[i]["Defensive_UID"].Value;
+                JsonData classJson = JsonMapper.ToJson(structDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + defensiveStructurePath + fileName + ".json", classJson.ToString());
+
+                structDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("방어물자 정보가 없습니다.");
+        }
+    }
+
+
     #endregion
 
     #region Item
+
+
+    /// <summary>
+    /// DB에서 모든 방어 물자 정보를 가져오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllItemCo()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allItemUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllItemJson(webRequest.text);
+        }
+    }
+
+    /// <summary>
+    /// 받아온 정보를 Json 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    private void GetAllItemJson(string _jsonData)
+    {
+
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> itemDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                itemDict.Add("Item_UID", arrayData[i]["Item_UID"].Value);
+                itemDict.Add("Item_Name", arrayData[i]["Item_Name"].Value);
+                itemDict.Add("Item_SkillUID", arrayData[i]["Item_SkillUID"].Value);
+                itemDict.Add("Item_Coefficient", arrayData[i]["Item_Coefficient"].Value);
+
+                string fileName = arrayData[i]["Item_UID"].Value;
+                JsonData classJson = JsonMapper.ToJson(itemDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + itemPath + fileName + ".json", classJson.ToString());
+
+                itemDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("아이템 정보가 없습니다.");
+        }
+    }
 
     #endregion
 
     #region Monster
 
+
+    /// <summary>
+    /// DB에서 모든 몬스터 정보를 가져오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllMonsterCo()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allMonsterUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllMonsterJson(webRequest.text);
+        }
+    }
+
+    /// <summary>
+    /// 받아온 정보를 Json 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    private void GetAllMonsterJson(string _jsonData)
+    {
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> monsterDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                monsterDict.Add("Monster_UID", arrayData[i]["Monster_UID"].Value);
+                monsterDict.Add("Monster_Name", arrayData[i]["Monster_Name"].Value);
+                monsterDict.Add("Monster_Hp", arrayData[i]["Monster_Hp"].Value);
+                monsterDict.Add("Monster_Armour", arrayData[i]["Monster_Armour"].Value);
+                monsterDict.Add("Monster_MoveSpeed", arrayData[i]["Monster_MoveSpeed"].Value);
+                monsterDict.Add("Monster_Damage", arrayData[i]["Monster_Damage"].Value);
+                monsterDict.Add("Monster_AttackDistance", arrayData[i]["Monster_AttackDistance"].Value);
+                monsterDict.Add("Monster_AttackSpeed", arrayData[i]["Monster_AttackSpeed"].Value);
+                monsterDict.Add("Monster_Exp", arrayData[i]["Monster_Exp"].Value);
+                monsterDict.Add("Monster_SkillUID", arrayData[i]["Monster_SkillUID"].Value);
+
+                string fileName = arrayData[i]["Monster_UID"].Value;
+                JsonData classJson = JsonMapper.ToJson(monsterDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + monsterPath + fileName + ".json", classJson.ToString());
+
+                monsterDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("몬스터 정보가 없습니다.");
+        }
+    }
+
+
     #endregion
 
     #region MonsterSkill
 
+
+    /// <summary>
+    /// DB에서 모든 몬스터 스킬 정보를 가져오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllMonsterSkillCo()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allMonsterSkillUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllMonsterSkillJson(webRequest.text);
+        }
+    }
+
+    /// <summary>
+    /// 받아온 정보를 Json 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    private void GetAllMonsterSkillJson(string _jsonData)
+    {
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> monsterSkillDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                monsterSkillDict.Add("MonsterSkill_UID", arrayData[i]["MonsterSkill_UID"].Value);
+                monsterSkillDict.Add("MonsterSkill_Name", arrayData[i]["MonsterSkill_Name"].Value);
+                monsterSkillDict.Add("MonsterSkill_SkillUID", arrayData[i]["MonsterSkill_SkillUID"].Value);
+                monsterSkillDict.Add("MonsterSkill_Coefficient", arrayData[i]["MonsterSkill_Coefficient"].Value);
+
+                string fileName = arrayData[i]["MonsterSkill_UID"].Value;
+                JsonData classJson = JsonMapper.ToJson(monsterSkillDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + monsterSkillPath + fileName + ".json", classJson.ToString());
+
+                monsterSkillDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("몬스터 스킬 데이터가 없습니다.");
+        }
+    }
+
+
     #endregion
 
     #region StageSpawn
+
+    /// <summary>
+    /// DB에서 모든 몬스터 스킬 정보를 가져오는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator GetAllStageSpawnCo()
+    {
+        // POST 방식의 요청
+        WWWForm form = new WWWForm();
+        // classUrl(php)에 form 값을 넘겨준다.
+        WWW webRequest = new WWW(allStageSpawnUrl, form);
+
+        yield return webRequest;
+
+        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+        if (string.IsNullOrEmpty(webRequest.error))
+        {
+            // 실행
+            GetAllStageSpawnJson(webRequest.text);
+        }
+    }
+
+    /// <summary>
+    /// 받아온 정보를 Json 파일로 저장하는 함수
+    /// </summary>
+    /// <param name="_jsonData"></param>
+    private void GetAllStageSpawnJson(string _jsonData)
+    {
+        // 입력받은 데이터를 Parsing 하는 단계
+        var parseData = JSON.Parse(_jsonData);
+        // {"results":[]} 형태의 파일
+        var arrayData = parseData["results"];
+        // []와 같이 데이터만 남는다.
+
+        Dictionary<string, string> spawnDict = new Dictionary<string, string>();
+
+        // 개수가 0개보다 많을 경우
+        if (arrayData.Count > 0)
+        {
+            for (int i = 0; i < arrayData.Count; i++)
+            {
+                spawnDict.Add("Stage_Count", arrayData[i]["Stage_Count"].Value);
+                spawnDict.Add("Stage_MaxSpawn", arrayData[i]["Stage_MaxSpawn"].Value);
+
+                string fileName = arrayData[i]["Stage_Count"].Value;
+                JsonData classJson = JsonMapper.ToJson(spawnDict);
+
+                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
+                File.WriteAllText(streamingAssetPath + jsonPath + stageSpawnPath + fileName + ".json", classJson.ToString());
+
+                spawnDict.Clear();
+            }
+        }
+        else
+        {
+            Debug.Log("스테이지 정보가 없습니다.");
+        }
+    }
 
     #endregion
 

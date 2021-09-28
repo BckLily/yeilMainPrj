@@ -5,7 +5,7 @@ using InterfaceSet;
 //using System;
 public class LivingEntity : MonoBehaviour, IAttack, IDamaged
 {
-    public float maxHp = 100f; // 시작 체력
+    public float startHp = 100f; // 시작 체력
     public float currHP;
     public float damage;
     public bool down;
@@ -15,7 +15,7 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
     {
         down = false;
         dead = false;  // 사망상태가 아님
-        currHP = maxHp; // 현재 체력은 시작 체력이랑 같음
+        currHP = startHp; // 현재 체력은 시작 체력이랑 같음
     }
 
     public void Attack()  // 공격시 실행될 함수
@@ -26,6 +26,9 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
     public virtual void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal) // 피헤 받을시 실행될 함수 (데미지, 피격 위치, 피격 방향)
     {
         currHP -= damage; // 현재체력에 데미지 만큼 감소
+
+        Debug.Log(currHP);
+
         if (currHP <= 0 && !dead) // 현재체력이 0보다 작고 사망 상태가 아닐떄
         {
             Down(); // Down 함수 실행

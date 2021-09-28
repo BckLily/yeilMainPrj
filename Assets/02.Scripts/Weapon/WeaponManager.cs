@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class WeaponManager : MonoBehaviour
 {
+    public PlayerCtrl playerCtrl; // 플레이어 컨트롤 스크립트
     public Transform playerCameraTr; // 플레이어 카메라 Transform
     public Transform leftHandTr; // 플레이어 왼손 위치
     private Transform weaponTr; //weapon Transform
@@ -115,13 +116,23 @@ public class WeaponManager : MonoBehaviour
         // 현재 총의 손잡이 부분을 오른손의 중앙에 맞게 이동
         currWeaponObj.transform.Translate(-currGun.handleTr.localPosition);
 
+        // 최대 총알 수 설정.
+        weaponDict["Weapon_CarryBullet"] = (Mathf.RoundToInt(float.Parse(weaponDict["Weapon_CarryBullet"]) * (1 + (playerCtrl.incCarryBullet * 0.01f)))).ToString();
+        // 무기 공격 속도 증가
+        weaponDict["Weapon_AttackSpeed"] = (float.Parse(weaponDict["Weapon_AttackSpeed"]) * (1 - (playerCtrl.incAttackSpeed * 0.01f))).ToString();
+        //Debug.Log(weaponDict["Weapon_AttackSpeed"]);
+        
         //weaponTr.LookAt(leftHandTr);
         // 받아온 무기 정보 딕셔너리를 현재 총에 넘겨준다.
         currGun.weaponDict = this.weaponDict;
 
+
+
         WeaponNameChange();
         WeaponBulletChange();
     }
+
+
 
     #endregion
 
@@ -308,7 +319,7 @@ public class WeaponManager : MonoBehaviour
         if (target.CompareTag("ENEMY"))
         {
             //Debug.Log("____Gun Damage: " + currGun.damage + "____");
-            target.GetComponent<LivingEntity>().Damaged(currGun.damage, hitTarget.point, hitTarget.normal);
+            target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.addAttack, hitTarget.point, hitTarget.normal);
 
             // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
             //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 5f);

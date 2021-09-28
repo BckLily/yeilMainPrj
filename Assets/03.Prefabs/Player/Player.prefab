@@ -1711,6 +1711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1804070b04fc4e4eb0dcffe9692bed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCtrl: {fileID: 919132148041802225}
   playerCameraTr: {fileID: 963194228}
   leftHandTr: {fileID: 2570782436213453580}
   cameraRaycast: {fileID: 818480284}

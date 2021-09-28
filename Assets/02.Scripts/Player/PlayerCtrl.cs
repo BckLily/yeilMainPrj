@@ -6,6 +6,8 @@ using InterfaceSet;
 using System;
 using UnityEngine.UI;
 
+
+
 public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 {
 
@@ -16,7 +18,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// <summary>
     /// 플레이어 최대 체력
     /// </summary>
-    //public float maxHP { get { return addHP + 100f; } } 
+    public float maxHp { get { return startHp + addHP; } }
     /// <summary>
     /// 플레이어 추가 체력
     /// </summary>
@@ -28,7 +30,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// <summary>
     /// 플레이어 추가 방어력
     /// </summary>
-    public float addDef { get; private set; }
+    public float addArmour { get; private set; }
     /// <summary>
     /// 플레이어 추가 공격력
     /// </summary>
@@ -92,7 +94,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #region 플레이어 관련 변수
     private Transform tr; // 플레이어의 위치(Transform)
-
     public string playerName { get; private set; } // 플레이어 이름(유저 닉네임)
     public PlayerClass.ePlayerClass playerClass { get; private set; } // Player의 Class(직업)
     public Animator playerAnim; // 플레이어의 Animator
@@ -104,9 +105,23 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #endregion
 
+    #region 플레이어 스킬 관련 변수
+    private int status0_Level = 0;
+    private int status1_Level = 0;
+    private int status2_Level = 0;
+    private int ability0_Level = 0;
+    private int ability1_Level = 0;
+    private int perk0_Level = 0;
+    private int perk1_Level = 0;
+    private int perk2_Level = 0;
+
+
+    #endregion
+
     #region 플레이어 무기 관련 변수
     public WeaponManager weaponManager = null;
-
+    public float incCarryBullet;
+    public float incAttackSpeed;
 
     #endregion
 
@@ -142,7 +157,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
         // 플레이어가 선택한 직업을 가져와서 설정이 끝나면
         // 그 직업과 관련된 데이터를 가져와서 Dictionary에 저장해야한다.
-        StartCoroutine(PlayerClassSetting());
+        StartCoroutine(CoPlayerClassSetting());
 
 
         controller.enabled = true;
@@ -156,7 +171,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 저번에 쓴적 있는 데이터만 저장해놓는 부분을 만들고 거기서 가져오는 방식으로
         addHP = 0f;
         currHP = maxHp;
-        addDef = 0f;
+        addArmour = 0f;
         addAttack = 0f;
         #region 주석
         /*
@@ -219,8 +234,12 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
 
-    #region 플레이어 직업을 세팅하고 직업 관련 데이터를 가져오는 함수
-    IEnumerator PlayerClassSetting()
+    #region 플레이어 직업을 세팅하고 직업 관련 데이터를 가져오는 함수 관련
+    /// <summary>
+    /// 플레이어 직업 관련된 값을 Dictionary 변수에 저장할 때까지 시도하는 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator CoPlayerClassSetting()
     {
         yield return new WaitForSeconds(0.5f);
         while (classDict == null)
@@ -229,17 +248,229 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             yield return null;
         }
 
-        weaponManager.WeaponChange(classDict["WeaponUID"]);
+        //weaponManager.WeaponChange(classDict["WeaponUID"]);
+        PlayerWeaponChange();
         //Debug.Log(classDict["ClassName"]);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_skillUID"></param>
+    /// <param name="_skillLevel"></param>
+    void PlayerSkillSetting(string _playerSkillUID, int _skillLevel)
+    {
+        int firstUID;
+        int middleUID;
+        int lastUID;
+        // _skillUID.Substring(startIdx, endIdx);
+        try
+        {
+            Debug.Log("___UID: " + _playerSkillUID + "___");
+            firstUID = int.Parse(_playerSkillUID.Substring(0, 2));
+            Debug.Log("____UID: " + firstUID + "____");
+            if (firstUID != 03)
+            {
+                Debug.Log("____Worng Skill UID Input____");
+                return;
+            }
+
+            middleUID = int.Parse(_playerSkillUID.Substring(2, 3));
+            Debug.Log("____UID: " + middleUID + "____");
+            lastUID = int.Parse(_playerSkillUID.Substring(5, 4));
+            Debug.Log("____UID: " + lastUID + "____");
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning(e);
+            return;
+        }
+
+        Dictionary<string, string> __skillInfo = DBManager.Instance.GetPlayerSkill(_playerSkillUID);
+
+        string _name = __skillInfo["PlayerSkill_Name"];
+        string _skillUID = __skillInfo["PlayerSkill_SkillUID"];
+        float _coefficient = float.Parse(__skillInfo["PlayerSkill_Coefficient"]);
+
+        switch (middleUID)
+        {
+            //FindPlayerSkill.GetPlayerSkill(__skillInfo["PlayerSkill_Name"], __skillInfo["PlayerSkill_SkillUID"], _skillLevel)[0] * float.Parse(__skillInfo["PlayerSkill_Coefficient"])
+            case 000:
+                switch (lastUID)
+                {
+                    case 0000:
+                        // Increase Weapon Damage
+                        addAttack = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+
+                        Debug.Log("Add Attack: " + addAttack);
+
+                        break;
+                    case 0001:
+                        // Increase Player Armor
+                        addArmour = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+
+                        Debug.Log("Add Armour: " + addArmour);
+
+                        break;
+                    case 0002:
+                        // Increase Player Max HP
+                        addHP = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log("___Max Hp: " + maxHp);
+                        HPGaugeChange();
+                        break;
+                    default:
+                        Debug.Log("__Wrong UID Input__");
+
+                        break;
+                }
+
+                break;
+            case 001:
+                switch (lastUID)
+                {
+                    case 0000:
+                        // Incrase Max Carry Bullet
+                        incCarryBullet = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log(status0_Level);
+                        Debug.Log("___Inc Carry Bullet: " + incCarryBullet + "___");
+
+                        break;
+                    case 0001:
+                        // Increase Weapon Attack Speed
+                        incAttackSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log(status0_Level);
+                        Debug.Log("___Inc Attack Speed: " + incAttackSpeed + "___");
+
+                        break;
+                    case 0002:
+
+
+                        break;
+                    case 0003:
+
+
+                        break;
+                    case 0004:
+
+
+                        break;
+                    case 0005:
+
+
+                        break;
+                    default:
+
+
+                        break;
+                }
+
+                break;
+            case 002:
+                switch (lastUID)
+                {
+                    case 0000:
+
+
+                        break;
+                    case 0001:
+
+
+                        break;
+                    case 0002:
+
+
+                        break;
+                    case 0003:
+
+
+                        break;
+                    case 0004:
+
+
+                        break;
+                    case 0005:
+
+
+                        break;
+                    case 0006:
+
+
+                        break;
+                    case 0007:
+
+
+                        break;
+                    case 0008:
+
+
+                        break;
+                    default:
+
+
+                        break;
+                }
+
+                break;
+            default:
+                Debug.Log("Middle UID: " + middleUID);
+                Debug.Log("Last UID: " + lastUID);
+
+
+                break;
+        }
+
 
     }
+
+
+    private void SkillLevelUp(string _skillUID)
+    {
+        if (_skillUID == classDict["StatusSkill0_UID"])
+        {
+            PlayerSkillSetting(classDict["StatusSkill0_UID"], status0_Level);
+        }
+        else if (_skillUID == classDict["StatusSkill1_UID"])
+        {
+            PlayerSkillSetting(classDict["StatusSkill1_UID"], status1_Level);
+        }
+        else if (_skillUID == classDict["StatusSkill2_UID"])
+        {
+            PlayerSkillSetting(classDict["StatusSkill2_UID"], status2_Level);
+        }
+        else if (_skillUID == classDict["AbilitySkill0_UID"])
+        {
+            PlayerSkillSetting(classDict["AbilitySkill0_UID"], ability0_Level);
+        }
+        else if (_skillUID == classDict["AbilitySkill1_UID"])
+        {
+            PlayerSkillSetting(classDict["AbilitySkill1_UID"], ability1_Level);
+        }
+        else if (_skillUID == classDict["Perk0_UID"])
+        {
+            PlayerSkillSetting(classDict["Perk0_UID"], perk0_Level);
+        }
+        else if (_skillUID == classDict["Perk1_UID"])
+        {
+            PlayerSkillSetting(classDict["Perk1_UID"], perk1_Level);
+        }
+        else if (_skillUID == classDict["Perk2_UID"])
+        {
+            PlayerSkillSetting(classDict["Perk2_UID"], perk2_Level);
+        }
+    }
+
+
     #endregion
 
+
+    #region Player의 무기를 변경하는 함수 관련
     void PlayerWeaponChange()
     {
         // 상점에서 구매하려는 무기의 transform을 받아서 처리.
         weaponManager.WeaponChange(classDict["WeaponUID"]);
     }
+
+    #endregion
 
     // Update is called once per frame
     void Update()
@@ -255,23 +486,29 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         {
             playerClass = PlayerClass.ePlayerClass.Soldier;
             classDict = null;
-            StartCoroutine(PlayerClassSetting());
+            StartCoroutine(CoPlayerClassSetting());
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             playerClass = PlayerClass.ePlayerClass.Medic;
             classDict = null;
-            StartCoroutine(PlayerClassSetting());
+            StartCoroutine(CoPlayerClassSetting());
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             playerClass = PlayerClass.ePlayerClass.Engineer;
             classDict = null;
-            StartCoroutine(PlayerClassSetting());
+            StartCoroutine(CoPlayerClassSetting());
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             PlayerWeaponChange();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            status0_Level += 1;
+            PlayerSkillSetting(classDict["AbilitySkill1_UID"], status0_Level);
         }
 
         //// 체력 감소 테스트 코드
@@ -287,10 +524,9 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     }
 
-    float damageDelay = 5f;
-    float damageTime = 0f;
-
-
+    // 체력 감소 테스트 변수
+    //float damageDelay = 5f;
+    //float damageTime = 0f;
 
     private void LateUpdate()
     {
@@ -305,6 +541,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     /// <summary>
     /// 플레이어가 앉는 동작을 실행(시도)하는 함수
+    /// 사용하지 않는 함수.
     /// </summary>
     private void TryCrouch()
     {
@@ -344,12 +581,13 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 왼쪽 shift가 눌리면 달린다.
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            // 앉아있으면 일어서게 한다.
-            if (isCrouch == true)
-            {
-                doCrouch = true;
-                TryCrouch();
-            }
+            //// 앉아있으면 일어서게 한다.
+            //// 사용하지 않게 되었다.
+            //if (isCrouch == true)
+            //{
+            //    doCrouch = true;
+            //    TryCrouch();
+            //}
             // 일어서기만 하면 이동 속도가 walkSpeed가 되기때문에
             // 이동속도를 runSpeed로 설정한다.
             changedSpeed = runSpeed;
@@ -451,9 +689,15 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         //playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
     }
 
+    /// <summary>
+    /// 피해를 받을 때 호출되는 함수
+    /// </summary>
+    /// <param name="damage">받는 데미지</param>
+    /// <param name="hitPoint">공격 받은 위치</param>
+    /// <param name="hitNormal">공격 받은 위치의 노말 벡터</param>
     public override void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        base.Damaged(damage, hitPoint, hitNormal);
+        base.Damaged(damage - addArmour, hitPoint, hitNormal);
 
         StartCoroutine(ShowBloodScreen()); // 피격시 피격했다는 의미로 붉은 테두리가 깜빡인다.
         HPGaugeChange(); // HP 게이지를 변경시켜준다.

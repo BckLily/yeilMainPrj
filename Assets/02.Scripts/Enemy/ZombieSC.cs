@@ -48,7 +48,7 @@ public class ZombieSC : LivingEntity
 
     public void Setup(float newHP = 20f, float newSpeed = 3f, float newDamage = 10f)
     {
-        maxHp = newHP;
+        startHp = newHP;
         currHP = newHP;
         damage = newDamage;
         pathFinder.speed = newSpeed;
