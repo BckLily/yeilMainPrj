@@ -13,9 +13,75 @@ public class PlayerAction : MonoBehaviour
     ///</summary>
     private CameraRaycast cameraRaycast; // 카메라 Transform
 
+    #region 플레이어의 현재 동작 관련 변수
     private bool isBuild; // 플레이어가 빌딩을 건설하고 있는가?
     private bool isBuy; // 플레이어가 물건을 사고 있는가? 상점을 이용하고 있는가?
     private bool isHeal; // 플레이어가 회복 동작을 수행하고 있는가?
+
+    private float healingPoint; // 회복 아이템 사용시 회복되는 기본량
+    public float incHealingPoint; // 증가한 회복량
+    public float incHealingPoint_Perk; // 증가한 회복량
+    /// <summary>
+    /// 회복 아이템 사용시 회복되는 현재 수치
+    /// </summary>
+    private float currHealingPoint { get { return healingPoint * (1 + ((incHealingPoint + incHealingPoint_Perk) * 0.01f)); } }
+
+    private float healingSpeed; // 회복 아이템 사용시 걸리는 시간.
+    public float incHealingSpeed; // 증가한 회복 아이템 사용 속도
+    public float incHealingSpeed_Perk; // 증가한 회복 아이템 사용 속도
+    /// <summary>
+    /// 회복 아이템 사용 속도의 현재 수치
+    /// </summary>
+    private float currHealingSpeed
+    {
+        get
+        {
+            float _value = healingSpeed * (1 - ((incHealingSpeed + incHealingSpeed_Perk) * 0.01f));
+            return ((_value >= 0.5f) ? _value : 0.5f);
+        }
+    }
+
+    // if(dontUseHealingItem_Percent !=0)이면 실행
+    // 회복 아이템을 사용하지 않을 확률
+    public float dontUseHealingItem_Percent = 0f;
+
+    private float buildSpeed; // 현재 건물 건설에 걸리는 시간
+    public float incBuildSpeed; // 증가한 건물 건설 속도
+    public float incBuildSpeed_Perk = 0f; // 증가한 방어물자 건설 속도 Perk
+    /// <summary>
+    /// 방어 물자 건설 시 걸리는 시간
+    /// </summary>
+    private float currBuildSpeed
+    {
+        get
+        {
+            float _value = buildSpeed * (1 - ((incBuildSpeed + incBuildSpeed_Perk) * 0.01f));
+
+            return ((_value >= 2.5f) ? _value : 2.5f);
+        }
+    }
+
+    private float repairSpeed; // 방어물자 수리 속도
+    public float incRepairSpeed; // 증가한 건물 건설 속도
+    /// <summary>
+    /// 현재 방어물자 수리 속도
+    /// </summary>
+    private float currRepariSpeed
+    {
+        get
+        {
+            float _value = repairSpeed * (1 - (incRepairSpeed * 0.01f));
+            return ((_value >= 0.5f) ? _value : 0.5f);
+        }
+    }
+
+    // 건설할 방어물자의 증가할 최대 체력
+    public float incBuildMaxHealthPoint = 0f;
+
+    public bool buildingAutoRepair = false;
+
+    #endregion
+
 
     private Animator playerAnim; // 플레이어의 애니메이터
 
@@ -57,6 +123,16 @@ public class PlayerAction : MonoBehaviour
         isBuild = false;
         isBuy = false;
         isHeal = false;
+
+        healingPoint = 50f;
+        incHealingPoint = 0f;
+        healingSpeed = 5f;
+        incHealingSpeed = 0f;
+        buildSpeed = 7.5f;
+        incBuildSpeed = 0f;
+        repairSpeed = 5f;
+        incRepairSpeed = 0f;
+
 
         Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
         // Cursor.lockState = CorsorLockMode.None; // 커서 고정을 끈다

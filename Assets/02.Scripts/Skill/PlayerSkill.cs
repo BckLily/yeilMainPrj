@@ -241,8 +241,8 @@ public class PlayerSkill
 
         List<float> skillinfo = FindSkill.GetSkillInfo(_skillName);
 
-        float percent = skillinfo[0] * 20f * _skillLevel;
-        float incDamage = skillinfo[1] * _skillLevel;
+        float percent = 20f;
+        float incDamage = skillinfo[0] * _skillLevel;
 
         List<float> _return = new List<float>();
         _return.Add(percent);

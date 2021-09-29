@@ -25,6 +25,10 @@ public class WeaponManager : MonoBehaviour
 
     bool isFire = false; // 플레이어가 총을 발사하면 true가 된다.
 
+    public float dontUseBulletPercent = 0f;
+    // 총알 사용 안하는 스킬 활성화 여부
+    public bool dontUseBullet = false;
+
     [Space(5)]
     [Header("Weapon Info")]
     [Space(2)]
@@ -135,8 +139,8 @@ public class WeaponManager : MonoBehaviour
         currGun.maxCarryBullet = Mathf.RoundToInt(float.Parse(weaponDict["Weapon_CarryBullet"]) * (1 + (playerCtrl.incCarryBullet * 0.01f)));
         // 무기 공격 속도 증가
         //Debug.Log("Fire Delay: " + currGun.fireDelay);
-        currGun.fireDelay = ((60 / float.Parse(weaponDict["Weapon_AttackSpeed"])) * (1 - (playerCtrl.incAttackSpeed * 0.01f)));
-        //Debug.Log("Fire Delay: " + currGun.fireDelay);
+        currGun.fireDelay = ((60 / float.Parse(weaponDict["Weapon_AttackSpeed"])) * (1 - (playerCtrl.currIncAttackSpeed * 0.01f)));
+        Debug.Log("Fire Delay: " + currGun.fireDelay);
 
 
 
@@ -249,8 +253,9 @@ public class WeaponManager : MonoBehaviour
                 isFire = false;
                 // animation에 bool값을 설정
                 anim.SetBool("IsFire", isFire);
-                // fireTime을 
-                currGun.fireTime = currGun.fireDelay;
+                // 마우스에서 손을 떼도 현재 fireTime을 그대로 유지
+                //// fireTime을 fireDelay로 만들어서 바로 발사할 수 있도록 설정.
+                //currGun.fireTime = 0f;
             }
         }
         WeaponBulletChange();
@@ -274,8 +279,22 @@ public class WeaponManager : MonoBehaviour
                 isFire = true; // 총 발사가 가능한 경우
                 anim.SetBool("IsFire", isFire);
                 canFire = true;
-                // 총 발사를 진행
-                currGun.currBullet -= 1;
+                int percent = 0;
+                if (dontUseBullet)
+                {
+                    percent = UnityEngine.Random.Range(0, 100);
+                    Debug.Log("____Percent: " + percent + "____");
+                }
+                if (!(percent >= (100 - dontUseBulletPercent)))
+                {
+                    // 총 발사를 진행
+                    currGun.currBullet -= 1;
+                }
+                else
+                {
+                    Debug.Log("___Bullet Dont Use!!____");
+                }
+
                 // 발사 이펙트 생성
                 currGun.BulletFire();
                 // 레이 캐스트를 확인해서 판정하는 함수
@@ -329,7 +348,7 @@ public class WeaponManager : MonoBehaviour
         if (target.CompareTag("ENEMY"))
         {
             //Debug.Log("____Gun Damage: " + currGun.damage + "____");
-            target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.addAttack, hitTarget.point, hitTarget.normal);
+            target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
 
             // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
             //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 5f);

@@ -323,9 +323,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4aad336fcd26a4692efeb6e5f698ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHP: 100
+  startHp: 100
   currHP: 0
   damage: 0
+  down: 0
   dead: 0
   target:
     serializedVersion: 2

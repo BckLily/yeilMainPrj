@@ -31,12 +31,41 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// 플레이어 추가 방어력
     /// </summary>
     public float addArmour { get; private set; }
+
+
+    private float addAttack;
+    // 데미지 증가 Perk 발동 확률
+    private float attackPerk_Percent = 0f;
+    private float addAttack_Perk;
     /// <summary>
-    /// 플레이어 추가 공격력
+    /// 현재 플레이어 추가 공격력
     /// </summary>
-    public float addAttack { get; private set; }
+    public float currAddAttack
+    {
+        get
+        {
+            float _value = addAttack;
+
+            if (perk2_Level >= 1)
+            {
+                int percent = UnityEngine.Random.Range(0, 100);
+                if (!(percent >= (100 - attackPerk_Percent)))
+                {
+                    _value += addAttack_Perk;
+                    Debug.Log("___VALUE: " + _value + "___");
+                }
+            }
+
+            return _value;
+        }
+    }
 
     public Image bloodScreen;
+
+    private int statusMaxLevel = 5;
+    private int abilityMaxLevel = 3;
+    private int perkMaxLevel = 1;
+    
 
     #endregion
 
@@ -115,15 +144,34 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     private int perk1_Level = 0;
     private int perk2_Level = 0;
 
-
     #endregion
 
     #region 플레이어 무기 관련 변수
     public WeaponManager weaponManager = null;
+    // 스킬 설정을 잘못해서 스킬을 레벨당 다른 결과 값을 출력하도록 되어있는데
+    // 스킬은 레벨이 한 번에 한 번씩 오르므로 그냥 변수에 한 번 씩 값을 증가시키도록 했으면 됐는데
+    // 다른 결과가 출력되서 증가가 아니라 대입을 시키는 방식으로 되어있어서 어쩔 수 없이 Perk 용의 변수를 따로 만들어야 한다...
+    // 그리고 반환용 변수도 따로 만들어야 한다.....
+    // 수정할 여유가 생기면 스킬은 매번 레벨마다 발생하는 증가값을 반환하게 처리하고
+    // 변수 하나에 더하는 방식으로 하는 것이 좋을 것 같다.
     public float incCarryBullet;
-    public float incAttackSpeed;
+
+    // 증가하는 공격 속도
+    private float incAttackSpeed;
+    // 증가하는 공격 속도 Perk
+    private float incAttackSpeed_Perk;
+    public float currIncAttackSpeed
+    {
+        get
+        {
+            float _value = (incAttackSpeed + incAttackSpeed_Perk);
+            return _value;
+        }
+    }
+
 
     #endregion
+
 
     private void Awake()
     {
@@ -169,10 +217,12 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // DB에서 데이터를 받아오는 식으로.
         // 그냥 프리팹에 기본 데이터를 설정해놓고 그대로 가져와서 처음 값을 설정하는 방식으로 변경.
         // 저번에 쓴적 있는 데이터만 저장해놓는 부분을 만들고 거기서 가져오는 방식으로
+        startHp = 100f;
         addHP = 0f;
         currHP = maxHp;
         addArmour = 0f;
         addAttack = 0f;
+        addAttack_Perk = 0f;
         #region 주석
         /*
          * addHp >> 추가 Status에 영향을 주는 것은 초반엔 직업 밖에 없으므로
@@ -211,22 +261,22 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
          */
         #endregion
 
+        // 시작했을 때 플레이어는 가만히 서있을 것이기 때문에 imMove와 isCrouch에 false를 둔다.
+        // 앉아있다가 달릴때 doCrouch가 true가 되어야 하므로 초기값은 doCrouch가 false가 된다
         isMove = false;
         isCrouch = false;
         doCrouch = false;
-        #region 주석
-        /*
-         * 시작했을 때 플레이어는 가만히 서있을 것이기 때문에 imMove와 isCrouch에 false를 둔다.
-         * 앉아있다가 달릴때 doCrouch가 true가 되어야 하므로 초기값은 doCrouch가 false가 된다
-         */
-        #endregion
 
+
+        // 시작할 때 카메라의 현재 위치를 저장한다.
         cameraPosition = playerCameraTr.localPosition;
-        #region 주석
-        /*
-         * 시작할 때 카메라의 현재 위치를 저장한다.
-         */
-        #endregion
+
+
+        // 무기 관련 변수
+        incAttackSpeed = 0f;
+        incAttackSpeed_Perk = 0f;
+        incCarryBullet = 0f;
+
 
         HPGaugeChange();
 
@@ -254,10 +304,10 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     }
 
     /// <summary>
-    /// 
+    /// 플레이어가 스킬을 획득시 변경되는 값들을 설정하는 함수
     /// </summary>
-    /// <param name="_skillUID"></param>
-    /// <param name="_skillLevel"></param>
+    /// <param name="_playerSkillUID">획득한 스킬 UID</param>
+    /// <param name="_skillLevel">획득한 스킬의 Level</param>
     void PlayerSkillSetting(string _playerSkillUID, int _skillLevel)
     {
         int firstUID;
@@ -291,6 +341,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         string _name = __skillInfo["PlayerSkill_Name"];
         string _skillUID = __skillInfo["PlayerSkill_SkillUID"];
         float _coefficient = float.Parse(__skillInfo["PlayerSkill_Coefficient"]);
+
 
         switch (middleUID)
         {
@@ -343,23 +394,31 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
                         break;
                     case 0002:
-
+                        // Increase Item Healing Point
+                        playerAction.incHealingPoint = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log("___INC HEALING POINT: " + playerAction.incHealingPoint + "___");
 
                         break;
                     case 0003:
-
+                        // Increase Healing Item Use Speed
+                        playerAction.incHealingSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log("___INC HEALING SPEED: " + playerAction.incHealingSpeed + "___");
 
                         break;
                     case 0004:
-
+                        // Increase Build Speed
+                        playerAction.incBuildSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log("___INC BUILD SPEED: " + playerAction.incBuildSpeed + "____");
 
                         break;
                     case 0005:
-
+                        // Increase Repair Speed
+                        playerAction.incRepairSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        Debug.Log("___INC REPAIR SPEED: " + playerAction.incRepairSpeed + "___");
 
                         break;
                     default:
-
+                        Debug.Log("__Wrong UID Input__");
 
                         break;
                 }
@@ -369,42 +428,85 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                 switch (lastUID)
                 {
                     case 0000:
-
+                        if (perk0_Level >= 2) { return; }
+                        // Increase Attack Speed Perk
+                        incAttackSpeed_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
+                        StartCoroutine(weaponManager.WeaponStatusSetting());
+                        Debug.Log("___INC ATTACK SPEED PERK: " + incAttackSpeed_Perk + "___");
 
                         break;
                     case 0001:
+                        // Dont Use Bullet Perk
+                        if (perk1_Level >= 2) { return; }
+                        float _value = (FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0]);
+                        weaponManager.dontUseBulletPercent = _value * _coefficient;
+                        weaponManager.dontUseBullet = (_value == 1f * _skillLevel) ? true : false;
 
+                        Debug.Log("___Dont Use Bullet: " + weaponManager.dontUseBullet + "___");
 
                         break;
                     case 0002:
+                        // Increase Weapon Damage Perk
+                        if (perk2_Level >= 2) { return; }
+                        List<float> _list = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel);
+                        attackPerk_Percent = _list[0];
+                        addAttack_Perk = _list[1] * _coefficient;
+
+                        Debug.Log("___Attack Perk: " + addAttack_Perk + "____");
 
 
                         break;
                     case 0003:
+                        // Increase Healing Point Perk
+                        if (perk0_Level >= 2) { return; }
+                        // 회복 아이템의 회복량 증가
+                        playerAction.incHealingPoint_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
+                        Debug.Log("____ Healing Point Perk Increase ____");
 
                         break;
                     case 0004:
+                        // Increase Healing Speed Perk 
+                        if (perk1_Level >= 2) { return; }
+                        playerAction.incHealingSpeed_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
+                        Debug.Log("____ Healing Speed Perk Increase ____");
 
                         break;
                     case 0005:
+                        // Dont Use Healing Item Perk
+                        if (perk2_Level >= 2) { return; }
+                        playerAction.dontUseHealingItem_Percent = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
+                        Debug.Log("____ Healing Item Dont Use ____");
 
                         break;
                     case 0006:
+                        // Increase Build Speed Perk
+                        if (perk0_Level >= 2) { return; }
+                        playerAction.incBuildSpeed_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
+                        Debug.Log("____ Build Speed Up Perk ____" + playerAction.incBuildSpeed_Perk);
 
                         break;
                     case 0007:
+                        // Increase Building Max Health Point Perk
+                        if (perk1_Level >= 2) { return; }
+                        playerAction.incBuildMaxHealthPoint = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
+                        Debug.Log("___ Building Max Health Point Incrase ____" + playerAction.incBuildMaxHealthPoint);
 
                         break;
                     case 0008:
+                        // Building Auto Repair Perk
+                        playerAction.buildingAutoRepair = (FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] == 1);
+
+                        Debug.Log("____ Building Auto Repair ____" + playerAction.buildingAutoRepair);
 
 
                         break;
                     default:
+                        Debug.Log("__Wrong UID Input__");
 
 
                         break;
@@ -412,6 +514,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
                 break;
             default:
+                Debug.Log("__Wrong UID Input__");
                 Debug.Log("Middle UID: " + middleUID);
                 Debug.Log("Last UID: " + lastUID);
 
@@ -427,34 +530,42 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     {
         if (_skillUID == classDict["StatusSkill0_UID"])
         {
+            if (status0_Level < statusMaxLevel) { status0_Level++; }
             PlayerSkillSetting(classDict["StatusSkill0_UID"], status0_Level);
         }
         else if (_skillUID == classDict["StatusSkill1_UID"])
         {
+            if(status1_Level < statusMaxLevel) { status1_Level++; }
             PlayerSkillSetting(classDict["StatusSkill1_UID"], status1_Level);
         }
         else if (_skillUID == classDict["StatusSkill2_UID"])
         {
+            if(status2_Level < statusMaxLevel ) { status2_Level++; }
             PlayerSkillSetting(classDict["StatusSkill2_UID"], status2_Level);
         }
         else if (_skillUID == classDict["AbilitySkill0_UID"])
         {
+            if(ability0_Level < abilityMaxLevel) { ability0_Level++; }
             PlayerSkillSetting(classDict["AbilitySkill0_UID"], ability0_Level);
         }
         else if (_skillUID == classDict["AbilitySkill1_UID"])
         {
+            if (ability1_Level < abilityMaxLevel) { ability1_Level++; }
             PlayerSkillSetting(classDict["AbilitySkill1_UID"], ability1_Level);
         }
         else if (_skillUID == classDict["Perk0_UID"])
         {
+            if(perk0_Level < perkMaxLevel) { perk0_Level++; }
             PlayerSkillSetting(classDict["Perk0_UID"], perk0_Level);
         }
         else if (_skillUID == classDict["Perk1_UID"])
         {
+            if(perk1_Level < perkMaxLevel) { perk1_Level++; }
             PlayerSkillSetting(classDict["Perk1_UID"], perk1_Level);
         }
         else if (_skillUID == classDict["Perk2_UID"])
         {
+            if (perk2_Level < perkMaxLevel) { perk2_Level++; }
             PlayerSkillSetting(classDict["Perk2_UID"], perk2_Level);
         }
     }
@@ -508,7 +619,14 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             status0_Level += 1;
-            PlayerSkillSetting(classDict["AbilitySkill1_UID"], status0_Level);
+            if (perk2_Level == 0)
+            {
+                perk2_Level += 1;
+                Debug.Log("___PERK 2:" + perk2_Level + "___");
+            }
+            PlayerSkillSetting(classDict["Perk0_UID"], status0_Level);
+            PlayerSkillSetting(classDict["Perk1_UID"], status0_Level);
+            PlayerSkillSetting(classDict["Perk2_UID"], perk2_Level);
         }
 
         //// 체력 감소 테스트 코드
