@@ -3527,6 +3527,7 @@ MonoBehaviour:
   playerCameraTr: {fileID: 963194228}
   leftHandTr: {fileID: 2570782436213453580}
   cameraRaycast: {fileID: 818480284}
+  currGun: {fileID: 0}
   anim: {fileID: 3410318660562277931}
   dontUseBulletPercent: 0
   dontUseBullet: 0
@@ -4766,7 +4767,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: <b>Repari Speed Up</b>
+  m_Text: <b>Repair Speed Up</b>
 --- !u!1 &8284405293702371051
 GameObject:
   m_ObjectHideFlags: 0
@@ -4860,6 +4861,7 @@ MonoBehaviour:
   playerHpImage: {fileID: 123284233}
   playerHpText: {fileID: 98338588}
   bloodScreen: {fileID: 2011612019}
+  level: 1
   controller: {fileID: -3133774589751300096}
   playerCameraTr: {fileID: 963194228}
   playerAnim: {fileID: 3410318660562277931}
