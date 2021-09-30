@@ -33,10 +33,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     public float addArmour { get; private set; }
 
 
-    private float addAttack;
+    //private float addAttack =0f;
+    internal float addAttack =0f;
     // 데미지 증가 Perk 발동 확률
     private float attackPerk_Percent = 0f;
-    private float addAttack_Perk;
+    private float addAttack_Perk = 0f;
     /// <summary>
     /// 현재 플레이어 추가 공격력
     /// </summary>
@@ -52,7 +53,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                 if (!(percent >= (100 - attackPerk_Percent)))
                 {
                     _value += addAttack_Perk;
-                    Debug.Log("___VALUE: " + _value + "___");
+                    //Debug.Log("___VALUE: " + _value + "___");
                 }
             }
 
@@ -65,7 +66,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     private int statusMaxLevel = 5;
     private int abilityMaxLevel = 3;
     private int perkMaxLevel = 1;
-    
+
+    public int level = 1;
 
     #endregion
 
@@ -279,9 +281,14 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
         HPGaugeChange();
-
     }
 
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        currHP = maxHp;
+    }
 
 
     #region 플레이어 직업을 세팅하고 직업 관련 데이터를 가져오는 함수 관련

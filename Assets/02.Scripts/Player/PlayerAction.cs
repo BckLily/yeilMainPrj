@@ -24,7 +24,7 @@ public class PlayerAction : MonoBehaviour
     /// <summary>
     /// 회복 아이템 사용시 회복되는 현재 수치
     /// </summary>
-    private float currHealingPoint { get { return healingPoint * (1 + ((incHealingPoint + incHealingPoint_Perk) * 0.01f)); } }
+    public float currHealingPoint { get { return healingPoint * (1 + ((incHealingPoint + incHealingPoint_Perk) * 0.01f)); } }
 
     private float healingSpeed; // 회복 아이템 사용시 걸리는 시간.
     public float incHealingSpeed; // 증가한 회복 아이템 사용 속도
@@ -32,7 +32,7 @@ public class PlayerAction : MonoBehaviour
     /// <summary>
     /// 회복 아이템 사용 속도의 현재 수치
     /// </summary>
-    private float currHealingSpeed
+    public float currHealingSpeed
     {
         get
         {
@@ -51,7 +51,7 @@ public class PlayerAction : MonoBehaviour
     /// <summary>
     /// 방어 물자 건설 시 걸리는 시간
     /// </summary>
-    private float currBuildSpeed
+    public float currBuildSpeed
     {
         get
         {
@@ -66,7 +66,7 @@ public class PlayerAction : MonoBehaviour
     /// <summary>
     /// 현재 방어물자 수리 속도
     /// </summary>
-    private float currRepariSpeed
+    public float currRepariSpeed
     {
         get
         {

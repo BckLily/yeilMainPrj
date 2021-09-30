@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// Weapon Controller
 public class WeaponManager : MonoBehaviour
 {
     public PlayerCtrl playerCtrl; // 플레이어 컨트롤 스크립트
@@ -14,7 +16,7 @@ public class WeaponManager : MonoBehaviour
     public CameraRaycast cameraRaycast; // 플레이어 카메라의 CameraRaycast
 
     private GameObject currWeaponObj; // 현재 총
-    private Guns currGun; // 현재 총이 가지고 있는 Gun Script
+    public Guns currGun; // 현재 총이 가지고 있는 Gun Script
 
     private bool isReload; // 플레이어가 재장전을 하고 있는가?
 
