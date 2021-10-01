@@ -9,6 +9,15 @@ public class PlayerUI : MonoBehaviour
     public WeaponManager weaponManager;
     public PlayerAction playerAction;
 
+
+    #region Status UI
+
+    // 플레이어 스탯 UI
+    public GameObject playerStatusUI;
+    // 플레이어 스탯 UI가 열려있는가
+    private bool statusUIisOpen = false;
+
+
     // 플레이어 이름 텍스트
     public Text nameText;
     // 플레이어 currHp / maxHp 텍스트
@@ -38,41 +47,132 @@ public class PlayerUI : MonoBehaviour
     // 방어 물자 자동 회복 playerAction.autoRepair
     public Text autoRepairText;
 
+    Coroutine coUIUpdate;
+
+    #endregion
+
+    #region Player Skill
+    // 스킬 포인트를 가지고 있다는 것을 알려주는 오브젝트
+    public GameObject skillPointInfoObj;
+
+    #endregion 
+
+
+
     private void Start()
     {
-        StartCoroutine(StatusUIActive(true));
+        statusUIisOpen = false;
+        //statusUIisOpen = playerStatusUI.activeSelf;
+        //StartCoroutine(StatusUIActive());
+
+        StartCoroutine(HaveSkillPoint());
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            statusUIisOpen = !statusUIisOpen;
 
-    }
-
-    public IEnumerator StatusUIActive(bool _active)
-    {
-        while (true) {
-            yield return new WaitForSeconds(2f);
             try
             {
-                nameText.text = playerCtrl.playerName;
-                hpText.text = playerCtrl.currHP.ToString() + " / " + playerCtrl.maxHp.ToString();
-                classText.text = playerCtrl.playerClass.ToString();
-                levelText.text = playerCtrl.level.ToString();
-                armourText.text = playerCtrl.addArmour.ToString();
-                weaponText.text = weaponManager.weaponNameText.text;
-                damageText.text = (weaponManager.currGun.damage + playerCtrl.addAttack).ToString();
-                attackSpeedText.text = weaponManager.currGun.fireDelay.ToString();
-                healingPointText.text = playerAction.currHealingPoint.ToString();
-                healingSpeedText.text = playerAction.currHealingSpeed.ToString();
-                repairSpeedText.text = playerAction.currRepariSpeed.ToString();
-                autoRepairText.text = playerAction.buildingAutoRepair.ToString();
-                buildSpeedText.text = playerAction.currBuildSpeed.ToString();
+                playerStatusUI.SetActive(statusUIisOpen);
             }
             catch (System.Exception e)
             {
-                Debug.LogWarning(e);
+#if UNITY_EDITOR
+                Debug.LogWarning(e.GetType());
+#endif
             }
+
+            if (statusUIisOpen == true)
+                coUIUpdate = StartCoroutine(StatusUIActive());
+        }
     }
+
+    private IEnumerator HaveSkillPoint()
+    {
+        float _alphaChange = 0.1f;
+        while (true)
+        {
+
+            while (playerCtrl.skillPoint >= 1)
+            {
+
+                Color _color = skillPointInfoObj.GetComponent<UnityEngine.UI.Image>().color;
+                _color.a += _alphaChange;
+                skillPointInfoObj.GetComponent<UnityEngine.UI.Image>().color = _color;
+
+                if (_color.a >= 1f || _color.a <= 0f)
+                {
+                    _alphaChange *= -1f;
+                }
+
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return null;
+        }
+
+    }
+
+
+
+    public IEnumerator StatusUIActive()
+    {
+        while (statusUIisOpen)
+        {
+            try
+            {
+                nameText.text = $"{playerCtrl.playerName.ToString()}";
+                hpText.text = $"{playerCtrl.currHP.ToString()} / {playerCtrl.maxHp.ToString()}";
+
+                string classToKorean;
+
+                switch (playerCtrl.playerClass)
+                {
+                    case PlayerClass.ePlayerClass.Soldier:
+                        classToKorean = "소총병";
+                        break;
+                    case PlayerClass.ePlayerClass.Medic:
+                        classToKorean = "의무병";
+                        break;
+                    case PlayerClass.ePlayerClass.Engineer:
+                        classToKorean = "공병";
+                        break;
+                    default:
+                        classToKorean = "오류 발생";
+                        break;
+                }
+
+                classText.text = $"{classToKorean.ToString()}";
+
+
+                levelText.text = $"{playerCtrl.level.ToString()}";
+                armourText.text = $"{playerCtrl.addArmour.ToString()}";
+                weaponText.text = $"{weaponManager.weaponNameText.text.ToString()}";
+                damageText.text = $"{(weaponManager.currGun.damage + playerCtrl.addAttack).ToString()}";
+                attackSpeedText.text = $"{weaponManager.currGun.fireDelay.ToString()}";
+                healingPointText.text = $"{playerAction.currHealingPoint.ToString()}";
+                healingSpeedText.text = $"{playerAction.currHealingSpeed.ToString()}";
+                repairSpeedText.text = $"{playerAction.currRepariSpeed.ToString()}";
+                buildSpeedText.text = $"{playerAction.currBuildSpeed.ToString()}";
+
+                string autoRepair = playerAction.buildingAutoRepair ? "보유" : "미보유";
+
+                autoRepairText.text = $"{autoRepair.ToString()}";
+
+            }
+            catch (System.Exception e)
+            {
+#if UNITY_EDITOR
+                Debug.LogWarning(e.GetType());
+#endif
+            }
+            yield return new WaitForSeconds(1f);
+
+        }
+
+        yield break;
     }
 
 

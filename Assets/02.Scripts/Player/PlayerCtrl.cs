@@ -34,7 +34,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
     //private float addAttack =0f;
-    internal float addAttack =0f;
+    internal float addAttack = 0f;
     // 데미지 증가 Perk 발동 확률
     private float attackPerk_Percent = 0f;
     private float addAttack_Perk = 0f;
@@ -68,6 +68,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     private int perkMaxLevel = 1;
 
     public int level = 1;
+    public float _exp = 0f;
+    public int skillPoint = 0;
 
     #endregion
 
@@ -211,7 +213,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
         controller.enabled = true;
-
+        
 
 
         // 지금은 그냥 설정하고 있지만 나중에는 Init함수를 만들어서 PlayerClassSetting 코루틴의 마지막에 함수를 실행하는 방식으로 변경
@@ -542,17 +544,17 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else if (_skillUID == classDict["StatusSkill1_UID"])
         {
-            if(status1_Level < statusMaxLevel) { status1_Level++; }
+            if (status1_Level < statusMaxLevel) { status1_Level++; }
             PlayerSkillSetting(classDict["StatusSkill1_UID"], status1_Level);
         }
         else if (_skillUID == classDict["StatusSkill2_UID"])
         {
-            if(status2_Level < statusMaxLevel ) { status2_Level++; }
+            if (status2_Level < statusMaxLevel) { status2_Level++; }
             PlayerSkillSetting(classDict["StatusSkill2_UID"], status2_Level);
         }
         else if (_skillUID == classDict["AbilitySkill0_UID"])
         {
-            if(ability0_Level < abilityMaxLevel) { ability0_Level++; }
+            if (ability0_Level < abilityMaxLevel) { ability0_Level++; }
             PlayerSkillSetting(classDict["AbilitySkill0_UID"], ability0_Level);
         }
         else if (_skillUID == classDict["AbilitySkill1_UID"])
@@ -562,12 +564,12 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else if (_skillUID == classDict["Perk0_UID"])
         {
-            if(perk0_Level < perkMaxLevel) { perk0_Level++; }
+            if (perk0_Level < perkMaxLevel) { perk0_Level++; }
             PlayerSkillSetting(classDict["Perk0_UID"], perk0_Level);
         }
         else if (_skillUID == classDict["Perk1_UID"])
         {
-            if(perk1_Level < perkMaxLevel) { perk1_Level++; }
+            if (perk1_Level < perkMaxLevel) { perk1_Level++; }
             PlayerSkillSetting(classDict["Perk1_UID"], perk1_Level);
         }
         else if (_skillUID == classDict["Perk2_UID"])
@@ -625,14 +627,15 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            status0_Level += 1;
+            skillPoint += 1;
+            if (perk0_Level == 0)
+                perk0_Level += 1;
+            if (perk1_Level == 0)
+                perk1_Level += 1;
             if (perk2_Level == 0)
-            {
                 perk2_Level += 1;
-                Debug.Log("___PERK 2:" + perk2_Level + "___");
-            }
-            PlayerSkillSetting(classDict["Perk0_UID"], status0_Level);
-            PlayerSkillSetting(classDict["Perk1_UID"], status0_Level);
+            PlayerSkillSetting(classDict["Perk0_UID"], perk0_Level);
+            PlayerSkillSetting(classDict["Perk1_UID"], perk1_Level);
             PlayerSkillSetting(classDict["Perk2_UID"], perk2_Level);
         }
 
