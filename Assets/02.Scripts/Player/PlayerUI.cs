@@ -52,11 +52,17 @@ public class PlayerUI : MonoBehaviour
     #endregion
 
     #region Player Skill
+
     // 스킬 포인트를 가지고 있다는 것을 알려주는 오브젝트
     public GameObject skillPointInfoObj;
+    public bool havingSkillPoint_isRunning = false;
+
+    // 획득할 수 있는 스킬을 표시해주는 오브젝트
+    public GameObject skillSelectObj;
+    public bool selectObjisOpen = false;
+
 
     #endregion 
-
 
 
     private void Start()
@@ -65,11 +71,12 @@ public class PlayerUI : MonoBehaviour
         //statusUIisOpen = playerStatusUI.activeSelf;
         //StartCoroutine(StatusUIActive());
 
-        StartCoroutine(HaveSkillPoint());
     }
 
     private void Update()
     {
+
+        // O(o) 키를 누르면 스탯 UI 창을 켰다 껐다한다.
         if (Input.GetKeyDown(KeyCode.O))
         {
             statusUIisOpen = !statusUIisOpen;
@@ -88,35 +95,70 @@ public class PlayerUI : MonoBehaviour
             if (statusUIisOpen == true)
                 coUIUpdate = StartCoroutine(StatusUIActive());
         }
+        // 스킬 포인트를 가지고 있을 경우 스킬 선택 UI를 켜고
+        // 스킬 선택 UI가 켜져있을 경우 끌 수 있게 한다.
+        else if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if (playerCtrl.skillPoint >= 1 && skillSelectObj.activeSelf == false)
+            {
+                Cursor.lockState = UnityEngine.CursorLockMode.None; // 커서 고정을 끈다
+                skillSelectObj.SetActive(true);
+            }
+            else if (skillSelectObj.activeSelf == true)
+            {
+                Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
+                skillSelectObj.SetActive(false);
+            }
+
+            selectObjisOpen = skillSelectObj.activeSelf;
+        }
     }
 
-    private IEnumerator HaveSkillPoint()
+
+    /// <summary>
+    /// 스킬 포인트를 가지고 있을 경우 Level 표시 근처에 켜졌다 꺼졌다하는 표시 갱신 코루틴. 
+    /// <br/>스킬 포인트를 획득하면 실행된다.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator HaveSkillPoint()
     {
         float _alphaChange = 0.1f;
-        while (true)
+        havingSkillPoint_isRunning = true;
+
+        Image _image = skillPointInfoObj.GetComponent<UnityEngine.UI.Image>();
+        Color _color = _image.color;
+
+        while (playerCtrl.skillPoint >= 1)
         {
+            // UI Image의 color 값을 가져와서 alpha 값으 변경해준뒤 다시 대입하는 방식.
+            // 직접 대입하는 방식이 되지 않는 것으로 알고 있다.
+            _color.a += _alphaChange;
+            _image.color = _color;
 
-            while (playerCtrl.skillPoint >= 1)
+            // alpha 값은 0~1이고 최대로 차거나 최소로 줄어들면 증가하는 값이 반대로 바뀐다.
+            if (_color.a >= 1f || _color.a <= 0f)
             {
-
-                Color _color = skillPointInfoObj.GetComponent<UnityEngine.UI.Image>().color;
-                _color.a += _alphaChange;
-                skillPointInfoObj.GetComponent<UnityEngine.UI.Image>().color = _color;
-
-                if (_color.a >= 1f || _color.a <= 0f)
-                {
-                    _alphaChange *= -1f;
-                }
-
-                yield return new WaitForSeconds(0.1f);
+                _alphaChange *= -1f;
             }
-            yield return null;
+
+            yield return new WaitForSeconds(0.15f);
         }
 
+        _color.a = 0f;
+        _image.color = _color;
+
+        // havingSkillPoint Coroutine이 끝났으므로 false로 만들어 준다.
+        havingSkillPoint_isRunning = false;
+
+
+        //Debug.Log($"Skill Point: Done");
     }
 
 
-
+    /// <summary>
+    /// 스탯 UI를 활성화하고 갱신하는 코루틴
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator StatusUIActive()
     {
         while (statusUIisOpen)
@@ -168,7 +210,7 @@ public class PlayerUI : MonoBehaviour
                 Debug.LogWarning(e.GetType());
 #endif
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
         }
 

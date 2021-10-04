@@ -18,6 +18,8 @@ public class ItemGun : ScriptableObject
         Common =0, Rare=1, Epic=2,
     }
     
+    // 프로퍼티는 대문자로 작성하는게 맞나봄.
+    // 대문자로 시작해야한다고 표시가 계속 나오네
     public GunType gunType { get; private set; } // 무기 종류 변수
     public GunRarity gunRarity { get; private set; } // 무기 레어도 변수
 
