@@ -277,7 +277,7 @@ public class WeaponManager : MonoBehaviour
         // 현재 장전된 총알이 1발 이상인 경우
         if (currGun.currBullet > 0)
         {
-            Debug.Log("Fire Delay On FIre: " + currGun.fireDelay);
+            //Debug.Log("Fire Delay On FIre: " + currGun.fireDelay);
             // 총 발사 딜레이보다 총을 쏘고 지난 시간이 더 크거나 같을 경우
             if (currGun.fireDelay <= currGun.fireTime)
             {

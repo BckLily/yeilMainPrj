@@ -396,7 +396,7 @@ public class FindPlayerSkill
 
         object playerSkillObj = playerSkillMethod.Invoke(playerSkill, new object[] { _skillName, _skillLevel });
 
-        Debug.Log("___Object: " + playerSkillObj + "___");
+        //Debug.Log("___Object: " + playerSkillObj + "___");
 
         Debug.Log("____END FIND PLAYER SKILL____");
 

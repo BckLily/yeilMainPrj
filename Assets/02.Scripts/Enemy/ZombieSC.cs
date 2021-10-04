@@ -27,12 +27,12 @@ public class ZombieSC : LivingEntity
     Coroutine co_updatePath;
     Coroutine co_chageTarget;
 
-    public enum eCharacterState
-    {
-        Trace,
-        Attack,
-        Die
-    }
+    //public enum eCharacterState
+    //{
+    //    Trace,
+    //    Attack,
+    //    Die
+    //}
 
     List<GameObject> list = new List<GameObject>();
 
@@ -46,14 +46,14 @@ public class ZombieSC : LivingEntity
         Setup();
     }
 
-    public void Setup(float newHP = 20f, float newSpeed = 3f, float newDamage = 10f)
+    public void Setup(float newHP = 20f, float newAP = 0f, float newSpeed = 3f, float newDamage = 10f)
     {
         startHp = newHP;
         currHP = newHP;
+        armour = newAP;
         damage = newDamage;
         pathFinder.speed = newSpeed;
     }
-
     /// <summary>
     /// 애니매이션 Duration 값 얻기
     /// </summary>
@@ -161,23 +161,24 @@ public class ZombieSC : LivingEntity
     {
         if (other.CompareTag("PLAYER"))
         {
-            //Debug.Log("Player Contact");
+            Debug.Log("Player Contact");
             if (!list.Contains(other.gameObject))
             {
                 list.Add(other.gameObject);
                 isTrace = false;
 
                 Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);
-               
+
                 Vector3 hitNormal = new Vector3(hitPoint.x, hitPoint.y, hitPoint.z).normalized;
 
                 ZombieSC zombie = other.GetComponent<ZombieSC>();
-                other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal); ;
+                other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
 
-                //Debug.Log("HIT");
+                Debug.Log("HIT");
             }
             else
                 return;
+
 
         }
     }
@@ -256,7 +257,7 @@ public class ZombieSC : LivingEntity
 
     IEnumerator EndAttacking(float _delaytime)
     {
-        yield return new WaitForSeconds(_delaytime);
+        yield return new WaitForSeconds(_delaytime * 0.8f);
         isAttacking = false;
         pathFinder.enabled = true;
         NowTrace();
@@ -266,7 +267,6 @@ public class ZombieSC : LivingEntity
     {
         base.Down();
         Die();
-        //pathFinder.enabled = false;
     }
 
 

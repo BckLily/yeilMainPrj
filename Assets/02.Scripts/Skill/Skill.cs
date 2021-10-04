@@ -212,8 +212,8 @@ public class FindSkill
         // 입력한 스킬의 이름과 같은 스킬을 Skill class에서 찾는다.
         MethodInfo skillMethod = tp.GetMethod(_skillName);
 
-        Debug.Log(_skillName);
-        Debug.Log(skillMethod);
+        //Debug.Log(_skillName);
+        //Debug.Log(skillMethod);
 
         Skill _skill = new Skill();
 

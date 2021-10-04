@@ -5,8 +5,16 @@ using InterfaceSet;
 //using System;
 public class LivingEntity : MonoBehaviour, IAttack, IDamaged
 {
+    public enum eCharacterState
+    {
+        Trace,
+        Attack,
+        Die
+    }
+
     public float startHp = 100f; // 시작 체력
     public float currHP;
+    public float armour;
     public float damage;
     public bool down;
     public bool dead;
@@ -26,12 +34,9 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
     public virtual void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal) // 피헤 받을시 실행될 함수 (데미지, 피격 위치, 피격 방향)
     {
         currHP -= damage; // 현재체력에 데미지 만큼 감소
-
-        Debug.Log(currHP);
-
         if (currHP <= 0 && !dead) // 현재체력이 0보다 작고 사망 상태가 아닐떄
         {
-            Down(); // Down 함수 실행
+            Down(); // DIE 함수 실행
         }
     }
 
