@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerUI : MonoBehaviour
+
+public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHandler
 {
     public PlayerCtrl playerCtrl;
     public WeaponManager weaponManager;
     public PlayerAction playerAction;
-
+    public PlayerSkillManager playerSkillManager;
 
     #region Status UI
 
@@ -53,6 +54,8 @@ public class PlayerUI : MonoBehaviour
 
     #region Player Skill
 
+
+
     // 스킬 포인트를 가지고 있다는 것을 알려주는 오브젝트
     public GameObject skillPointInfoObj;
     public bool havingSkillPoint_isRunning = false;
@@ -61,12 +64,20 @@ public class PlayerUI : MonoBehaviour
     public GameObject skillSelectObj;
     public bool selectObjisOpen = false;
 
+    // 획득할 수 있는 스킬의 정보를 표시해주는 Object 리스트
+    public List<GameObject> skillInfo_ObjList = new List<GameObject>();
 
-    #endregion 
+    // 획득할 수 있는 스킬의 정보를 표시해줄 Image와 Text
+    public List<UnityEngine.UI.Image> skillInfo_ImageList = new List<Image>();
+    public List<UnityEngine.UI.Text> skillInfo_TextList = new List<Text>();
+
+    #endregion
 
 
     private void Start()
     {
+        playerSkillManager = GetComponent<PlayerSkillManager>();
+
         statusUIisOpen = false;
         //statusUIisOpen = playerStatusUI.activeSelf;
         //StartCoroutine(StatusUIActive());
@@ -101,12 +112,14 @@ public class PlayerUI : MonoBehaviour
         {
             if (playerCtrl.skillPoint >= 1 && skillSelectObj.activeSelf == false)
             {
-                Cursor.lockState = UnityEngine.CursorLockMode.None; // 커서 고정을 끈다
+                //Cursor.lockState = UnityEngine.CursorLockMode.None; // 커서 고정을 끈다
+                CursorState.CursorLockedSetting(false); // 커서 고정을 끈다.
                 skillSelectObj.SetActive(true);
             }
             else if (skillSelectObj.activeSelf == true)
             {
-                Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
+                //Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
+                CursorState.CursorLockedSetting(true); // 커서를 고정한다.
                 skillSelectObj.SetActive(false);
             }
 
@@ -188,7 +201,6 @@ public class PlayerUI : MonoBehaviour
 
                 classText.text = $"{classToKorean.ToString()}";
 
-
                 levelText.text = $"{playerCtrl.level.ToString()}";
                 armourText.text = $"{playerCtrl.addArmour.ToString()}";
                 weaponText.text = $"{weaponManager.weaponNameText.text.ToString()}";
@@ -216,6 +228,52 @@ public class PlayerUI : MonoBehaviour
 
         yield break;
     }
+
+
+    #region Button 기능
+
+
+    public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
+    {
+        // 스킬 포인트를 1감소 시킨다.
+        playerCtrl.skillPoint -= 1;
+
+        // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
+        playerSkillManager.skillSettingComplete = false;
+
+        //Debug.Log("____Press Event: " + eventData.pointerCurrentRaycast.ToString());
+        if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[0].name)
+        {
+            //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
+
+            playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[0]);
+        }
+        else if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[1].name.ToString())
+        {
+            //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
+
+            playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[1]);
+        }
+        else if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[2].name.ToString())
+        {
+            //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
+
+            playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[2]);
+        }
+
+        // 레벨을 올릴 스킬을 선택했으므로 스킬 선택 창을 끈다.
+        skillSelectObj.SetActive(false);
+        // 스킬 창을 껐으므로 커서를 중앙에 다시 고정시킨다.
+        // 스킬 포인트가 없어서 스킬 획득 창이 더 표시가 되지 않을 경우에만 동작한다.
+        if (playerCtrl.skillPoint <= 0)
+        {
+            CursorState.CursorLockedSetting(true);
+        }
+
+    }
+
+
+    #endregion
 
 
 

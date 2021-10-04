@@ -50,9 +50,187 @@ public class PlayerSkillManager : MonoBehaviour
     /// <returns></returns>
     internal IEnumerator SelectSkillSetting()
     {
+        CursorState.CursorLockedSetting(false);
+
+        string imagePath = "Player/Images/Skills/";
+        string imageName = "_img";
+
+        playerUI.skillSelectObj.SetActive(true);
+
+        for (int i = 0; i < 3; i++)
+        {
+            // 설정된 스킬의 정보를 가져온다.
+            Dictionary<string, string> skillInfo = DBManager.Instance.GetPlayerSkill(playerCtrl._select_SkillList[i]);
+            playerUI.skillInfo_ImageList[i].sprite = Resources.Load<Sprite>($"{imagePath}{skillInfo["PlayerSkill_Name"]}{imageName}");
+
+            if (playerCtrl._select_SkillList[i] == "030000000")
+            {
 
 
-        yield return null;
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"공격력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $" 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030000001")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"방어력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $" 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030000002")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"최대 체력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $" 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030010000")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"보유 최대 총알이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030010001")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"공격 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030010002")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"아이템 회복량이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $" 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030010003")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"아이템 사용 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030010004")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"건설 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030010005")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"]}</size></b>\n" +
+                    $"수리 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            // 레벨업으로 인한 스킬 선택에 Perk은 표시되지 않는다.
+            /*
+            else if (playerCtrl._select_SkillList[i] == "030020000")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"공격 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020001")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"]}</size></b>\n" +
+                    $"<color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 확률로\n총알을 사용하지 않게 됩니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020002")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"<color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 확률로\n 대폭 증가한 데미지를 입힙니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020003")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"아아템 회복량이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $" 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020004")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"아이템 사용 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], perk1_Level + 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020005")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"<color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], perk2_Level + 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 확률로\n아이템을 사용하지 않게 됩니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020006")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"건설 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], perk0_Level + 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"% 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020007")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"건설한 건물의 최대 체력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], perk1_Level + 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $" 증가합니다.";
+            }
+            else if (playerCtrl._select_SkillList[i] == "030020008")
+            {
+
+
+                //playerUI.skillInfo_ImageList
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                    $"건설한 건물이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], perk2_Level + 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
+                    $"의 자동회복을 가집니다.";
+            }
+            */
+
+            yield return null;
+        }
+
     }
 
 

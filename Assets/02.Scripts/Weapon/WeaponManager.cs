@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
@@ -136,9 +137,11 @@ public class WeaponManager : MonoBehaviour
 
     public IEnumerator WeaponStatusSetting()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.15f);
         // 최대 보유 총알 수 설정
         currGun.maxCarryBullet = Mathf.RoundToInt(float.Parse(weaponDict["Weapon_CarryBullet"]) * (1 + (playerCtrl.incCarryBullet * 0.01f)));
+        //Debug.Log("___ Max Carry Bullet: " + currGun.maxCarryBullet + " ___");
+        currGun.carryBullet = currGun.maxCarryBullet - currGun.reloadBullet;
         // 무기 공격 속도 증가
         //Debug.Log("Fire Delay: " + currGun.fireDelay);
         currGun.fireDelay = ((60 / float.Parse(weaponDict["Weapon_AttackSpeed"])) * (1 - (playerCtrl.currIncAttackSpeed * 0.01f)));
@@ -364,6 +367,7 @@ public class WeaponManager : MonoBehaviour
     }
 
     #endregion
+
 
     #region UI Setting
     /// <summary>

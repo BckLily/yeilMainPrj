@@ -745,6 +745,44 @@ public class DBManager : MonoBehaviour
 
 
     /// <summary>
+    /// 플레이어의 직업을 받으면 그 직업에 관련된 Dictionary 데이터를 반환
+    /// </summary>
+    public Dictionary<string, string> GetMonsterInfo(string _monsterUID)
+    {
+        string jsonString = null;
+        try
+        {
+            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
+            jsonString = File.ReadAllText(streamingAssetPath + jsonPath + monsterPath + _monsterUID.ToString() + ".json");
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning(e);
+            return null;
+        }
+
+        JsonData monsterInfoData = JsonMapper.ToObject(jsonString);
+
+        //Debug.Log(classData["ClassName"].ToString());
+
+        Dictionary<string, string> _monsterInfoDict = new Dictionary<string, string>();
+
+
+        _monsterInfoDict.Add("Monster_UID", monsterInfoData["Monster_UID"].ToString());
+        _monsterInfoDict.Add("Monster_Name", monsterInfoData["Monster_Name"].ToString());
+        _monsterInfoDict.Add("Monster_Hp", monsterInfoData["Monster_Hp"].ToString());
+        _monsterInfoDict.Add("Monster_Armour", monsterInfoData["Monster_Armour"].ToString());
+        _monsterInfoDict.Add("Monster_MoveSpeed", monsterInfoData["Monster_MoveSpeed"].ToString());
+        _monsterInfoDict.Add("Monster_Damage", monsterInfoData["Monster_Damage"].ToString());
+        _monsterInfoDict.Add("Monster_AttackDistance", monsterInfoData["Monster_AttackDistance"].ToString());
+        _monsterInfoDict.Add("Monster_AttackSpeed", monsterInfoData["Monster_AttackSpeed"].ToString());
+        _monsterInfoDict.Add("Monster_Exp", monsterInfoData["Monster_Exp"].ToString());
+        _monsterInfoDict.Add("Monster_SkillUID", monsterInfoData["Monster_SkillUID"].ToString());
+
+        return _monsterInfoDict;
+    }
+
+    /// <summary>
     /// DB에서 모든 몬스터 정보를 가져오는 코루틴
     /// </summary>
     /// <returns></returns>

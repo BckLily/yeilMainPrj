@@ -4,6 +4,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 커서 상태를 설정하기 위해서 만든 클래스
+/// </summary>
+internal class CursorState
+{
+    /// <summary>
+    /// 커서를 고정시키는 함수
+    /// </summary>
+    /// <param name="_state">true는 고정, false는 고정 해제</param>
+    public static void CursorLockedSetting(bool _state)
+    {    // Cursor.lockState = CorsorLockMode.None; // 커서 고정을 끈다
+         // Cursor.lockState = CorsorLockMode.Confine; // 커서를 경계를 벗어나지 못하게 한다.
+         //Cursor.visible = true; // 커서를 보이게 한다.
+        if (_state)
+        {
+            Cursor.lockState = UnityEngine.CursorLockMode.Locked; // 커서를 고정한다.
+            Cursor.visible = false; // 커서 보이지 않게 한다
+        }
+        else
+        {
+            Cursor.lockState = UnityEngine.CursorLockMode.None; // 커서 고정을 끈다
+            Cursor.visible = true; // 커서를 보이게 한다.
+
+        }
+    }
+
+}
+
+
 public class PlayerAction : MonoBehaviour
 {
     private Transform tr; // 플레이어의 Transform
@@ -134,11 +163,7 @@ public class PlayerAction : MonoBehaviour
         incRepairSpeed = 0f;
 
 
-        Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
-        // Cursor.lockState = CorsorLockMode.None; // 커서 고정을 끈다
-        // Cursor.lockState = CorsorLockMode.Confine; // 커서를 경계를 벗어나지 못하게 한다.
-        Cursor.visible = true; // 커서를 보이게 한다.
-                               //Cursor.visible = false; // 커서 보이지 않게 한다.
+        CursorState.CursorLockedSetting(true);
 
         LayerMask enemyLayer = LayerMask.NameToLayer("ENEMY");
         LayerMask defensiveGoodsLayer = LayerMask.NameToLayer("DEFENSIVEGOODS");
