@@ -235,40 +235,49 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
     {
-        // 스킬 포인트를 1감소 시킨다.
-        playerCtrl.skillPoint -= 1;
-
-        // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
-        playerSkillManager.skillSettingComplete = false;
+        bool select = false;
 
         //Debug.Log("____Press Event: " + eventData.pointerCurrentRaycast.ToString());
         if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[0].name)
         {
             //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
-
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[0]);
+
+            select = true;
         }
         else if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[1].name.ToString())
         {
             //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
-
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[1]);
+
+            select = true;
         }
         else if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[2].name.ToString())
         {
             //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
-
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[2]);
+
+            select = true;
         }
 
-        // 레벨을 올릴 스킬을 선택했으므로 스킬 선택 창을 끈다.
-        skillSelectObj.SetActive(false);
-        // 스킬 창을 껐으므로 커서를 중앙에 다시 고정시킨다.
-        // 스킬 포인트가 없어서 스킬 획득 창이 더 표시가 되지 않을 경우에만 동작한다.
-        if (playerCtrl.skillPoint <= 0)
+        if (select)
         {
-            CursorState.CursorLockedSetting(true);
+            // 스킬 포인트를 1감소 시킨다.
+            playerCtrl.skillPoint -= 1;
+
+            // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
+            playerSkillManager.skillSettingComplete = false;
+
+            // 레벨을 올릴 스킬을 선택했으므로 스킬 선택 창을 끈다.
+            skillSelectObj.SetActive(false);
+            // 스킬 창을 껐으므로 커서를 중앙에 다시 고정시킨다.
+            // 스킬 포인트가 없어서 스킬 획득 창이 더 표시가 되지 않을 경우에만 동작한다.
+            if (playerCtrl.skillPoint <= 0)
+            {
+                CursorState.CursorLockedSetting(true);
+            }
         }
+
 
     }
 

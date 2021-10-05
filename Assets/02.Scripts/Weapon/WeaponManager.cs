@@ -61,11 +61,13 @@ public class WeaponManager : MonoBehaviour
 
         LayerMask enemyLayer = LayerMask.NameToLayer("ENEMY");
         LayerMask wallLayer = LayerMask.NameToLayer("WALL");
+        LayerMask uiLayer = LayerMask.NameToLayer("UI");
 
-        alllTargetLayerMask = (1 << enemyLayer) | (1 << wallLayer);
-
+        //alllTargetLayerMask = ((1 << enemyLayer) | (1 << wallLayer) | (1 << uiLayer));
+        alllTargetLayerMask = ((1 << enemyLayer) | (1 << wallLayer));
 
     }
+
 
     // Update is called once per frame
     void Update()
@@ -281,6 +283,16 @@ public class WeaponManager : MonoBehaviour
             // 총 발사 딜레이보다 총을 쏘고 지난 시간이 더 크거나 같을 경우
             if (currGun.fireDelay <= currGun.fireTime)
             {
+                // 레이 캐스트를 확인해서 판정하는 함수
+                if (Cursor.lockState == CursorLockMode.None && CheckRaycastUI() == true)
+                {
+                    // UI를 타겟으로 하고 있고
+                    // 커서가 고정 상태가 아닐 경우
+                    // 발사 불가능한 상태로 한다.
+                    return false;
+                }
+
+
                 isFire = true; // 총 발사가 가능한 경우
                 anim.SetBool("IsFire", isFire);
                 canFire = true;
@@ -302,7 +314,7 @@ public class WeaponManager : MonoBehaviour
 
                 // 발사 이펙트 생성
                 currGun.BulletFire();
-                // 레이 캐스트를 확인해서 판정하는 함수
+
                 CheckFireRaycast();
             }
             else
@@ -330,41 +342,81 @@ public class WeaponManager : MonoBehaviour
     private void CheckFireRaycast()
     {
         // 무기 사거리 내의 타겟 정보를 가져온다.
-        RaycastHit hitTarget = cameraRaycast.GetRaycastTarget(currGun.attackDistance, alllTargetLayerMask);
+        List<RaycastHit> hitTargets = cameraRaycast.GetWeaponRaycastTarget(currGun.attackDistance, alllTargetLayerMask, currGun.gunType);
         GameObject target;
 
-        try
-        {
-            target = hitTarget.transform.gameObject;
+        Debug.Log("____ HIT COUNT: " + hitTargets.Count + " ____");
 
-        }
-        catch (NullReferenceException e)
+        foreach (RaycastHit hitTarget in hitTargets)
         {
+            try
+            {
+                target = hitTarget.transform.gameObject;
+
+                Debug.Log("______ TARGET NAME: " + target.name);
+                //Debug.Log("____ Target Layer: " + LayerMask.LayerToName(target.layer));
+            }
+            catch (System.Exception e)
+            {
 #if UNITY_EDITOR
-            Debug.LogWarning(e);
-
+                Debug.LogWarning("____ Target is Null: " + e);
 #endif
-            return;
+                return;
+            }
+
+            //if (target == null) { return; }
+
+            // Raycast 했을 때 대상이 무엇인가
+            if (target.CompareTag("ENEMY"))
+            {
+                Debug.Log("____ Gun Damage: " + currGun.damage + "____");
+                target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
+
+                // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
+                Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 20f);
+            }
+            else if (target.CompareTag("WALL"))
+            {
+                Debug.Log("____ TARGET TAG WALL");
+            }
+            //else if (target.CompareTag("UI"))
+            // 대상이 없는 상태일 때
+            else
+            {
+
+            }
         }
 
-        //if (target == null) { return; }
 
-        // Raycast 했을 때 대상이 무엇인가
-        if (target.CompareTag("ENEMY"))
+        return;
+    }
+
+
+    private bool CheckRaycastUI()
+    {
+        bool lookUI = false;
+
+        RaycastHit hit;
+
+        Vector3 mousePos = Input.mousePosition;
+        Camera camera = Camera.main;
+        mousePos.z = camera.farClipPlane; // 카메라가 보는 방향과 시야를 가져온다.
+        Vector3 dir = camera.ScreenToWorldPoint(mousePos);
+        // 마우스를 고정 시켜도 마우스 위치랑 카메라 정면이랑 동일히자 않다.
+        //if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
+        if (Physics.Raycast(transform.position, dir, out hit, (1 << LayerMask.NameToLayer("UI"))))
         {
-            //Debug.Log("____Gun Damage: " + currGun.damage + "____");
-            target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
+            lookUI = true;
+            //Debug.Log("Hit Object: " + hit.transform.gameObject.name.ToString());
 
-            // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
-            //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 5f);
-        }
-        else if (target.CompareTag("WALL"))
-        {
-
+            //target = hit.transform.gameObject;
+            //Debug.Log(target.tag);
         }
 
+        return lookUI;
 
     }
+
 
     #endregion
 

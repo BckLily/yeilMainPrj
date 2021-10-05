@@ -843,7 +843,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #endregion
 
-
     #region 플레이어의 움직임을 컨트롤 하는 영역
     /// <summary>
     /// 플레이어가 앉는 동작을 실행(시도)하는 함수

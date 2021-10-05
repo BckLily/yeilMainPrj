@@ -9,6 +9,7 @@ TagManager:
   - DEFENSIVEGOODS
   - STORE
   - WALL
+  - UI
   layers:
   - Default
   - TransparentFX

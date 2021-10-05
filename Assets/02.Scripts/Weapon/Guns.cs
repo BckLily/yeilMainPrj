@@ -36,7 +36,7 @@ public class Guns : Weapon
 
     private void Start()
     {
-
+        StartCoroutine(CoWeaponTypeSetting());
     }
 
 
@@ -45,6 +45,30 @@ public class Guns : Weapon
     {
 
     }
+
+    private IEnumerator CoWeaponTypeSetting()
+    {
+        while (weaponDict == null) { yield return null; }
+        yield return new WaitForSeconds(1f);
+        // 2번 요소부터 3개 >> 무기 종류 구분한 곳
+        string __type = UID.Substring(2, 3);
+
+        if (__type == "000")
+        {
+            gunType = ItemGun.GunType.Rifle;
+        }
+        else if (__type == "001")
+        {
+            gunType = ItemGun.GunType.SMG;
+        }
+        else if (__type == "002")
+        {
+            gunType = ItemGun.GunType.SG;
+        }
+
+    }
+
+
 
 
     // 발사 조건의 확인은 WeaponManager에서 한다.
