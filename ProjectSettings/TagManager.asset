@@ -10,6 +10,10 @@ TagManager:
   - STORE
   - WALL
   - UI
+  - BLUEPRINT
+  - WALL_DAMAGE
+  - FENCE
+  - BARBEDWIRE
   layers:
   - Default
   - TransparentFX
@@ -41,7 +45,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - BLUEPRINT
   - 
   m_SortingLayers:
   - name: Default

@@ -50,11 +50,11 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     Coroutine coUIUpdate;
 
+    public Text pointText; // 보유 포인트 텍스트
+
     #endregion
 
     #region Player Skill
-
-
 
     // 스킬 포인트를 가지고 있다는 것을 알려주는 오브젝트
     public GameObject skillPointInfoObj;
@@ -72,6 +72,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
     public List<UnityEngine.UI.Text> skillInfo_TextList = new List<Text>();
 
     #endregion
+
 
 
     private void Start()
@@ -116,7 +117,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
                 CursorState.CursorLockedSetting(false); // 커서 고정을 끈다.
                 skillSelectObj.SetActive(true);
             }
-            else if (skillSelectObj.activeSelf == true)
+            else if (skillSelectObj.activeSelf == true && playerCtrl.isUIOpen == false)
             {
                 //Cursor.lockState = CursorLockMode.Locked; // 커서를 고정한다.
                 CursorState.CursorLockedSetting(true); // 커서를 고정한다.
@@ -127,6 +128,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
         }
     }
 
+    #region Skill Point UI
 
     /// <summary>
     /// 스킬 포인트를 가지고 있을 경우 Level 표시 근처에 켜졌다 꺼졌다하는 표시 갱신 코루틴. 
@@ -166,8 +168,9 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
         //Debug.Log($"Skill Point: Done");
     }
+    #endregion
 
-
+    #region Status UI 
     /// <summary>
     /// 스탯 UI를 활성화하고 갱신하는 코루틴
     /// </summary>
@@ -214,7 +217,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
                 string autoRepair = playerAction.buildingAutoRepair ? "보유" : "미보유";
 
                 autoRepairText.text = $"{autoRepair.ToString()}";
-
+                pointText.text = $"{playerCtrl._point.ToString()}";
             }
             catch (System.Exception e)
             {
@@ -229,31 +232,43 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
         yield break;
     }
 
+    #endregion
 
     #region Button 기능
-
 
     public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
     {
         bool select = false;
 
         //Debug.Log("____Press Event: " + eventData.pointerCurrentRaycast.ToString());
-        if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[0].name)
+        if (eventData.pointerCurrentRaycast.gameObject == skillInfo_ObjList[0])
         {
+            // 스킬 포인트를 1감소 시킨다.
+            playerCtrl.skillPoint -= 1;
+            // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
+            playerSkillManager.skillSettingComplete = false;
             //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[0]);
 
             select = true;
         }
-        else if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[1].name.ToString())
+        else if (eventData.pointerCurrentRaycast.gameObject == skillInfo_ObjList[1])
         {
+            // 스킬 포인트를 1감소 시킨다.
+            playerCtrl.skillPoint -= 1;
+            // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
+            playerSkillManager.skillSettingComplete = false;
             //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[1]);
 
             select = true;
         }
-        else if (eventData.pointerCurrentRaycast.gameObject.name.ToString() == skillInfo_ObjList[2].name.ToString())
+        else if (eventData.pointerCurrentRaycast.gameObject == skillInfo_ObjList[2])
         {
+            // 스킬 포인트를 1감소 시킨다.
+            playerCtrl.skillPoint -= 1;
+            // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
+            playerSkillManager.skillSettingComplete = false;
             //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[2]);
 
@@ -262,29 +277,23 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
         if (select)
         {
-            // 스킬 포인트를 1감소 시킨다.
-            playerCtrl.skillPoint -= 1;
-
-            // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
-            playerSkillManager.skillSettingComplete = false;
-
             // 레벨을 올릴 스킬을 선택했으므로 스킬 선택 창을 끈다.
             skillSelectObj.SetActive(false);
+
             // 스킬 창을 껐으므로 커서를 중앙에 다시 고정시킨다.
             // 스킬 포인트가 없어서 스킬 획득 창이 더 표시가 되지 않을 경우에만 동작한다.
             if (playerCtrl.skillPoint <= 0)
             {
-                CursorState.CursorLockedSetting(true);
+                if (playerCtrl.isUIOpen == false)
+                {
+                    CursorState.CursorLockedSetting(true);
+                }
             }
         }
 
-
     }
 
-
     #endregion
-
-
 
 
 }

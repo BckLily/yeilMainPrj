@@ -214,6 +214,12 @@ public class WeaponManager : MonoBehaviour
     /// </summary>
     private void TryFire()
     {
+        // 플레이어가 상점을 오픈한 상태이면 총을 발사하는 동작을 하지 못하도록 한다.
+        if (playerCtrl.isUIOpen == true)
+        {
+            return;
+        }
+
         // 미완성 상태일 때 계속 에러가 나서 에러 발생시 그냥 함수 종료하게 함.
         // 재장전 중이 아닐 때
         if (isReload == false)
@@ -345,7 +351,7 @@ public class WeaponManager : MonoBehaviour
         List<RaycastHit> hitTargets = cameraRaycast.GetWeaponRaycastTarget(currGun.attackDistance, alllTargetLayerMask, currGun.gunType);
         GameObject target;
 
-        Debug.Log("____ HIT COUNT: " + hitTargets.Count + " ____");
+        //Debug.Log("____ HIT COUNT: " + hitTargets.Count + " ____");
 
         foreach (RaycastHit hitTarget in hitTargets)
         {

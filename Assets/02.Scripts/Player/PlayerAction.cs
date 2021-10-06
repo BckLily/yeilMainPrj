@@ -29,13 +29,13 @@ internal class CursorState
 
         }
     }
-
 }
 
 
 public class PlayerAction : MonoBehaviour
 {
-    private Transform tr; // 플레이어의 Transform
+    private Transform playerTr; // 플레이어의 Transform
+    private PlayerCtrl playerCtrl; // 플레이어 Ctrl 스크립트
 
     ///<summary>
     /// CameraRaycast Script
@@ -146,7 +146,8 @@ public class PlayerAction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tr = GetComponent<Transform>();
+        playerTr = transform.parent.GetComponent<Transform>();
+        playerCtrl = playerTr.GetComponent<PlayerCtrl>();
         cameraRaycast = GetComponent<CameraRaycast>();
 
         isBuild = false;
@@ -179,8 +180,20 @@ public class PlayerAction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckLooking();
-        Action();
+        if (playerCtrl.isUIOpen == false)
+        {
+            CheckLooking();
+            Action();
+        }
+        else
+        {
+            if (targetInfoPanel.activeSelf == true)
+            {
+                targetInfoPanel.SetActive(false);
+            }
+        }
+
+
     }
 
 
@@ -225,7 +238,7 @@ public class PlayerAction : MonoBehaviour
         //Debug.Log(target);
 
         // 방어 물자가 건설되어 있지 않은 상태이면 건설할 수 있다고 표시해주어야 한다.
-        if (targetTag == "DEFENSIVEGOODS")
+        if (targetTag == "BLUEPRINT")
         {
             // 각각의 상황에 따로 SetActive를 처리하는 이유는 Raycast를 통해서 무언가를 비추고는 있는데
             // 내가 원하는 타겟이 아닌 경우가 있기 때문에 원하는 타겟일 경우에만 표시하도록 처리한 것.
@@ -249,7 +262,7 @@ public class PlayerAction : MonoBehaviour
             targetInfoText.text = TargetInfoTextSetting(targetTag);
             if (Input.GetKeyDown(KeyCode.E))
             {
-                Debug.Log("Store Open");
+                target.GetComponent<Store>().OpenStore(playerTr);
             }
             //else if (Input.GetKey(KeyCode.E))
             //{
