@@ -318,7 +318,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
 
         //weaponManager.WeaponChange(classDict["WeaponUID"]);
-        PlayerWeaponChange();
+        PlayerWeaponChange(classDict["WeaponUID"]);
         //Debug.Log(classDict["ClassName"]);
     }
 
@@ -326,10 +326,10 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
     #region Player의 무기를 변경하는 함수 관련
-    void PlayerWeaponChange()
+    public void PlayerWeaponChange(string _weaponUID)
     {
         // 상점에서 구매하려는 무기의 transform을 받아서 처리.
-        weaponManager.WeaponChange(classDict["WeaponUID"]);
+        weaponManager.WeaponChange(_weaponUID);
     }
 
     #endregion
@@ -373,7 +373,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            PlayerWeaponChange();
+            PlayerWeaponChange(weaponManager.currGun.weaponDict["WeaponUID"]);
         }
         else if (Input.GetKeyDown(KeyCode.Backslash))
         {

@@ -112,6 +112,7 @@ public class WeaponManager : MonoBehaviour
 
         //Debug.Log(weaponPath + weaponDict["Weapon_Name"]);
         // 새로 생성한 무기를 현재 무기로 만들어준다.
+        Debug.Log("____ Weapon Name: " + weaponDict["Weapon_Name"] + " ____");
         currWeaponObj = (GameObject)Instantiate(Resources.Load(weaponPath + weaponDict["Weapon_Name"]), this.transform);
 
         //currWeapon = weaponTr.GetChild(0).gameObject;
@@ -214,6 +215,8 @@ public class WeaponManager : MonoBehaviour
     /// </summary>
     private void TryFire()
     {
+        WeaponBulletChange();
+
         // 플레이어가 상점을 오픈한 상태이면 총을 발사하는 동작을 하지 못하도록 한다.
         if (playerCtrl.isUIOpen == true)
         {
@@ -271,7 +274,6 @@ public class WeaponManager : MonoBehaviour
                 //currGun.fireTime = 0f;
             }
         }
-        WeaponBulletChange();
     }
 
     /// <summary>
@@ -320,6 +322,7 @@ public class WeaponManager : MonoBehaviour
 
                 // 발사 이펙트 생성
                 currGun.BulletFire();
+
 
                 CheckFireRaycast();
             }
@@ -441,7 +444,16 @@ public class WeaponManager : MonoBehaviour
     /// </summary>
     private void WeaponBulletChange()
     {
-        weaponBulletText.text = string.Format($"<b>{currGun.currBullet}</b> / <b>{currGun.carryBullet}</b>");
+        try
+        {
+            weaponBulletText.text = string.Format($"<b>{currGun.currBullet}</b> / <b>{currGun.carryBullet}</b>");
+        }
+        catch (System.Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log("____ Weapon Change Exception: " + e + " ____");
+#endif
+        }
     }
 
     #endregion

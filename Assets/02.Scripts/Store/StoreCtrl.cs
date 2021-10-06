@@ -133,7 +133,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
                 break;
             // 구매 아이템 버튼 클릭.
             case StoreButtonType.ButtonType.BuyButton:
-
+                BuyItem(_myButton.GetComponent<MyBuyButton>());
 
 
                 break;
@@ -215,6 +215,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     }
     #endregion
 
+    #region Information Text 설정
 
     // 마우스를 올렸을 때 정보를 가져오기 위해서 사용
     public void OnPointerEnter(PointerEventData eventData)
@@ -249,10 +250,41 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         {
             infoText.text = "";
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.LogWarning(e);
         }
 
     }
+
+    #endregion
+
+
+    private void BuyItem(MyBuyButton _myBuyButton)
+    {
+        // 구매할 물건의 UID를 통해서 어떤 물건을 구매하는지 확인
+        string firstUID = _myBuyButton._uid.Substring(0, 2);
+        string middleUID = _myBuyButton._uid.Substring(2, 3);
+        string lastUID = _myBuyButton._uid.Substring(5, 4);
+
+        // 무기 구매
+        if (firstUID == "01")
+        {
+            Debug.Log("____ My Buy Button Item UID: " + _myBuyButton._uid + " ____");
+            transform.parent.GetComponent<PlayerCtrl>().PlayerWeaponChange(_myBuyButton._uid);
+
+        }
+        // 아이템 구매
+        else if (firstUID == "06")
+        {
+
+        }
+        // 방어 물자 구매
+        else if (firstUID == "07")
+        {
+
+        }
+
+    }
+
 }
