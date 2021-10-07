@@ -43,9 +43,10 @@ public class PlayerAction : MonoBehaviour
     private CameraRaycast cameraRaycast; // 카메라 Transform
 
     #region 플레이어의 현재 동작 관련 변수
-    private bool isBuild; // 플레이어가 빌딩을 건설하고 있는가?
-    private bool isBuy; // 플레이어가 물건을 사고 있는가? 상점을 이용하고 있는가?
-    private bool isHeal; // 플레이어가 회복 동작을 수행하고 있는가?
+    public bool isBuild; // 플레이어가 빌딩을 건설하고 있는가?
+    public bool isBuy; // 플레이어가 물건을 사고 있는가? 상점을 이용하고 있는가?
+    public bool isHeal; // 플레이어가 회복 동작을 수행하고 있는가?
+    public bool isRepair; // 플레이어가 수리 동작을 하고 있는가?
 
     private float healingPoint; // 회복 아이템 사용시 회복되는 기본량
     public float incHealingPoint; // 증가한 회복량
@@ -259,7 +260,8 @@ public class PlayerAction : MonoBehaviour
                 // E를 누를경우 
                 if (Input.GetKey(KeyCode.E))
                 { // Build 과정 진행
-                  // 건설할 수 있는 상황이면
+                    isBuild = true;
+                    // 건설할 수 있는 상황이면
                     if (FillGauge(currBuildSpeed))
                     {
                         target.GetComponent<Blueprint>().BuildingBuild();
@@ -268,6 +270,7 @@ public class PlayerAction : MonoBehaviour
                 // 놓았을 경우
                 else if (Input.GetKeyUp(KeyCode.E))
                 {
+                    isBuild = false;
                     GaugeClear();
                 }
             }
@@ -295,6 +298,7 @@ public class PlayerAction : MonoBehaviour
                 // 상호작용키 E를 누르고 있으면
                 if (Input.GetKey(KeyCode.E))
                 {
+                    isRepair = true;
                     if (FillGauge(currRepariSpeed))
                     { // 수리 과정 진행 }
                         defSturct.Repair();
@@ -302,6 +306,7 @@ public class PlayerAction : MonoBehaviour
                 }
                 else if (Input.GetKeyUp(KeyCode.E))
                 {
+                    isRepair = false;
                     GaugeClear();
                 }
             }
@@ -356,6 +361,7 @@ public class PlayerAction : MonoBehaviour
                 targetInfoText.text = TargetInfoTextSetting("회복 가능");
                 if (Input.GetKey(KeyCode.E))
                 {
+                    isHeal = true;
                     if (FillGauge(healingSpeed))
                     {
                         //Debug.Log("____ 회복 ____");
@@ -364,6 +370,7 @@ public class PlayerAction : MonoBehaviour
                 }
                 else if (Input.GetKeyUp(KeyCode.E))
                 {
+                    isHeal = false;
                     GaugeClear();
                 }
 
@@ -423,6 +430,10 @@ public class PlayerAction : MonoBehaviour
         // ring이 표시되어있는 상태일 경우 fillAmount를 0으로 해서 다음에 시도할때 0부터 차도록 한다.
         if (gaugeRing.activeSelf == true)
         {
+            isHeal = false;
+            isRepair = false;
+            isBuild = false;
+
             gaugeRing.GetComponent<Image>().fillAmount = 0f;
             gaugeRing.SetActive(false);
         }

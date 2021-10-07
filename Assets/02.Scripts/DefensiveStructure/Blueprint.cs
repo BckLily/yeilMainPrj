@@ -8,13 +8,13 @@ public class Blueprint : MonoBehaviour
     public GameObject structure;
     // 청사진
     public GameObject bluePrint;
-    private Collider collider;
+    private Collider _collider;
 
     public bool isBuild;
 
     void Start()
     {
-        collider = GetComponent<Collider>();
+        _collider = GetComponent<Collider>();
         isBuild = false;
     }
 
@@ -35,7 +35,7 @@ public class Blueprint : MonoBehaviour
         bluePrint.SetActive(false);
         gameObject.GetComponent<BoxCollider>().enabled = false;
         isBuild = true;
-        collider.enabled = false;
+        _collider.enabled = false;
     }
 
     public void BuildingDestroy()
@@ -44,7 +44,7 @@ public class Blueprint : MonoBehaviour
         structure.SetActive(false);
         gameObject.GetComponent<BoxCollider>().enabled = true;
         isBuild = false;
-        collider.enabled = true;
+        _collider.enabled = true;
     }
 
 

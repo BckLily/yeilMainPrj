@@ -218,7 +218,7 @@ public class WeaponManager : MonoBehaviour
         WeaponBulletChange();
 
         // 플레이어가 상점을 오픈한 상태이면 총을 발사하는 동작을 하지 못하도록 한다.
-        if (playerCtrl.isUIOpen == true)
+        if (playerCtrl.isUIOpen == true || playerCtrl.doAction == true)
         {
             return;
         }

@@ -16,7 +16,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     private PlayerUI playerUI; // 플레이어 UI 스크립트
 
     public bool isUIOpen; // 플레이어가 UI(상점)을 열었는지를 판단하는 변수
-
+    // 플레이어가 건설, 수리, 회복 등의 동작을 하고 있는지 판단하는 불리언 변수
+    public bool doAction
+    {
+        get { return playerAction.isBuild || playerAction.isRepair || playerAction.isHeal; }
+    }
     #endregion
 
     #region 플레이어 Status 관련 변수
@@ -121,8 +125,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// <summary>
     /// 카메라가 움직일 때 보간 값
     /// </summary>
-    private float cameraMoveSpeed = 4f;
-    private float cameraMoveValue = 0.375f;
+    //private float cameraMoveSpeed = 4f;
+    //private float cameraMoveValue = 0.375f;
 
     #endregion
 
