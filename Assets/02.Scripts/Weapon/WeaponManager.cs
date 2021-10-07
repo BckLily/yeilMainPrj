@@ -451,7 +451,7 @@ public class WeaponManager : MonoBehaviour
         catch (System.Exception e)
         {
 #if UNITY_EDITOR
-            Debug.Log("____ Weapon Change Exception: " + e + " ____");
+            Debug.LogWarning("____ Weapon Change Exception: " + e + " ____");
 #endif
         }
     }

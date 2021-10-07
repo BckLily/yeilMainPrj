@@ -10,28 +10,33 @@ public class MovidicSC : LivingEntity
     private GameObject targetEntity;
     public GameObject maindoor;
     public GameObject attackColl;
+    private GameObject pastTarget; // 이전 타겟 저장 변수
 
-    float traceRange = 10f;
-    float attackDistance = 4f;
+    float traceRange = 15f;
+    float attackDistance = 7f;
+    float rushDistance = 20f;
 
     private NavMeshAgent pathFinder;
     private Animator enemyAnimator;
+    private Rigidbody rigid;
 
     [SerializeField]
     private bool isTrace = false;
     [SerializeField]
     private bool isAttack = false;
     private bool isAttacking = false;
+    private bool canRush = true;
 
     Coroutine co_updatePath;
     Coroutine co_changeTarget;
 
-    private eCharacterState state;
+
 
     List<GameObject> list = new List<GameObject>();
 
     private void Awake()
     {
+        rigid = GetComponent<Rigidbody>();
         pathFinder = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
         Setup();
@@ -90,23 +95,42 @@ public class MovidicSC : LivingEntity
         if (dead)
             return;
 
-        if (state == eCharacterState.Trace && Vector3.Distance(targetEntity.transform.position, this.transform.position) <= attackDistance && !isAttacking)
+        if (state == eCharacterState.Trace && Vector3.Distance(targetEntity.transform.position, this.transform.position) <= rushDistance && !isAttacking)
         {
-            NowAttack();
+
+            if (canRush == true)
+            {
+                pastTarget = targetEntity.gameObject;
+                pathFinder.enabled = false;
+                isTrace = false;
+                enemyAnimator.SetBool("IsTrace", isTrace);
+
+                canRush = false;
+                Invoke("RushAttack", 2f);
+            }
+
+            if (Vector3.Distance(targetEntity.transform.position, this.transform.position) <= attackDistance)
+            {
+                NowAttack();
+            }
         }
 
         if (isAttacking == true)
         {
-            Quaternion LookRot = Quaternion.LookRotation(targetEntity.transform.position - this.transform.position);
+            Quaternion LookRot = Quaternion.LookRotation(new Vector3(targetEntity.transform.position.x, 0, targetEntity.transform.position.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, LookRot, 60f * Time.deltaTime);
+        }
+
+        if(pastTarget != null && targetEntity.gameObject != pastTarget.gameObject)
+        {
+            canRush = true;
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("PLAYER"))
+        if (other.CompareTag("BUNKERDOOR"))
         {
-            //Debug.Log("=== Player Contact ===");
             if (!list.Contains(other.gameObject))
             {
                 list.Add(other.gameObject);
@@ -117,8 +141,22 @@ public class MovidicSC : LivingEntity
 
                 MovidicSC modivic = other.GetComponent<MovidicSC>();
                 other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitnormal);
+            }
+            else
+                return;
+        }
+        else if (other.CompareTag("DEFENSIVEGOODS"))
+        {
+            if (!list.Contains(other.gameObject))
+            {
+                list.Add(other.gameObject);
+                isTrace = false;
 
-                //Debug.Log("=== HIT ===");
+                Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);
+                Vector3 hitnormal = new Vector3(hitPoint.x, hitPoint.y, hitPoint.z).normalized;
+
+                MovidicSC modivic = other.GetComponent<MovidicSC>();
+                other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitnormal);
             }
             else
                 return;
@@ -132,6 +170,7 @@ public class MovidicSC : LivingEntity
 
         enemyAnimator.SetBool("IsTrace", isTrace);
     }
+
     /// <summary>
     /// 추적 함수
     /// </summary>
@@ -146,15 +185,19 @@ public class MovidicSC : LivingEntity
             enemyAnimator.SetBool("IsTrace", isTrace);
         }
     }
-
+    /// <summary>
+    /// 공격 함수
+    /// </summary>
     void NowAttack()
     {
+        damage = 20f;
         isAttacking = true;
 
         state = eCharacterState.Attack;
 
         pathFinder.enabled = true;
         pathFinder.speed = 0f;
+        //enemyAnimator.SetFloat("RushSpeed", 1f);
         enemyAnimator.SetTrigger("IsAttack");
         float attackTime = 0.5f;
         StartCoroutine(StartAttacking(attackTime));
@@ -163,7 +206,16 @@ public class MovidicSC : LivingEntity
         float attackdelayTime = MoveDuration(eCharacterState.Attack);
         StartCoroutine(EndAttacking(attackdelayTime));
 
-        Debug.Log(MoveDuration(eCharacterState.Attack));
+        //Debug.Log(MoveDuration(eCharacterState.Attack));
+    }
+    /// <summary>
+    /// 돌진 공격 함수
+    /// </summary>
+    void RushAttack()
+    {
+        damage = 40f;
+        rigid.AddForce(this.transform.forward * 25f, ForceMode.Impulse);
+        enemyAnimator.SetTrigger("IsAttack");
     }
 
     public void ClearList()
@@ -183,7 +235,7 @@ public class MovidicSC : LivingEntity
             if (pathFinder.enabled)
             {
                 pathFinder.isStopped = false;
-                pathFinder.SetDestination(targetEntity.transform.position);
+                pathFinder.SetDestination(new Vector3(targetEntity.transform.position.x, this.transform.position.y, targetEntity.transform.position.z));
             }
 
             yield return new WaitForSeconds(0.1f);
@@ -197,7 +249,7 @@ public class MovidicSC : LivingEntity
     {
         while (!dead)
         {
-            Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, 1 << LayerMask.NameToLayer("PLAYER"));
+            Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, 1 << LayerMask.NameToLayer("DEFENSIVEGOODS"));
 
             if (colliders.Length >= 1)
                 targetEntity = colliders[0].gameObject;
@@ -226,6 +278,7 @@ public class MovidicSC : LivingEntity
         isAttacking = false;
         pathFinder.enabled = true;
         NowTrace();
+        print("=== ATTACK END ===");
     }
 
     void ColliderOn()
@@ -241,6 +294,9 @@ public class MovidicSC : LivingEntity
     protected override void Down()
     {
         base.Down();
+        pathFinder.enabled = false;
+        enemyAnimator.SetTrigger("IsDead");
+        //Debug.Log(MoveDuration(eCharacterState.Die));
         Die();
     }
 }

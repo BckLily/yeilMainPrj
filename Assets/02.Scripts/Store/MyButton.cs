@@ -6,6 +6,7 @@ public static class StoreButtonType
 {
     public enum ButtonType
     {
+        None = -1,
         WeaponType = 0, DefStructType, ItemType,
         RifleList = 10, SMGList, SGList,
         DefStructList = 20,
@@ -23,7 +24,7 @@ public class MyButton : MonoBehaviour
     public StoreButtonType.ButtonType buttonType;
 
 
-    
+
     // Start is called before the first frame update
     void Start()
     {

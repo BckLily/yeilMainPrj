@@ -23,16 +23,10 @@ public class SpiderSC : LivingEntity
     //private bool isAttack = false;
     private bool isAttacking = false;
 
-    public enum eCharacterState
-    {
-        Trace,
-        Attack,
-        Die
-    }
+    
 
     List<GameObject> list = new List<GameObject>();
 
-    private eCharacterState state;
 
 
     Coroutine co_updatePath;
@@ -108,14 +102,14 @@ public class SpiderSC : LivingEntity
         if (dead)
             return;
 
-        if (Vector3.Distance(targetEnitity.transform.position, this.transform.position) <= attackDistance && !isAttacking)
+        if (state == eCharacterState.Trace && Vector3.Distance(targetEnitity.transform.position, this.transform.position) <= attackDistance && !isAttacking)
         {
             NowAttack();
         }
 
         if (isAttacking == true)
         {
-            Quaternion lookRot = Quaternion.LookRotation(targetEnitity.transform.position - this.transform.position);
+            Quaternion lookRot = Quaternion.LookRotation(new Vector3(targetEnitity.transform.position.x, 0, targetEnitity.transform.position.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, 60f * Time.deltaTime);
         }
     }
@@ -223,5 +217,14 @@ public class SpiderSC : LivingEntity
         yield return new WaitForSeconds(_delaytime);
         GameObject bullet = Instantiate(Bulletobj, this.transform.position + transform.forward * 1.3f + transform.up * 0.5f, transform.rotation);
         FireCo = null;
+    }
+
+    protected override void Down()
+    {
+        base.Down();
+        pathFinder.enabled = false;
+        enemyAnimator.SetTrigger("IsDead");
+        Debug.Log(MoveDuration(eCharacterState.Die));
+        Die();
     }
 }

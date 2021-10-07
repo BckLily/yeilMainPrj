@@ -73,6 +73,13 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     #endregion
 
+    #region Player Item UI
+    // 아이템이 있을 때 활성화 되는 Panel
+    public Image itemPanel;
+    // 아이템의 이미지
+    public Image itemImg;
+
+    #endregion
 
 
     private void Start()
@@ -207,12 +214,12 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
                 levelText.text = $"{playerCtrl.level.ToString()}";
                 armourText.text = $"{playerCtrl.addArmour.ToString()}";
                 weaponText.text = $"{weaponManager.weaponNameText.text.ToString()}";
-                damageText.text = $"{(weaponManager.currGun.damage + playerCtrl.addAttack).ToString()}";
-                attackSpeedText.text = $"{weaponManager.currGun.fireDelay.ToString()}";
-                healingPointText.text = $"{playerAction.currHealingPoint.ToString()}";
-                healingSpeedText.text = $"{playerAction.currHealingSpeed.ToString()}";
-                repairSpeedText.text = $"{playerAction.currRepariSpeed.ToString()}";
-                buildSpeedText.text = $"{playerAction.currBuildSpeed.ToString()}";
+                damageText.text = $"{(weaponManager.currGun.damage + playerCtrl.addAttack).ToString("F2")}";
+                attackSpeedText.text = $"{weaponManager.currGun.fireDelay.ToString("F2")}";
+                healingPointText.text = $"{playerAction.currHealingPoint.ToString("F2")}";
+                healingSpeedText.text = $"{playerAction.currHealingSpeed.ToString("F2")}";
+                repairSpeedText.text = $"{playerAction.currRepariSpeed.ToString("F2")}";
+                buildSpeedText.text = $"{playerAction.currBuildSpeed.ToString("F2")}";
 
                 string autoRepair = playerAction.buildingAutoRepair ? "보유" : "미보유";
 
@@ -294,6 +301,46 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
     }
 
     #endregion
+
+
+    public void ItemUISetting(int _lastUID)
+    {
+
+        if (playerCtrl.isHaveItem == true)
+        {
+            // Item Panel active
+            itemPanel.gameObject.SetActive(true);
+
+            if (playerCtrl.haveMedikit == true)
+            {
+                // Medikit Image acitve
+                itemImg.sprite = Resources.Load<Sprite>("Store/ItemImage/MedikitImg");
+            }
+            else if (playerCtrl.haveDefStruct == true)
+            {
+                // DefStruct Image active
+                // 철책
+                if (_lastUID == 0)
+                {
+                    // Iron Fence image active
+                    itemImg.sprite = Resources.Load<Sprite>("Store/DefensiveStructureImage/Fence");
+                }
+                // 철조망
+                else if (_lastUID == 1)
+                {
+                    // Barbed Wire image active
+                    itemImg.sprite = Resources.Load<Sprite>("Store/DefensiveStructureImage/BarbedWire");
+                }
+            }
+        }
+        else
+        {
+            // Item Panel inactive
+            itemPanel.gameObject.SetActive(false);
+        }
+
+
+    }
 
 
 }

@@ -27,16 +27,8 @@ public class ZombieSC : LivingEntity
     Coroutine co_updatePath;
     Coroutine co_chageTarget;
 
-    //public enum eCharacterState
-    //{
-    //    Trace,
-    //    Attack,
-    //    Die
-    //}
 
     List<GameObject> list = new List<GameObject>();
-
-    private eCharacterState state;
 
     private void Awake()    //초기화
     {
@@ -70,6 +62,9 @@ public class ZombieSC : LivingEntity
             case eCharacterState.Attack:
                 name = "Zombie Attack";
                 break;
+            case eCharacterState.Die:
+                name = "Zombie Dying";
+                break;
             default:
                 return 0;
         }
@@ -101,14 +96,14 @@ public class ZombieSC : LivingEntity
         if (dead)
             return;
 
-        if (state == eCharacterState.Trace && Vector3.Distance(targetEntity.transform.position, transform.position) <= attackDistance && !isAttacking)
+        if (state == eCharacterState.Trace && Vector3.Distance(new Vector3(targetEntity.transform.position.x, 0, targetEntity.transform.position.z), new Vector3(this.transform.position.x, 0, this.transform.position.z)) <= attackDistance && !isAttacking)
         {
             NowAttack();
         }
 
         if (isAttacking == true)
         {
-            Quaternion lookRot = Quaternion.LookRotation(targetEntity.transform.position - this.transform.position);
+            Quaternion lookRot = Quaternion.LookRotation(new Vector3(targetEntity.transform.position.x, 0, targetEntity.transform.position.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, 60f * Time.deltaTime);
         }
     }
@@ -213,9 +208,6 @@ public class ZombieSC : LivingEntity
     {
         isAttacking = true;
 
-        //Debug.Log("START ATTACK");
-        state = eCharacterState.Attack;
-
         pathFinder.isStopped = true;
         pathFinder.speed = 0f;
         enemyAnimator.SetTrigger("IsAttack");
@@ -266,6 +258,9 @@ public class ZombieSC : LivingEntity
     protected override void Down()
     {
         base.Down();
+        pathFinder.enabled = false;
+        enemyAnimator.SetTrigger("IsDead");
+        Debug.Log(MoveDuration(eCharacterState.Die));
         Die();
     }
 

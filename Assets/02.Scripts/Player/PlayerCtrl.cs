@@ -75,8 +75,9 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     private int perkMaxLevel = 1;
 
     public int level = 1;
-    public float _exp = 0f;
     public int skillPoint = 0;
+    public int _point; // 플레이어가 보유하고 있는 포인트
+    public float _exp = 0f;
 
     #endregion
 
@@ -179,7 +180,22 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #endregion
 
-    internal int _point; // 플레이어가 보유하고 있는 포인트
+    #region 아이템 관련 변수
+    public string _haveItemUID = null; // 가지고 있는 아이템 UID
+    // 아이템을 가지고 있는가?
+    public bool isHaveItem
+    {
+        get
+        {
+            return haveMedikit || haveDefStruct;
+        }
+    }
+    // 회복 아이템을 가지고 있는가?
+    public bool haveMedikit = false;
+    // 방어물자를 가지고 있는가?
+    public bool haveDefStruct = false;
+
+    #endregion
 
     public GameObject crosshairPanel; // 조준점을 표시해주는 canvas
 
@@ -219,7 +235,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 플레이어가 선택한 직업을 가져와서 설정이 끝나면
         // 그 직업과 관련된 데이터를 가져와서 Dictionary에 저장해야한다.
         StartCoroutine(CoPlayerClassSetting());
-
 
         controller.enabled = true;
 
@@ -670,7 +685,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     {
 
 
-
         // 동일한 이름의 UID를 찾고
         // 각 스킬이 스킬의 최대 레벨이 아닐 경우 레벨을 증가시키고 증가 값에 따라 세팅을 한다.
         if (_skillUID == classDict["StatusSkill0_UID"])
@@ -723,7 +737,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
 
     }
-
 
 
     // 플레이어의 스킬 중에 최대 레빌이 아닌 3개의 스킬을 랜덤으로 뽑아서 List<string> 형식으로 UID 값을 반환한다.
@@ -1014,6 +1027,10 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
         StartCoroutine(ShowBloodScreen()); // 피격시 피격했다는 의미로 붉은 테두리가 깜빡인다.
         HPGaugeChange(); // HP 게이지를 변경시켜준다.
+        if (currHP <= 0)
+        {
+            currHP = 0f;
+        }
     }
 
 
@@ -1045,6 +1062,114 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #endregion
 
+
+    public void ItemSetting(string _itemUid)
+    {
+        // 원래는 UID를 통해서 DBManager를 거쳐서 어떤 아이템을 가지고 있는지 확인을 하고
+        // 아이템의 종류에 따라서 itemImg Sprite를 변경해주는게 맞는 것 같다.
+        // 지금은 어떤 종류의 아이템을 가지고 있는지도 전부 bool 값을 사용해서 처리하고 있다.
+        // 나중에 아이템을 사용할 때 어떤 아이템을 가지고 있는지 아는게 편리하므로 bool 값으로 설정하는 것이 맞을수도 있다.
+        // 상황에 따라 다를 듯.
+
+        _haveItemUID = _itemUid;
+
+        int firstUID = int.Parse(_itemUid.Substring(0, 2));
+        int middleUID = int.Parse(_itemUid.Substring(2, 3));
+        int lastUID = int.Parse(_itemUid.Substring(5, 4));
+        switch (firstUID)
+        {
+            // 아이템 타입
+            case 6:
+                switch (middleUID)
+                {
+                    // 아이템
+                    case 0:
+                        switch (lastUID)
+                        {
+                            // 회복 아이템
+                            case 0:
+                                //isHaveItem = true;
+                                haveMedikit = true;
+
+                                playerUI.ItemUISetting(lastUID);
+                                break;
+                            // 탄 보급
+                            case 1:
+                                weaponManager.currGun.carryBullet += weaponManager.currGun.maxCarryBullet;
+
+                                break;
+                            // 벙커 수리
+                            case 2:
+                                GameManager.instance.bunkerDoor.GetComponent<BunkerDoor>().Repair();
+
+                                break;
+                            default:
+
+                                break;
+                        }
+                        break;
+                    // Perk
+                    case 1:
+                        // Perk을 구매하면 Game Manager를 통해서 모든 "플레이어"를 찾아서 플레이어의 각 Perk을 활성화해야한다.
+
+                        break;
+                    default:
+
+
+                        break;
+
+
+                }
+                break;
+            // 방어물자 타입
+            case 7:
+                switch (middleUID)
+                {
+                    // 방어 물자
+                    case 0:
+                        //isHaveItem = true;
+                        haveDefStruct = true;
+
+                        Debug.Log("____ Last UID: " + lastUID + " ____");
+
+                        // 마지막 UID 값을 넘겨주기 때문에 어떤 아이템인지 파악해서 처리할 수 있다.
+                        // 이후 다른 아이템이 추가되면 코드가 전체적으로 바뀌어야할 수도 있다.
+                        playerUI.ItemUISetting(lastUID);
+
+                        break;
+                    default:
+
+                        break;
+
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 체력 회복할 때 실행하는 함수
+    /// </summary>
+    /// <param name="_healingPoint">회복할 양</param>
+    public void Healing(float _healingPoint)
+    {
+        //isHaveItem = false;
+        // 회복 아이템을 사용했으므로 haveMedikit을 false로
+        haveMedikit = false;
+        // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
+        playerUI.ItemUISetting(0);
+
+        // 회복할 양만큼 증가시킨 다음 
+        currHP += _healingPoint;
+        // 최대체력보다 많으면 최대체력으로 설정해준다.
+        if (currHP >= maxHp)
+        {
+            currHP = maxHp;
+        }
+
+        HPGaugeChange();
+
+
+    }
 
 
 }

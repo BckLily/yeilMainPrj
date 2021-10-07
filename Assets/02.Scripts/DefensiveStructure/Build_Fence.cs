@@ -27,7 +27,7 @@ public class Build_Fence : MonoBehaviour
     {
         //Install();
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             BUildingBuild();
         }

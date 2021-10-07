@@ -933,6 +933,7 @@ MonoBehaviour:
   damage: 0
   down: 0
   dead: 0
+  state: 0
   target:
     serializedVersion: 2
     m_Bits: 0

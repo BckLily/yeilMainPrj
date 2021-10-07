@@ -166,14 +166,15 @@ public class PlayerAction : MonoBehaviour
 
         CursorState.CursorLockedSetting(true);
 
+        LayerMask blueprint = LayerMask.NameToLayer("BLUEPRINT");
         LayerMask enemyLayer = LayerMask.NameToLayer("ENEMY");
         LayerMask defensiveGoodsLayer = LayerMask.NameToLayer("DEFENSIVEGOODS");
         LayerMask storeLayer = LayerMask.NameToLayer("STORE");
         LayerMask playerLayer = LayerMask.NameToLayer("PLAYER");
-        LayerMask mainDoorLayer = LayerMask.NameToLayer("MAINDOOR");
+        LayerMask bunkerDoorLayer = LayerMask.NameToLayer("BUNKERDOOR");
         LayerMask wallLayer = LayerMask.NameToLayer("WALL");
 
-        allLayerMask = (1 << enemyLayer) | (1 << defensiveGoodsLayer) | (1 << storeLayer) | (1 << playerLayer) | (1 << mainDoorLayer) | (1 << wallLayer);
+        allLayerMask = (1 << blueprint) | (1 << enemyLayer) | (1 << defensiveGoodsLayer) | (1 << storeLayer) | (1 << playerLayer) | (1 << bunkerDoorLayer) | (1 << wallLayer);
 
     }
 
@@ -244,17 +245,77 @@ public class PlayerAction : MonoBehaviour
             // 내가 원하는 타겟이 아닌 경우가 있기 때문에 원하는 타겟일 경우에만 표시하도록 처리한 것.
             if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
 
-            targetInfoText.text = TargetInfoTextSetting(targetTag);
+
+            bool canBuild = !target.GetComponent<Blueprint>().isBuild;
+
+            // 건설된 상태인지 확인을 하고 건설된 상태가 아니면 건설 가능하다고 표시해준다.
+            targetInfoText.text = (TargetInfoTextSetting(canBuild ? "건설 가능" : "건설 완료"));
             // 방어물자가 건설되어 있지 않은 상태이면 건설할 수 있다고 표시
             // 건설된 상태이면? 수리 가능한 상황일 경우 따로 표시를 해서 수리 진행하게 처리.
             //Debug.Log("Defensive Goods State");
 
-            // 건설할 수 있는 상황이면
-            //if(canBuild && FillGauge(buildTime)){ // Build 과정 진행 }
-            // 수리할 수 있는 상황이면
-            //else if(canRepair && FillGauge(repairTime)){ // 수리 과정 진행 }
-
+            if (canBuild)
+            {
+                // E를 누를경우 
+                if (Input.GetKey(KeyCode.E))
+                { // Build 과정 진행
+                  // 건설할 수 있는 상황이면
+                    if (FillGauge(currBuildSpeed))
+                    {
+                        target.GetComponent<Blueprint>().BuildingBuild();
+                    }
+                }
+                // 놓았을 경우
+                else if (Input.GetKeyUp(KeyCode.E))
+                {
+                    GaugeClear();
+                }
+            }
+            else
+            {
+                // 건설이 완료된 경우 따로 정보를 표시할 것이 없다.
+                GaugeClear();
+                if (targetInfoPanel.activeSelf == true)
+                {
+                    targetInfoPanel.SetActive(false);
+                }
+            }
         }
+        else if (targetTag == "FENCE" || targetTag == "BARBEDWIRE")
+        {
+            // 각각의 상황에 따로 SetActive를 처리하는 이유는 Raycast를 통해서 무언가를 비추고는 있는데
+            // 내가 원하는 타겟이 아닌 경우가 있기 때문에 원하는 타겟일 경우에만 표시하도록 처리한 것.
+            if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
+
+            DefensiveStructure defSturct = target.GetComponent<DefensiveStructure>();
+            // 수리할 수 있는 상황이면
+            if (defSturct.currHP < defSturct.startHp)
+            {
+                targetInfoText.text = TargetInfoTextSetting("수리 필요");
+                // 상호작용키 E를 누르고 있으면
+                if (Input.GetKey(KeyCode.E))
+                {
+                    if (FillGauge(currRepariSpeed))
+                    { // 수리 과정 진행 }
+                        defSturct.Repair();
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.E))
+                {
+                    GaugeClear();
+                }
+            }
+            else
+            {
+                // 수리가 완료된 상태면 따로 표시할 것이 없다.
+                GaugeClear();
+                if (targetInfoPanel.activeSelf == true)
+                {
+                    targetInfoPanel.SetActive(false);
+                }
+            }
+        }
+
         // 상점에 다가가면 상점이라고 표시가 뜨고 키를 누르면 상점이 열린다.
         else if (targetTag == "STORE" && Vector3.Distance(this.transform.position, target.transform.position) <= 5f)
         {
@@ -287,10 +348,33 @@ public class PlayerAction : MonoBehaviour
         // 보고있는 대상은 있는데 그 대상이 내가 원하는 대상이 아닐 경우 정보 표시가 필요없다.
         else
         {
-            GaugeClear();
-            if (targetInfoPanel.activeSelf == true)
+            // 보고 있는 대상이 없는데 체력이 최대 체력보다 낮을 경우
+            // 회복 아이템이 있는 경우
+            if (playerCtrl.haveMedikit && playerCtrl.currHP < playerCtrl.maxHp)
             {
-                targetInfoPanel.SetActive(false);
+                if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
+                targetInfoText.text = TargetInfoTextSetting("회복 가능");
+                if (Input.GetKey(KeyCode.E))
+                {
+                    if (FillGauge(healingSpeed))
+                    {
+                        //Debug.Log("____ 회복 ____");
+                        playerCtrl.Healing(currHealingPoint);
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.E))
+                {
+                    GaugeClear();
+                }
+
+            }
+            else
+            {
+                GaugeClear();
+                if (targetInfoPanel.activeSelf == true)
+                {
+                    targetInfoPanel.SetActive(false);
+                }
             }
         }
 
@@ -347,5 +431,10 @@ public class PlayerAction : MonoBehaviour
 
     }
     #endregion
+
+
+
+
+
 
 }

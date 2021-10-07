@@ -18,6 +18,9 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
     public float damage;
     public bool down;
     public bool dead;
+
+    public eCharacterState state;
+
     //public event Action OnDeath;
     protected virtual void OnEnable()  // 클래스가 생성될때 리셋되는 상태
     {
@@ -56,7 +59,7 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
         // 제거하든 disable처리하든
     }
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
         // 사망 애니매이션 실행
 

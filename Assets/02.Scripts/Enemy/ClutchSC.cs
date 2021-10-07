@@ -11,7 +11,7 @@ public class ClutchSC : LivingEntity
     public GameObject attackColl;
 
     float traceRange = 10f;
-    float attackDistance = 4f;
+    float attackDistance = 2.5f;
 
     private NavMeshAgent pathFinder;
     private Animator enemyAnimator;
@@ -24,15 +24,6 @@ public class ClutchSC : LivingEntity
 
     Coroutine co_updatePath;
     Coroutine co_chageTarget;
-
-    //public enum eCharacterState
-    //{
-    //    Trace,
-    //    Attack,
-    //    Die
-    //}
-
-    private eCharacterState state;
 
     List<GameObject> list = new List<GameObject>();
 
@@ -103,7 +94,7 @@ public class ClutchSC : LivingEntity
 
         if (isAttacking == true)
         {
-            Quaternion LookRot = Quaternion.LookRotation(targetEntity.transform.position - this.transform.position);
+            Quaternion LookRot = Quaternion.LookRotation(new Vector3(targetEntity.transform.position.x, 0, targetEntity.transform.position.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, LookRot, 60f * Time.deltaTime);
         }
     }
@@ -114,7 +105,6 @@ public class ClutchSC : LivingEntity
     {
         if (other.CompareTag("PLAYER"))
         {
-            Debug.Log("=== Player Contact ===");
             if (!list.Contains(other.gameObject))
             {
                 list.Add(other.gameObject);
@@ -125,8 +115,23 @@ public class ClutchSC : LivingEntity
 
                 ClutchSC clutch = other.GetComponent<ClutchSC>();
                 other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
+                
+            }
+            else
+                return;
+        } 
+        if (other.CompareTag("MAINDOOR") || other.CompareTag("DEFENSIVEGOODS"))
+        {
+            if (!list.Contains(other.gameObject))
+            {
+                list.Add(other.gameObject);
+                isTrace = false;
 
-                Debug.Log("HIT");
+                Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);
+                Vector3 hitNormal = new Vector3(hitPoint.x, hitPoint.y, hitPoint.z).normalized;
+
+                ClutchSC clutch = other.GetComponent<ClutchSC>();
+                other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
             }
             else
                 return;
@@ -154,7 +159,9 @@ public class ClutchSC : LivingEntity
             enemyAnimator.SetBool("IsTrace", isTrace);
         }
     }
-
+    /// <summary>
+    /// 공격함수
+    /// </summary>
     void NowAttack()
     {
         isAttacking = true;
@@ -164,13 +171,14 @@ public class ClutchSC : LivingEntity
         pathFinder.isStopped = true;
         pathFinder.speed = 0f;
         enemyAnimator.SetTrigger("IsAttack");
-        float attacktime = 0.5f;
+        float attacktime = 0.4f;
         StartCoroutine(StartAttacking(attacktime));
-        attacktime = 1.5f;
+        attacktime = 0.5f;
         StartCoroutine(NowAttacking(attacktime));
         float attackdelayTime = MoveDuration(eCharacterState.Attack);
         StartCoroutine(EndAttacking(attackdelayTime));
 
+        Debug.Log(MoveDuration(eCharacterState.Attack));
     }
 
     public void ClearList()
@@ -223,7 +231,7 @@ public class ClutchSC : LivingEntity
 
     IEnumerator NowAttacking(float _delaytime)
     {
-        yield return new WaitForSeconds(_delaytime * 0.4f);
+        yield return new WaitForSeconds(_delaytime);
         ClearList();
     }
 
@@ -247,6 +255,9 @@ public class ClutchSC : LivingEntity
     protected override void Down()
     {
         base.Down();
+        pathFinder.enabled = false;
+        enemyAnimator.SetTrigger("IsDead");
+        Debug.Log(MoveDuration(eCharacterState.Die));
         Die();
     }
 }

@@ -7,6 +7,12 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
 {
     public Transform originParent;
 
+    // 이전 버튼을 저장하는 변수
+    GameObject _preButton;
+    // UI의 이전 색을 저장하는 변수
+    Color _preColor;
+
+
     // 지금은 상점의 버튼과 Canvas 등을 전부 하나하나 프리팹으로 생성해뒀지만
     // 나중에 JSON 같은 것으로 정리하면 열 때 정보를 가져와서 로드하는 방식을 사용할 수 있을 것이다.
 
@@ -50,13 +56,16 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // Start is called before the first frame update
     void Start()
     {
-
+        _preColor = new Color();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnStoreCloseBtn();
+        }
     }
 
     private void OnEnable()
@@ -133,7 +142,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
                 break;
             // 구매 아이템 버튼 클릭.
             case StoreButtonType.ButtonType.BuyButton:
-                BuyItem(_myButton.GetComponent<MyBuyButton>());
+                StartCoroutine(CoCheckSuccessBuy(BuyItem(_myButton.GetComponent<MyBuyButton>())));
 
 
                 break;
@@ -144,6 +153,21 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         }
 
     }
+
+    IEnumerator CoCheckSuccessBuy(bool _success)
+    {
+        // 이전에 클릭한 오브젝트를 따로 저장한다.
+        GameObject _checkObject = _preButton;
+        Color _preCheckColor = _preColor;
+        if (!_success)
+            _checkObject.GetComponent<UnityEngine.UI.Image>().color = Color.red;
+        else
+            _checkObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
+        yield return new WaitForSeconds(0.1f);
+        _checkObject.GetComponent<UnityEngine.UI.Image>().color = _preCheckColor;
+
+    }
+
 
 
     #region Panel Active 모음
@@ -217,16 +241,22 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
 
     #region Information Text 설정
 
+
     // 마우스를 올렸을 때 정보를 가져오기 위해서 사용
     public void OnPointerEnter(PointerEventData eventData)
     {
         Debug.Log("___ Pointer Enter: " + eventData.pointerCurrentRaycast.gameObject.name + " ____");
         try
         {
+            _preButton = eventData.pointerCurrentRaycast.gameObject;
+            // 마우스가 올라간 버튼의 기존 색을 _preColor에 저장하고 회색으로 한다.
+            _preColor = _preButton.GetComponent<UnityEngine.UI.Image>().color;
+            _preButton.GetComponent<UnityEngine.UI.Image>().color = Color.gray;
+
             // 구매할 수 있는 목록의 버튼에 올라가면 그 버튼의 아이템 정보를 가져온다.
-            if (eventData.pointerCurrentRaycast.gameObject.GetComponent<MyButton>().buttonType == StoreButtonType.ButtonType.BuyButton)
+            if (_preButton.GetComponent<MyButton>().buttonType == StoreButtonType.ButtonType.BuyButton)
             {
-                MyBuyButton buyButton = eventData.pointerCurrentRaycast.gameObject.GetComponent<MyBuyButton>();
+                MyBuyButton buyButton = _preButton.GetComponent<MyBuyButton>();
 
                 // text에 문자를 저장할 때 string Builder라는 것을 사용하는 것이 좋다고 한다. 후에 찾아보자.
                 // 아이템의 정보를 표시해준다.
@@ -238,7 +268,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         catch (System.Exception e)
         {
             // 어떤 오브젝트에 닿아서 어떤 에러가 발생했는지 확인
-            Debug.LogWarning(eventData.pointerCurrentRaycast.gameObject.name + e.Message);
+            Debug.LogWarning(_preButton.name + e.Message);
         }
 
     }
@@ -248,7 +278,10 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     {
         try
         {
+            // 정보가 없으므로 정보를 비워준다.
             infoText.text = "";
+            // 버튼 영역을 벗어났으므로 기존의 색으로 되돌려 준다.
+            _preButton.GetComponent<UnityEngine.UI.Image>().color = _preColor;
         }
         catch (System.Exception e)
         {
@@ -260,31 +293,65 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     #endregion
 
 
-    private void BuyItem(MyBuyButton _myBuyButton)
+
+
+
+    private bool BuyItem(MyBuyButton _myBuyButton)
     {
+
+        PlayerCtrl _playerCtrl = transform.parent.GetComponent<PlayerCtrl>();
+        // 보유한 포인트와 가격의 비교를 통해서 구매 가능 여부를 표시해줄 필요가 있다.
+        if (_playerCtrl._point < _myBuyButton._price)
+        {
+            return false;
+        }
+
+
         // 구매할 물건의 UID를 통해서 어떤 물건을 구매하는지 확인
         string firstUID = _myBuyButton._uid.Substring(0, 2);
         string middleUID = _myBuyButton._uid.Substring(2, 3);
         string lastUID = _myBuyButton._uid.Substring(5, 4);
 
+
         // 무기 구매
         if (firstUID == "01")
         {
             Debug.Log("____ My Buy Button Item UID: " + _myBuyButton._uid + " ____");
-            transform.parent.GetComponent<PlayerCtrl>().PlayerWeaponChange(_myBuyButton._uid);
+            // 동일한 무기를 가지고 있으면 스킵하는 기능 필요
+
+
+            _playerCtrl.PlayerWeaponChange(_myBuyButton._uid);
 
         }
         // 아이템 구매
         else if (firstUID == "06")
         {
+            // 플레이어가 이미 아이템(회복 아이템, 방어물자)을 가지고 있으면 추가적인 구매를 할 수 없다.
+            // 회복 아이템의 경우에만
+            if (_playerCtrl.isHaveItem == true && middleUID == "000" && lastUID == "0000")
+            {
+                return false;
+            }
+            // 지금은 경우의 수가 몇 없기 때문에 그냥 if로 처리했는데
+            // 개수가 늘어나면 문제가 생길 수 있다.(코드 작성이 어려워진다.)
+            // 때문에 ItemSetting 쪽에서 bool 값을 return 하고 그 값을 return 하는 것도 방법일 것이다.
 
+            _playerCtrl.ItemSetting(_myBuyButton._uid);
         }
         // 방어 물자 구매
         else if (firstUID == "07")
         {
+            // 이미 아이템을 가지고 있으면 추가적인 구매를 할 수 없다.
+            if (_playerCtrl.isHaveItem == true)
+            {
+                return false;
+            }
 
+            _playerCtrl.ItemSetting(_myBuyButton._uid);
         }
 
+        _playerCtrl._point -= _myBuyButton._price;
+        return true;
     }
 
 }
