@@ -17,36 +17,46 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // 나중에 JSON 같은 것으로 정리하면 열 때 정보를 가져와서 로드하는 방식을 사용할 수 있을 것이다.
 
     // 상점에서 판매하는 것들의 종류를 구분한 버튼 리스트
-    public List<UnityEngine.UI.Button> typeButtonList;
+    //public List<UnityEngine.UI.Button> typeButtonList;
+    public List<MyButton> typeButtonList;
     // 구분된 종류를 표시할 패널 리스트
     public List<UnityEngine.UI.Image> typePanelList;
 
     // 무기의 종류를 구분하는 버튼 리스트
-    public List<UnityEngine.UI.Button> weaponTypeButtonList;
+    //public List<UnityEngine.UI.Button> weaponTypeButtonList;
+    public List<MyButton> weaponTypeButtonList;
     // 구분된 패널 리스트
     public List<UnityEngine.UI.Image> weaponTypePanelList;
     // Rifle 리스트
-    public List<UnityEngine.UI.Button> rifleList;
+    //public List<UnityEngine.UI.Button> rifleList;
+    public List<MyButton> rifleList;
     // SMG 리스트
-    public List<UnityEngine.UI.Button> smgList;
+    //public List<UnityEngine.UI.Button> smgList;
+    public List<MyButton> smgList;
     // SG 리스트
-    public List<UnityEngine.UI.Button> sgList;
+    //public List<UnityEngine.UI.Button> sgList;
+    public List<MyButton> sgList;
 
     // 아이템의 종류를 구분하는 버튼 리스트
-    public List<UnityEngine.UI.Button> itemTypeButtonList;
+    //public List<UnityEngine.UI.Button> itemTypeButtonList;
+    public List<MyButton> itemTypeButtonList;
     // 구분된 아이템 패널 리스트
     public List<UnityEngine.UI.Image> itemTypePanelList;
     // 아이템 리스트
-    public List<UnityEngine.UI.Button> itemList;
+    //public List<UnityEngine.UI.Button> itemList;
+    public List<MyButton> itemList;
     // 특전 리스트
-    public List<UnityEngine.UI.Button> perkList;
+    //public List<UnityEngine.UI.Button> perkList;
+    public List<MyButton> perkList;
 
     // 방어 물자의 정류를 구분하는 버튼 리스트
-    public List<UnityEngine.UI.Button> defStructTypeButtonList;
+    //public List<UnityEngine.UI.Button> defStructTypeButtonList;
+    public List<MyButton> defStructTypeButtonList;
     // 구분된 패널 리스트
     public List<UnityEngine.UI.Image> defStructTypePanelList;
     // 방어 물자 리스트
-    public List<UnityEngine.UI.Button> defStructList;
+    //public List<UnityEngine.UI.Button> defStructList;
+    public List<MyButton> defStructList;
 
 
     // 판매 목록의 정보를 표시해주는 텍스트
@@ -298,6 +308,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
 
     private bool BuyItem(MyBuyButton _myBuyButton)
     {
+        bool canBuy = true;
 
         PlayerCtrl _playerCtrl = transform.parent.GetComponent<PlayerCtrl>();
         // 보유한 포인트와 가격의 비교를 통해서 구매 가능 여부를 표시해줄 필요가 있다.
@@ -319,8 +330,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
             Debug.Log("____ My Buy Button Item UID: " + _myBuyButton._uid + " ____");
             // 동일한 무기를 가지고 있으면 스킵하는 기능 필요
 
-
-            _playerCtrl.PlayerWeaponChange(_myBuyButton._uid);
+            canBuy = _playerCtrl.PlayerWeaponChange(_myBuyButton._uid);
 
         }
         // 아이템 구매
@@ -336,7 +346,11 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
             // 개수가 늘어나면 문제가 생길 수 있다.(코드 작성이 어려워진다.)
             // 때문에 ItemSetting 쪽에서 bool 값을 return 하고 그 값을 return 하는 것도 방법일 것이다.
 
-            _playerCtrl.ItemSetting(_myBuyButton._uid);
+            // 특전의 경우 현재 어떤 특전을 구매하려고 하는지 비교할 마땅한 변수가 없어서
+            // ItemSetting Bool 값으로 반환하게 처음부터 만드는게 맞았던것 같다.
+            // 즉 구매하는 목록의 종류만 넘겨주고 어떤 물건을 구매하는지
+            // 구매가 가능한지는 ItemSetting에서 했었어야 했다.
+            canBuy = _playerCtrl.ItemSetting(_myBuyButton._uid);
         }
         // 방어 물자 구매
         else if (firstUID == "07")
@@ -347,11 +361,16 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
                 return false;
             }
 
-            _playerCtrl.ItemSetting(_myBuyButton._uid);
+            canBuy = _playerCtrl.ItemSetting(_myBuyButton._uid);
         }
 
-        _playerCtrl._point -= _myBuyButton._price;
-        return true;
+        // 물건을 구매할 수 있을 때만 포인트를 감소시킨다.
+        if (canBuy == true)
+        {
+            _playerCtrl._point -= _myBuyButton._price;
+            _playerCtrl.ActionTextSetting("구매 완료");
+        }
+        return canBuy;
     }
 
 }

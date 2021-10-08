@@ -3108,7 +3108,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 122
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &2145772139727119354
 CapsuleCollider:
@@ -3133,7 +3133,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 6556190070212295083}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -3171,7 +3171,6 @@ MonoBehaviour:
   mainDoor: {fileID: 0}
   attackColl: {fileID: 7576004938321180424}
   isTrace: 0
-  isAttack: 0
 --- !u!1 &6556190070212295085
 GameObject:
   m_ObjectHideFlags: 0

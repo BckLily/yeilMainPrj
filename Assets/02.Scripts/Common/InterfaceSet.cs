@@ -23,7 +23,8 @@ namespace InterfaceSet
         /// <summary>
         /// 피해를 받았을 때 시행될 함수
         /// </summary>
-        public void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal);
+        /// <returns>적 사망시 플레이어에게 경험치를 반환</returns>
+        public float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal);
     }
 
 

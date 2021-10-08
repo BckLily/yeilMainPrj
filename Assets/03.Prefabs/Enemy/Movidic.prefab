@@ -530,7 +530,7 @@ GameObject:
   - component: {fileID: 1371921427172504666}
   - component: {fileID: 5128566342185990903}
   - component: {fileID: 4221648256065487444}
-  - component: {fileID: 1000010667340346}
+  - component: {fileID: 2588315479055512934}
   - component: {fileID: 1763411112222176874}
   m_Layer: 20
   m_Name: Movidic
@@ -628,9 +628,9 @@ CapsuleCollider:
   m_Radius: 0.8
   m_Height: 6
   m_Direction: 2
-  m_Center: {x: 0, y: 1.57, z: -0.5}
---- !u!65 &1000010667340346
-BoxCollider:
+  m_Center: {x: 0, y: 1.57, z: -1}
+--- !u!136 &2588315479055512934
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -639,9 +639,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.5, y: 1, z: 1}
-  m_Center: {x: 0, y: 0.5, z: -0.5}
+  m_Radius: 0.8
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8, z: -0.5}
 --- !u!114 &1763411112222176874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +668,8 @@ MonoBehaviour:
   maindoor: {fileID: 0}
   attackColl: {fileID: 4616702280645887223}
   isTrace: 0
-  isAttack: 0
+  isAttacking: 0
+  isRush: 0
 --- !u!1 &2319988202224712790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,8 +1852,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.2, z: 1}
-  m_Center: {x: 0, y: 1.5, z: 3.8}
+  m_Size: {x: 1, y: 1.2, z: 0.5}
+  m_Center: {x: 0, y: 1.5, z: 4}
 --- !u!1 &8222489720658811142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1911,6 +1913,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigid: {fileID: 5128566342185990903}
+  movidic: {fileID: 1763411112222176874}
 --- !u!54 &1803386921
 Rigidbody:
   m_ObjectHideFlags: 0

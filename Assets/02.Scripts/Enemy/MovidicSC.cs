@@ -23,9 +23,9 @@ public class MovidicSC : LivingEntity
     [SerializeField]
     private bool isTrace = false;
     [SerializeField]
-    private bool isAttack = false;
     private bool isAttacking = false;
     private bool canRush = true;
+    public bool isRush = false;
 
     Coroutine co_updatePath;
     Coroutine co_changeTarget;
@@ -100,6 +100,7 @@ public class MovidicSC : LivingEntity
 
             if (canRush == true)
             {
+                isRush = true;
                 pastTarget = targetEntity.gameObject;
                 pathFinder.enabled = false;
                 isTrace = false;
@@ -109,7 +110,7 @@ public class MovidicSC : LivingEntity
                 Invoke("RushAttack", 2f);
             }
 
-            if (Vector3.Distance(targetEntity.transform.position, this.transform.position) <= attackDistance)
+            if (Vector3.Distance(targetEntity.transform.position, this.transform.position) <= attackDistance && !isRush)
             {
                 NowAttack();
             }
@@ -165,7 +166,6 @@ public class MovidicSC : LivingEntity
 
     private void OnTriggerExit(Collider other)
     {
-        isAttack = false;
         isTrace = true;
 
         enemyAnimator.SetBool("IsTrace", isTrace);
@@ -201,12 +201,12 @@ public class MovidicSC : LivingEntity
         enemyAnimator.SetTrigger("IsAttack");
         float attackTime = 0.5f;
         StartCoroutine(StartAttacking(attackTime));
-        attackTime = 0.8f;
+        attackTime = 0.6f;
         StartCoroutine(NowAttacking(attackTime));
         float attackdelayTime = MoveDuration(eCharacterState.Attack);
         StartCoroutine(EndAttacking(attackdelayTime));
 
-        //Debug.Log(MoveDuration(eCharacterState.Attack));
+        Debug.Log(MoveDuration(eCharacterState.Attack));
     }
     /// <summary>
     /// 돌진 공격 함수

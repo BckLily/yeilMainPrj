@@ -61,6 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structure: {fileID: 1314554667705293153}
   bluePrint: {fileID: 7671325669611928501}
+  _uid: 070000001
   isBuild: 0
 --- !u!1 &1314554666337005739
 GameObject:
@@ -233,6 +234,7 @@ MonoBehaviour:
   damage: 0
   down: 0
   dead: 0
+  state: 0
   Hp_Ui: {fileID: 4413723466590985716}
 --- !u!1 &1314554668176125983
 GameObject:

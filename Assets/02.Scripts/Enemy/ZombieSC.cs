@@ -12,8 +12,6 @@ public class ZombieSC : LivingEntity
     public GameObject attackColl;      // 공격 판정 콜라이더
     float traceRange = 10f;            // 추적 반경
     float attackDistance = 1.5f;       // 공격 거리
-    float timeBetAttack = 0.5f;        // 공격 간격
-    float lastAttackTime;              // 마지막 공격 시점
 
     private NavMeshAgent pathFinder;   // 경로 계산 에이전트
     private Animator enemyAnimator;    // 애니매이션
@@ -36,6 +34,17 @@ public class ZombieSC : LivingEntity
         pathFinder = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
         Setup();
+
+        exp = 1f;
+
+    }
+
+    // 임시로 적어둠
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        mainDoor = GameManager.instance.bunkerDoor.gameObject;
     }
 
     public void Setup(float newHP = 20f, float newAP = 0f, float newSpeed = 3f, float newDamage = 10f)
@@ -211,13 +220,15 @@ public class ZombieSC : LivingEntity
         pathFinder.isStopped = true;
         pathFinder.speed = 0f;
         enemyAnimator.SetTrigger("IsAttack");
-        float collidertime = 0.8f;
-        StartCoroutine(ColliderON(collidertime));
-        collidertime = 1.5f;
-        StartCoroutine(ColliderOff(collidertime));
+        float collidertime = 0.999f;
+        StartCoroutine(StartAttacking(collidertime));
+        collidertime = 1.166f;
+        StartCoroutine(NowAttacking(collidertime));
         float attackdelayTime = MoveDuration(eCharacterState.Attack);
         StartCoroutine(EndAttacking(attackdelayTime));
         // StartCoroutine(ClearList());
+
+        Debug.Log(MoveDuration(eCharacterState.Attack));
     }
 
     //IEnumerator ClearList()
@@ -233,17 +244,15 @@ public class ZombieSC : LivingEntity
         list.Clear();
     }
 
-    IEnumerator ColliderON(float _delaytime)
+    IEnumerator StartAttacking(float _delaytime)
     {
         yield return new WaitForSeconds(_delaytime);
         pathFinder.enabled = false;
-        attackColl.SetActive(true);
     }
 
-    IEnumerator ColliderOff(float _delaytime)
+    IEnumerator NowAttacking(float _delaytime)
     {
         yield return new WaitForSeconds(_delaytime);
-        attackColl.SetActive(false);
         ClearList();
     }
 
@@ -255,12 +264,29 @@ public class ZombieSC : LivingEntity
         NowTrace();
     }
 
+    void ColliderON()
+    {
+        attackColl.SetActive(true);
+    }
+
+    void ColliderOFF()
+    {
+        attackColl.SetActive(false);
+    }
+
     protected override void Down()
     {
         base.Down();
         pathFinder.enabled = false;
         enemyAnimator.SetTrigger("IsDead");
         Debug.Log(MoveDuration(eCharacterState.Die));
+
+        // 임시 작성
+        if (GameManager.instance.enemies.Contains(this))
+        {
+            GameManager.instance.enemies.Remove(this);
+        }
+
         Die();
     }
 

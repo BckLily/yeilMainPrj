@@ -28,10 +28,10 @@ public class Store : MonoBehaviour
     /// <summary>
     /// 플레이어가 상점과 상호작용을 통해서 상점을 열었을 때 동작할 함수.
     /// </summary>
-    public void OpenStore(Transform _playerTr)
+    public bool OpenStore(Transform _playerTr)
     {
         // 상점을 이미 사용하고 있을 경우 함수를 종료해서 아무런 동작을 하지 않게 한다.
-        if (isUsed == true) { return; }
+        if (isUsed == true) { return false; }
         // 상점이 열렸으므로 isUsed를 true로 해준다.
         isUsed = true;
         // 상점의 Canvas를 활성화하고
@@ -50,7 +50,7 @@ public class Store : MonoBehaviour
 
 
 
-
+        return true;
     }
 
     /// <summary>

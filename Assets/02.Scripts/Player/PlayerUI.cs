@@ -12,7 +12,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
     public PlayerSkillManager playerSkillManager;
 
     #region Status UI
-
+    [Header("Player Status UI")]
     // 플레이어 스탯 UI
     public GameObject playerStatusUI;
     // 플레이어 스탯 UI가 열려있는가
@@ -55,7 +55,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
     #endregion
 
     #region Player Skill
-
+    [Header("Player SKill")]
     // 스킬 포인트를 가지고 있다는 것을 알려주는 오브젝트
     public GameObject skillPointInfoObj;
     public bool havingSkillPoint_isRunning = false;
@@ -74,6 +74,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
     #endregion
 
     #region Player Item UI
+    [Header("Player Item UI")]
     // 아이템이 있을 때 활성화 되는 Panel
     public Image itemPanel;
     // 아이템의 이미지
@@ -81,6 +82,16 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     #endregion
 
+    #region Player Action UI
+    [Header("Player Action UI")]
+    // SerializeField를 사용한 Private
+    // 혹은 private를 기반으로 Awake에서 프리팹 내부의 오브젝트를 찾아서 진행하는것이 일반적.
+    public Image playerActionPanel;
+    public Text playerActionText;
+
+    IEnumerator IEnumActionText = null;
+
+    #endregion
 
     private void Start()
     {
@@ -302,7 +313,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     #endregion
 
-
+    #region Item UI
     public void ItemUISetting(int _lastUID)
     {
 
@@ -341,6 +352,41 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
 
     }
+    #endregion
+
+    #region Player Action UI
+
+
+    public void PlayerActionTextSetting(string _text)
+    {
+        // 플레이어 액션 텍스트가 실행되고 있으면 실행중인 것을 멈추고 실행
+        if (IEnumActionText != null)
+        {
+            StopCoroutine(IEnumActionText);
+        }
+        // 새로운 텍스트를 넣어서 코루틴을 실행시킨다.
+        IEnumActionText = CoActionTextSetting(_text);
+        StartCoroutine(IEnumActionText);
+    }
+
+    IEnumerator CoActionTextSetting(string _text)
+    {
+        // 액션 텍스트를 표시할 Panel이 비활성화 되어있으면 활성화시킨다.
+        if (playerActionPanel.gameObject.activeSelf == false)
+            playerActionPanel.gameObject.SetActive(true);
+        playerActionText.text = string.Format($"{_text.ToString()}");
+        yield return new WaitForSeconds(1f);
+        playerActionText.text = string.Format("");
+        // 액션 텍스트를 표시할 Panel이 활성화되어있으면 비활성화한다.
+        if (playerActionPanel.gameObject.activeSelf == true)
+            playerActionPanel.gameObject.SetActive(false);
+        // 코루틴이 끝났으므로 실행할 때 사용하는 변수를 null로 되돌린다.
+        IEnumActionText = null;
+
+    }
+
+    #endregion 
+
 
 
 }

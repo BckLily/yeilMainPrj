@@ -6,34 +6,12 @@ public class CameraRaycast : MonoBehaviour
 {
 
     #region LayerMask
-    //LayerMask allLayerMask;
-    //LayerMask enemyLayer;
-    //LayerMask defensiveGoodsLayer;
-    //LayerMask storeLayer;
-    //LayerMask playerLayer;
-    //LayerMask mainDoorLayer;
-    //LayerMask wallLayer;
 
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-        //enemyLayer = LayerMask.NameToLayer("ENEMY");
-        //defensiveGoodsLayer = LayerMask.NameToLayer("DEFENSIVEGOODS");
-        //storeLayer = LayerMask.NameToLayer("STORE");
-        //playerLayer = LayerMask.NameToLayer("PLAYER");
-        //mainDoorLayer = LayerMask.NameToLayer("MAINDOOR");
-        //wallLayer = LayerMask.NameToLayer("WALL");
-
-        //allLayerMask = (1 << enemyLayer) | (1 << defensiveGoodsLayer) | (1 << storeLayer) | (1 << playerLayer) | (1 << mainDoorLayer);
-
-        //Debug.Log("EnemyLayer: " + enemyLayer.value);
-        //Debug.Log("GodsLayer: " + defensiveGoodsLayer.value);
-        //Debug.Log("StoreLayer: " + storeLayer.value);
-        //Debug.Log("PlayerLayer: " + playerLayer.value);
-        //Debug.Log("MainDoorLayer: " + mainDoorLayer.value);
-        //Debug.Log("ALL Layer: " + string.Format($"{allLayerMask.value}"));
 
     }
 
@@ -67,11 +45,9 @@ public class CameraRaycast : MonoBehaviour
         {
             //Debug.Log("Hit Object: " + hit.transform.gameObject.name.ToString());
 
-            //target = hit.transform.gameObject;
             //Debug.Log(target.tag);
         }
 
-        //Debug.DrawLine(transform.position, dir, Color.red, _raycastRange);
 
         return hit;
     }
@@ -97,14 +73,10 @@ public class CameraRaycast : MonoBehaviour
         {
             // 샷건처럼 보이기 위해서 정면 기준으로 조금씩 움직일 값.
             float _value = 0.1f;
-            //Debug.Log($"____ _value: {_value} ____");
-            //Debug.Log($"____ Value: {transform.right + transform.up + transform.forward}");
-            //Debug.Log("____ GUN TYPE : " + _gunType + " ____");
 
             // 정면
             if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.DrawLine(transform.position, dir, Color.green, _raycastRange);
                 //Debug.Log("____ HIT 1 ____");
                 _returnHit.Add(hit);
             }
@@ -112,28 +84,24 @@ public class CameraRaycast : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, _value, 0f), out hit, _raycastRange, targetLayerMasks))
             //if (Physics.Raycast(transform.position, new Vector3(dir.x + _value, dir.y + _value, transform.forward.z), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.DrawLine(transform.position, dir, Color.green, _raycastRange);
                 //Debug.Log("____ HIT 2 ____");
                 _returnHit.Add(hit);
             }
             // 아래
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, -_value, 0f), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.DrawLine(transform.position, dir, Color.green, _raycastRange);
                 //Debug.Log("____ HIT 3 ____");
                 _returnHit.Add(hit);
             }
             // 좌
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(-_value, 0f, 0f), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.DrawLine(transform.position, dir, Color.green, _raycastRange);
                 //Debug.Log("____ HIT 4 ____");
                 _returnHit.Add(hit);
             }
             // 우
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(_value, 0f, 0f), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.DrawLine(transform.position, dir, Color.green, _raycastRange);
                 //Debug.Log("____ HIT 5 ____");
                 _returnHit.Add(hit);
             }
@@ -142,7 +110,5 @@ public class CameraRaycast : MonoBehaviour
 
         return _returnHit;
     }
-
-
 
 }

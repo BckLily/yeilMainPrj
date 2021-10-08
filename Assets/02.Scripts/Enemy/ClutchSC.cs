@@ -18,9 +18,8 @@ public class ClutchSC : LivingEntity
 
     [SerializeField]
     private bool isTrace = false;
-    [SerializeField]
-    private bool isAttack = false;
     private bool isAttacking = false;
+    private bool isBleed = false;
 
     Coroutine co_updatePath;
     Coroutine co_chageTarget;
@@ -113,13 +112,24 @@ public class ClutchSC : LivingEntity
                 Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);
                 Vector3 hitNormal = new Vector3(hitPoint.x, hitPoint.y, hitPoint.z).normalized;
 
-                ClutchSC clutch = other.GetComponent<ClutchSC>();
+                int random = Random.Range(0, 10);
+
+                switch (random)
+                {
+                    case 3:
+                    case 4:
+                        // 출혈
+                        StartCoroutine(Bleeding(targetEntity));
+                        break;
+                    default:
+                        break;
+                }
                 other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
-                
+
             }
             else
                 return;
-        } 
+        }
         if (other.CompareTag("MAINDOOR") || other.CompareTag("DEFENSIVEGOODS"))
         {
             if (!list.Contains(other.gameObject))
@@ -130,7 +140,6 @@ public class ClutchSC : LivingEntity
                 Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);
                 Vector3 hitNormal = new Vector3(hitPoint.x, hitPoint.y, hitPoint.z).normalized;
 
-                ClutchSC clutch = other.GetComponent<ClutchSC>();
                 other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
             }
             else
@@ -140,9 +149,7 @@ public class ClutchSC : LivingEntity
 
     private void OnTriggerExit(Collider other)
     {
-        isAttack = false;
         isTrace = true;
-
         enemyAnimator.SetBool("IsTrace", isTrace);
     }
     /// <summary>
@@ -151,6 +158,7 @@ public class ClutchSC : LivingEntity
     void NowTrace()
     {
         state = eCharacterState.Trace;
+
         if (pathFinder.enabled)
         {
             pathFinder.isStopped = false;
@@ -197,7 +205,10 @@ public class ClutchSC : LivingEntity
             if (pathFinder.enabled)
             {
                 pathFinder.isStopped = false;
-                pathFinder.SetDestination(targetEntity.transform.position);
+                Vector3 targetPosition = targetEntity.GetComponent<Collider>().bounds.center;
+                Vector3 targetSize = targetEntity.GetComponent<Collider>().bounds.size;
+                pathFinder.SetDestination(new Vector3(targetPosition.x, (targetPosition.y - (targetSize.y / 2)), targetPosition.z));
+                Debug.Log($"Position {new Vector3(targetPosition.x, (targetPosition.y - (targetSize.y / 2)), targetPosition.z)}");
             }
 
             yield return new WaitForSeconds(0.1f);
@@ -211,7 +222,7 @@ public class ClutchSC : LivingEntity
     {
         while (!dead)
         {
-            Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, 1 << LayerMask.NameToLayer("PLAYER"));
+            Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, 1 << LayerMask.NameToLayer("PLAYER") | 1 << LayerMask.NameToLayer("MAINDOOR"));
 
             if (colliders.Length >= 1)
                 targetEntity = colliders[0].gameObject;
@@ -222,10 +233,22 @@ public class ClutchSC : LivingEntity
         }
     }
 
+    IEnumerator Bleeding(GameObject target)
+    {
+        PlayerCtrl _player = target.GetComponent<PlayerCtrl>();
+
+        float damageTime = 0.5f;
+        for (float i = 0; i < damageTime * 5; i += damageTime)
+        {
+            _player.Damaged(2f, Vector3.zero, Vector3.zero);
+            yield return new WaitForSeconds(damageTime);
+        }
+
+    }
 
     IEnumerator StartAttacking(float _delaytime)
     {
-        yield return new WaitForSeconds(_delaytime);
+        yield return new WaitForSeconds(_delaytime); ;
         pathFinder.enabled = false;
     }
 

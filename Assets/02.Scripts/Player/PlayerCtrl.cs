@@ -21,6 +21,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     {
         get { return playerAction.isBuild || playerAction.isRepair || playerAction.isHeal; }
     }
+
     #endregion
 
     #region 플레이어 Status 관련 변수
@@ -81,7 +82,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     public int level = 1;
     public int skillPoint = 0;
     public int _point; // 플레이어가 보유하고 있는 포인트
-    public float _exp = 0f;
+    internal float _playerExp = 0f;
 
     #endregion
 
@@ -139,8 +140,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #region 플레이어 관련 변수
     private Transform tr; // 플레이어의 위치(Transform)
-    public string playerName { get; private set; } // 플레이어 이름(유저 닉네임)
-    public PlayerClass.ePlayerClass playerClass { get; private set; } // Player의 Class(직업)
+    public string playerName { get; set; } // 플레이어 이름(유저 닉네임)
+    public PlayerClass.ePlayerClass playerClass { get; set; } // Player의 Class(직업)
     public Animator playerAnim; // 플레이어의 Animator
 
     #endregion
@@ -222,8 +223,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     {
 
 
-        playerName = string.Format("Player1");
-        playerClass = PlayerClass.ePlayerClass.Soldier;
+        //playerName = string.Format("Player1");
+        //playerClass = PlayerClass.ePlayerClass.Soldier;
         // 플레이어의 이름 및 플레이어의 직업 설정
         #region 주석
         /*
@@ -345,10 +346,27 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
     #region Player의 무기를 변경하는 함수 관련
-    public void PlayerWeaponChange(string _weaponUID)
+    public bool PlayerWeaponChange(string _weaponUID)
     {
+        // 지금 UID 설정을 잘못해서 rarity가 1밖에 차이나지 않지만
+        // 자리수가 다르게 설정하면 더 쉽게 판단할 수 있다.
+        string _rarity = _weaponUID.Substring(5, 4);
+        if (_rarity == "0001" && GameManager.instance.perk0_Active == false)
+        {
+            ActionTextSetting("1단계 특전을 활성화해야 합니다.");
+            return false;
+        }
+        else if (_rarity == "0002" && GameManager.instance.perk1_Active == false)
+        {
+            ActionTextSetting("2단계 특전을 활성화해야 합니다.");
+            return false;
+        }
+
+
+        ActionTextSetting("무기 변경 중");
         // 상점에서 구매하려는 무기의 transform을 받아서 처리.
         weaponManager.WeaponChange(_weaponUID);
+        return true;
     }
 
     #endregion
@@ -400,24 +418,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            if (level < playerMaxLevel)
-            {
-                level += 1;
-                skillPoint += 1;
-            }
-            else
-            {
-                return;
-            }
-
-            StartCoroutine(SelectSkill());
-
-            // having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
-            if (playerUI.havingSkillPoint_isRunning == false)
-            {
-                //Debug.Log("Skill Point is Start");
-                StartCoroutine(playerUI.HaveSkillPoint());
-            }
+            _playerExp += 90;
+            CheckLevelUp();
 
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
@@ -434,7 +436,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     // 체력 감소 테스트 변수
     //float damageDelay = 5f;
     //float damageTime = 0f;
-
     private void LateUpdate()
     {
         // 커서가 고정이 된 상태에서만 플레이어가 회전하도록 처리.
@@ -447,8 +448,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             // Player Camera Move 함수 실행
             //PlayerCameraMove(); // 기능 제거
         }
-
     }
+
 
 
     #region 플레이어 스킬 관련 
@@ -688,7 +689,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     internal void SkillLevelUp(string _skillUID)
     {
 
-
         // 동일한 이름의 UID를 찾고
         // 각 스킬이 스킬의 최대 레벨이 아닐 경우 레벨을 증가시키고 증가 값에 따라 세팅을 한다.
         if (_skillUID == classDict["StatusSkill0_UID"])
@@ -716,21 +716,21 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             if (playerSkillManager.ability1_Level < abilityMaxLevel) { playerSkillManager.ability1_Level++; }
             PlayerSkillSetting(classDict["AbilitySkill1_UID"], playerSkillManager.ability1_Level);
         }
-        //else if (_skillUID == classDict["Perk0_UID"])
-        //{
-        //    if (playerSkillManager.perk0_Level < perkMaxLevel) { playerSkillManager.perk0_Level++; }
-        //    PlayerSkillSetting(classDict["Perk0_UID"], playerSkillManager.perk0_Level);
-        //}
-        //else if (_skillUID == classDict["Perk1_UID"])
-        //{
-        //    if (playerSkillManager.perk1_Level < perkMaxLevel) { playerSkillManager.perk1_Level++; }
-        //    PlayerSkillSetting(classDict["Perk1_UID"], playerSkillManager.perk1_Level);
-        //}
-        //else if (_skillUID == classDict["Perk2_UID"])
-        //{
-        //    if (playerSkillManager.perk2_Level < perkMaxLevel) { playerSkillManager.perk2_Level++; }
-        //    PlayerSkillSetting(classDict["Perk2_UID"], playerSkillManager.perk2_Level);
-        //}
+        else if (_skillUID == classDict["Perk0_UID"])
+        {
+            if (playerSkillManager.perk0_Level < perkMaxLevel) { playerSkillManager.perk0_Level++; }
+            PlayerSkillSetting(classDict["Perk0_UID"], playerSkillManager.perk0_Level);
+        }
+        else if (_skillUID == classDict["Perk1_UID"])
+        {
+            if (playerSkillManager.perk1_Level < perkMaxLevel) { playerSkillManager.perk1_Level++; }
+            PlayerSkillSetting(classDict["Perk1_UID"], playerSkillManager.perk1_Level);
+        }
+        else if (_skillUID == classDict["Perk2_UID"])
+        {
+            if (playerSkillManager.perk2_Level < perkMaxLevel) { playerSkillManager.perk2_Level++; }
+            PlayerSkillSetting(classDict["Perk2_UID"], playerSkillManager.perk2_Level);
+        }
 
         _select_SkillList.Clear();
 
@@ -1025,7 +1025,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// <param name="damage">받는 데미지</param>
     /// <param name="hitPoint">공격 받은 위치</param>
     /// <param name="hitNormal">공격 받은 위치의 노말 벡터</param>
-    public override void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
+    public override float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.Damaged(damage - addArmour, hitPoint, hitNormal);
 
@@ -1034,7 +1034,9 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         if (currHP <= 0)
         {
             currHP = 0f;
+
         }
+        return 0;
     }
 
 
@@ -1067,7 +1069,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     #endregion
 
 
-    public void ItemSetting(string _itemUid)
+    #region 아이템 세팅
+    public bool ItemSetting(string _itemUid)
     {
         // 원래는 UID를 통해서 DBManager를 거쳐서 어떤 아이템을 가지고 있는지 확인을 하고
         // 아이템의 종류에 따라서 itemImg Sprite를 변경해주는게 맞는 것 같다.
@@ -1076,10 +1079,20 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 상황에 따라 다를 듯.
 
         _haveItemUID = _itemUid;
+        int firstUID = 0;
+        int middleUID = 0;
+        int lastUID = 0;
+        try
+        {
+            firstUID = int.Parse(_itemUid.Substring(0, 2));
+            middleUID = int.Parse(_itemUid.Substring(2, 3));
+            lastUID = int.Parse(_itemUid.Substring(5, 4));
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"____ Input item uid is Wrong {_itemUid} ____");
+        }
 
-        int firstUID = int.Parse(_itemUid.Substring(0, 2));
-        int middleUID = int.Parse(_itemUid.Substring(2, 3));
-        int lastUID = int.Parse(_itemUid.Substring(5, 4));
         switch (firstUID)
         {
             // 아이템 타입
@@ -1115,14 +1128,43 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                     // Perk
                     case 1:
                         // Perk을 구매하면 Game Manager를 통해서 모든 "플레이어"를 찾아서 플레이어의 각 Perk을 활성화해야한다.
+                        switch (lastUID)
+                        {
+                            // 1단계 특전 활성화
+                            case 0:
+                                if (playerSkillManager.perk0_Level >= 1)
+                                    return false;
+                                GameManager.instance.perk0_Active = true;
+                                SkillLevelUp(classDict["Perk0_UID"]);
+
+                                break;
+                            // 2단계 특전 활성화
+                            case 1:
+                                if (playerSkillManager.perk1_Level >= 1)
+                                    return false;
+                                GameManager.instance.perk1_Active = true;
+                                SkillLevelUp(classDict["Perk1_UID"]);
+
+                                break;
+                            // 3단계 특전 활성화
+                            case 2:
+                                if (playerSkillManager.perk2_Level >= 1)
+                                    return false;
+                                GameManager.instance.perk2_Active = true;
+                                SkillLevelUp(classDict["Perk2_UID"]);
+
+                                break;
+                            default:
+                                Debug.LogWarning("____ Wrong UID input: " + _itemUid);
+                                break;
+
+                        }
 
                         break;
                     default:
 
 
                         break;
-
-
                 }
                 break;
             // 방어물자 타입
@@ -1147,8 +1189,18 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
                 }
                 break;
+            default:
+                // 아이템을 사용하고 나면 이쪽으로 올 것이다.
+                playerUI.ItemUISetting(0);
+
+                break;
         }
+
+        return true;
     }
+
+    #endregion
+
 
     /// <summary>
     /// 체력 회복할 때 실행하는 함수
@@ -1157,10 +1209,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     public void Healing(float _healingPoint)
     {
         //isHaveItem = false;
-        // 회복 아이템을 사용했으므로 haveMedikit을 false로
-        haveMedikit = false;
-        // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
-        playerUI.ItemUISetting(0);
 
         // 회복할 양만큼 증가시킨 다음 
         currHP += _healingPoint;
@@ -1171,9 +1219,47 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
 
         HPGaugeChange();
-
-
     }
 
+
+    // 이러한 방식으로 PlayerCtrl을 거쳐서 PlayerUI가 가지고 있는
+    // PlayerActionTextSetting에 접근하게 한다.
+    // 지금은 대부분이 public 으로 되어있어서 큰 차이가 없으나 playerUI의 경우 PlayerCtrl과 동일한 위치에 있으므로
+    // getCompenent를 ㅌ옹해서도 받을 수 있다는 점을봤을 때
+    // 이후 보안?을 높일때 private로 변경 후 진행할 수 있기 때문이다.
+    public void ActionTextSetting(string _text)
+    {
+        playerUI.PlayerActionTextSetting(string.Format($"{_text.ToString()}"));
+    }
+
+
+    public void CheckLevelUp()
+    {
+        float targetExp = (level == 1 ? 50f : 90f);
+
+
+        if (level < 18 && _playerExp >= targetExp)
+        {
+            _playerExp -= targetExp;
+            level += 1;
+            skillPoint += 1;
+        }
+        else
+        {
+            return;
+        }
+
+        // 레벨이 올랐을 때 어떤 스킬을 획득할지 표시해주는 코루틴
+        // 스킬을 획득하지 않은 상태이면 동작하지 않는다.
+        StartCoroutine(SelectSkill());
+
+        // having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
+        if (playerUI.havingSkillPoint_isRunning == false)
+        {
+            //Debug.Log("Skill Point is Start");
+            StartCoroutine(playerUI.HaveSkillPoint());
+        }
+
+    }
 
 }

@@ -29,10 +29,11 @@ public class BunkerDoor : DefensiveStructure
 
     }
 
-    public override void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
+    public override float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.Damaged(damage, hitPoint, hitNormal);
         Debug.Log($"____ Bunker Curr Hp: {this.currHP} ____");
+        return 0;
     }
 
 

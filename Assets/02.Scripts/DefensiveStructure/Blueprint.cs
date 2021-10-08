@@ -10,6 +10,9 @@ public class Blueprint : MonoBehaviour
     public GameObject bluePrint;
     private Collider _collider;
 
+    // 구조물의 UID
+    public string _uid;
+
     public bool isBuild;
 
     void Start()
@@ -47,5 +50,8 @@ public class Blueprint : MonoBehaviour
         _collider.enabled = true;
     }
 
-
+    public void StartAutoRepair()
+    {
+        structure.GetComponent<DefensiveStructure>().BuildingAutoRepair();
+    }
 }

@@ -21,7 +21,6 @@ public class Guns : Weapon
         base.Awake();
 
     }
-
     private void OnEnable()
     {
         muzzlePath = "FireMuzzle/Prefabs/";
@@ -32,7 +31,6 @@ public class Guns : Weapon
         fireMuzzle.SetActive(false);
 
     }
-
 
     private void Start()
     {
@@ -67,8 +65,6 @@ public class Guns : Weapon
         }
 
     }
-
-
 
 
     // 발사 조건의 확인은 WeaponManager에서 한다.

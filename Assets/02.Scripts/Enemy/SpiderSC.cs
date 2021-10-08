@@ -12,7 +12,7 @@ public class SpiderSC : LivingEntity
     public GameObject Bulletobj;
 
     private float traceRange = 15f;
-    private float attackDistance = 5f;
+    private float attackDistance = 12f;
 
     private NavMeshAgent pathFinder;
     private Animator enemyAnimator;
@@ -20,10 +20,9 @@ public class SpiderSC : LivingEntity
     [SerializeField]
     private bool isTrace = false;
     [SerializeField]
-    //private bool isAttack = false;
     private bool isAttacking = false;
 
-    
+
 
     List<GameObject> list = new List<GameObject>();
 
@@ -122,7 +121,7 @@ public class SpiderSC : LivingEntity
         if (pathFinder.enabled)
         {
             pathFinder.isStopped = false;
-            //pathFinder.speed = 3f;
+            pathFinder.speed = 3f;
             isTrace = true;
             enemyAnimator.SetBool("IsTrace", isTrace);
         }
@@ -143,8 +142,8 @@ public class SpiderSC : LivingEntity
 
         float attackdelayTime = 0.5f;
         StartCoroutine(StartAttack(attackdelayTime));
+
         attackdelayTime = MoveDuration(eCharacterState.Attack);
-        Debug.Log(attackdelayTime);
         StartCoroutine(EndAttacking(attackdelayTime));
     }
 
@@ -176,6 +175,15 @@ public class SpiderSC : LivingEntity
         {
             Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, 1 << LayerMask.NameToLayer("PLAYER"));
 
+            try
+            {
+                Debug.Log($"___ TARGET {targetEnitity.name} ____");
+            }
+            catch (System.Exception e)
+            {
+
+            }
+
             if (colliders.Length >= 1)
                 targetEnitity = colliders[0].gameObject;
             else
@@ -186,9 +194,9 @@ public class SpiderSC : LivingEntity
     }
     IEnumerator StartAttack(float _delaytime)
     {
+        pathFinder.enabled = false;
         yield return new WaitForSeconds(_delaytime);
         Debug.Log("=== Start Attack ===");
-        pathFinder.enabled = false;
     }
     /// <summary>
     /// 공격 이후 추적 상태 변경 코루틴

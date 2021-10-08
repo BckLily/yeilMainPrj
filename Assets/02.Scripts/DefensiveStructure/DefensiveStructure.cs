@@ -83,9 +83,10 @@ public class DefensiveStructure : LivingEntity
         }
     }
 
-    public override void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
+    public override float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.Damaged(damage, hitPoint, hitNormal);
+        return exp;
 
     }
 
@@ -96,4 +97,21 @@ public class DefensiveStructure : LivingEntity
             currHP = startHp;
         }
     }
+
+    public void BuildingAutoRepair()
+    {
+        StartCoroutine(CoBuildingAutoRepair());
+    }
+
+    IEnumerator CoBuildingAutoRepair()
+    {
+        yield return new WaitForSeconds(5f);
+        currHP += 5f;
+        if (currHP >= startHp)
+        {
+            currHP = startHp;
+        }
+    }
+
+
 }

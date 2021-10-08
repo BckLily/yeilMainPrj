@@ -61,6 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structure: {fileID: 7682076499666987156}
   bluePrint: {fileID: 8241014726369048219}
+  _uid: 070000000
   isBuild: 0
 --- !u!1 &3839503615070774541
 GameObject:
@@ -314,6 +315,8 @@ MonoBehaviour:
   damage: 0
   down: 0
   dead: 0
+  exp: 0
+  state: 0
   Hp_Ui: {fileID: 6358300838761547427}
 --- !u!1 &7682076501086592264
 GameObject:
@@ -592,6 +595,10 @@ PrefabInstance:
       propertyPath: wall
       value: 
       objectReference: {fileID: 7679076742312360540}
+    - target: {fileID: 8620837773073236190, guid: f250ed3939a8a2a449f8b50fbcde2974, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f250ed3939a8a2a449f8b50fbcde2974, type: 3}
 --- !u!1 &6358300838761547427 stripped

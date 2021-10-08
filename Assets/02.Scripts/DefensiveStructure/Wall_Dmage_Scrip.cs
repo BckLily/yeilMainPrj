@@ -155,7 +155,7 @@ public class Wall_Dmage_Scrip : MonoBehaviour, IDamaged
 
     }
 
-    public void Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
+    public float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         hp_bar.hp -= damage;
 
@@ -163,6 +163,7 @@ public class Wall_Dmage_Scrip : MonoBehaviour, IDamaged
         {
             Die();
         }
+        return 0;
     }
 
 }

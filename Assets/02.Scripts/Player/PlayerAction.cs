@@ -205,7 +205,7 @@ public class PlayerAction : MonoBehaviour
     private void CheckLooking()
     {
         searchTime += Time.deltaTime;
-        // 0.05초마다 보고 있는 대상 확인
+        // searchDelay마다 보고 있는 대상 확인
         if (searchTime >= searchDelay)
         {
             searchTime -= searchDelay;
@@ -249,38 +249,66 @@ public class PlayerAction : MonoBehaviour
 
             bool canBuild = !target.GetComponent<Blueprint>().isBuild;
 
-            // 건설된 상태인지 확인을 하고 건설된 상태가 아니면 건설 가능하다고 표시해준다.
-            targetInfoText.text = (TargetInfoTextSetting(canBuild ? "건설 가능" : "건설 완료"));
-            // 방어물자가 건설되어 있지 않은 상태이면 건설할 수 있다고 표시
-            // 건설된 상태이면? 수리 가능한 상황일 경우 따로 표시를 해서 수리 진행하게 처리.
-            //Debug.Log("Defensive Goods State");
-
-            if (canBuild)
+            if (playerCtrl.haveDefStruct == false)
             {
-                // E를 누를경우 
-                if (Input.GetKey(KeyCode.E))
-                { // Build 과정 진행
-                    isBuild = true;
-                    // 건설할 수 있는 상황이면
-                    if (FillGauge(currBuildSpeed))
-                    {
-                        target.GetComponent<Blueprint>().BuildingBuild();
-                    }
-                }
-                // 놓았을 경우
-                else if (Input.GetKeyUp(KeyCode.E))
-                {
-                    isBuild = false;
-                    GaugeClear();
-                }
+                targetInfoText.text = TargetInfoTextSetting("아이템이 필요합니다.");
             }
             else
             {
-                // 건설이 완료된 경우 따로 정보를 표시할 것이 없다.
-                GaugeClear();
-                if (targetInfoPanel.activeSelf == true)
+                if (target.GetComponent<Blueprint>()._uid != playerCtrl._haveItemUID)
                 {
-                    targetInfoPanel.SetActive(false);
+                    targetInfoText.text = TargetInfoTextSetting("아이템이 필요합니다.");
+                }
+                else
+                {
+                    // 건설된 상태인지 확인을 하고 건설된 상태가 아니면 건설 가능하다고 표시해준다.
+                    targetInfoText.text = (TargetInfoTextSetting(canBuild ? "건설 가능" : "건설 완료"));
+                    // 방어물자가 건설되어 있지 않은 상태이면 건설할 수 있다고 표시
+                    // 건설된 상태이면? 수리 가능한 상황일 경우 따로 표시를 해서 수리 진행하게 처리.
+                    //Debug.Log("Defensive Goods State");
+
+                    if (canBuild)
+                    {
+                        // E를 누를경우 
+                        if (Input.GetKey(KeyCode.E))
+                        { // Build 과정 진행
+                            isBuild = true;
+                            // 건설할 수 있는 상황이면 진행
+                            if (FillGauge(currBuildSpeed))
+                            {
+                                // 건설이 완료됐을 경우 실행.
+                                // 가진 방어물자가 없다고 표시한다.
+                                playerCtrl.haveDefStruct = false;
+                                playerCtrl.ItemSetting("0"); // 가진 아이템이 없으므로 0을 넣어준다.
+
+                                playerCtrl.ActionTextSetting("건설 완료");
+
+                                target.GetComponent<Blueprint>().BuildingBuild();
+                                // 건물 자동 회복 특전을 가지고 있을 경우
+                                if (buildingAutoRepair == true)
+                                {
+                                    // 건물의 자동 회복을 활성화시킨다.
+                                    target.GetComponent<Blueprint>().StartAutoRepair();
+                                }
+
+                            }
+                        }
+                        // 놓았을 경우
+                        else if (Input.GetKeyUp(KeyCode.E))
+                        {
+                            isBuild = false;
+                            GaugeClear();
+                        }
+                    }
+                    else
+                    {
+                        // 건설이 완료된 경우 따로 정보를 표시할 것이 없다.
+                        GaugeClear();
+                        if (targetInfoPanel.activeSelf == true)
+                        {
+                            targetInfoPanel.SetActive(false);
+                        }
+                    }
                 }
             }
         }
@@ -300,7 +328,8 @@ public class PlayerAction : MonoBehaviour
                 {
                     isRepair = true;
                     if (FillGauge(currRepariSpeed))
-                    { // 수리 과정 진행 }
+                    { // 수리 과정 진행
+                        playerCtrl.ActionTextSetting("수리 완료");
                         defSturct.Repair();
                     }
                 }
@@ -328,22 +357,48 @@ public class PlayerAction : MonoBehaviour
             targetInfoText.text = TargetInfoTextSetting(targetTag);
             if (Input.GetKeyDown(KeyCode.E))
             {
+                // Modify
+                // OpenStore에서 열렸나 안열렸나로 반환값을 주는데 이때
+                // 결과값을 이용해서 현재 동작에 대한 결과를 UI에 텍스트로 표시해주는 것이 필요한 것 같다.
+                // 대부분의 동작에 UI로 표시해주는 과정이 있으면 보기 편하다.
+
                 target.GetComponent<Store>().OpenStore(playerTr);
             }
-            //else if (Input.GetKey(KeyCode.E))
-            //{
-            //    FillGauge(5f);
-            //}
-            //else if (Input.GetKeyUp(KeyCode.E))
-            //{
-            //    GaugeClear();
-            //}
         }
         // 플레이어에게 다가가면 플레이어의 이름이 표시된다.
         else if (targetTag == "PLAYER")
         {
-            if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
+            PlayerCtrl _targetPlayer = target.GetComponent<PlayerCtrl>();
+            if (_targetPlayer.currHP < _targetPlayer.maxHp)
+            {
+                if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
+                targetInfoText.text = TargetInfoTextSetting("동료 회복 가능");
+                if (Input.GetKey(KeyCode.E))
+                {
+                    isHeal = true;
+                    if (FillGauge(healingSpeed))
+                    {
+                        playerCtrl.ActionTextSetting("회복 완료");
+                        // 회복 아이템을 사용했으므로 haveMedikit을 false로
+                        playerCtrl.haveMedikit = false;
+                        // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
+                        playerCtrl.ItemSetting("0");
 
+                        // Healing 함수 안에 넣으면 회복되는 대상의 아이템을 사용해버리는 문제가 생긴다.
+                        // 회복시키는 대상의 아이템을 사용해야한다.
+                        //Debug.Log("____ 회복 ____");
+                        _targetPlayer.Healing(currHealingPoint);
+
+
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.E))
+                {
+                    isHeal = false;
+                    GaugeClear();
+                }
+
+            }
             //Debug.Log("Player Live State");
         }
         //else if(targetTag == "MAINDOOR")
@@ -364,6 +419,12 @@ public class PlayerAction : MonoBehaviour
                     isHeal = true;
                     if (FillGauge(healingSpeed))
                     {
+                        playerCtrl.ActionTextSetting("회복 완료");
+                        // 회복 아이템을 사용했으므로 haveMedikit을 false로
+                        playerCtrl.haveMedikit = false;
+                        // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
+                        playerCtrl.ItemSetting("0");
+
                         //Debug.Log("____ 회복 ____");
                         playerCtrl.Healing(currHealingPoint);
                     }
@@ -442,9 +503,6 @@ public class PlayerAction : MonoBehaviour
 
     }
     #endregion
-
-
-
 
 
 

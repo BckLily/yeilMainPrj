@@ -68,7 +68,6 @@ public class WeaponManager : MonoBehaviour
 
     }
 
-
     // Update is called once per frame
     void Update()
     {
@@ -184,6 +183,7 @@ public class WeaponManager : MonoBehaviour
             // 가지고 있는 총알이 0발보다 많은 경우
             if (currGun.carryBullet > 0)
             {
+                playerCtrl.ActionTextSetting("재장전 중");
                 isFire = false;
                 anim.SetBool("IsFire", isFire);
                 //Debug.Log("Reload");
@@ -323,7 +323,6 @@ public class WeaponManager : MonoBehaviour
                 // 발사 이펙트 생성
                 currGun.BulletFire();
 
-
                 CheckFireRaycast();
             }
             else
@@ -362,7 +361,9 @@ public class WeaponManager : MonoBehaviour
             {
                 target = hitTarget.transform.gameObject;
 
+#if UNITY_EDITOR
                 Debug.Log("______ TARGET NAME: " + target.name);
+#endif
                 //Debug.Log("____ Target Layer: " + LayerMask.LayerToName(target.layer));
             }
             catch (System.Exception e)
@@ -378,15 +379,16 @@ public class WeaponManager : MonoBehaviour
             // Raycast 했을 때 대상이 무엇인가
             if (target.CompareTag("ENEMY"))
             {
-                Debug.Log("____ Gun Damage: " + currGun.damage + "____");
-                target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
+                //Debug.Log("____ Gun Damage: " + currGun.damage + "____");
+                playerCtrl._playerExp += target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
+
 
                 // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
-                Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 20f);
+                //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 20f);
             }
             else if (target.CompareTag("WALL"))
             {
-                Debug.Log("____ TARGET TAG WALL");
+                //Debug.Log("____ TARGET TAG WALL");
             }
             //else if (target.CompareTag("UI"))
             // 대상이 없는 상태일 때
@@ -401,6 +403,10 @@ public class WeaponManager : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Ray의 Target이 UI인지 확인하는 함수
+    /// </summary>
+    /// <returns></returns>
     private bool CheckRaycastUI()
     {
         bool lookUI = false;
@@ -416,10 +422,7 @@ public class WeaponManager : MonoBehaviour
         if (Physics.Raycast(transform.position, dir, out hit, (1 << LayerMask.NameToLayer("UI"))))
         {
             lookUI = true;
-            //Debug.Log("Hit Object: " + hit.transform.gameObject.name.ToString());
 
-            //target = hit.transform.gameObject;
-            //Debug.Log(target.tag);
         }
 
         return lookUI;
@@ -428,7 +431,6 @@ public class WeaponManager : MonoBehaviour
 
 
     #endregion
-
 
     #region UI Setting
     /// <summary>
