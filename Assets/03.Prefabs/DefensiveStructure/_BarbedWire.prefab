@@ -14,7 +14,7 @@ GameObject:
   m_Layer: 30
   m_Name: _BarbedWire
   m_TagString: BLUEPRINT
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 1bdeab1db758f4042b3150c6f6146db0, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314401280508169715}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.93, z: 0}
+  m_LocalPosition: {x: 0, y: -2.38, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1311538139750707089}
@@ -45,8 +45,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.9, y: 0.68, z: 0.5}
-  m_Center: {x: 0, y: 2.33, z: 0}
+  m_Size: {x: 3.25, y: 0.68, z: 0.5}
+  m_Center: {x: -0.34, y: 2.72, z: 0}
 --- !u!114 &7566180548909186520
 MonoBehaviour:
   m_ObjectHideFlags: 0

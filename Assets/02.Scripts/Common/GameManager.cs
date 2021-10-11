@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     // 적을 생성할 위치
     Transform[] enemyPoints;
 
+    private IEnumerator _coEnemySpawn;
+
+
     private void Awake()
     {
         if (instance != null)
@@ -41,6 +44,8 @@ public class GameManager : MonoBehaviour
     {
         bunkerDoor = GameObject.FindGameObjectWithTag("BUNKERDOOR").GetComponent<BunkerDoor>();
 
+        _coEnemySpawn = EnemySpawn();
+
         // 지금은 게임 씬에서 시작하니까 바로 GameStart를 실행시킨다.
         GameStart();
     }
@@ -56,7 +61,13 @@ public class GameManager : MonoBehaviour
             ExitGame();
         }
         // 윈도우에서 동작
+
 #elif UNITY_STANDALONE_WIN
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            ExitGame();
+        }
+
 
 #endif
 
@@ -114,13 +125,13 @@ public class GameManager : MonoBehaviour
         // 플레이어의 이름 및 직업 설정
         // Lobyy에서 입력받은 플레이어 이름과 선택된 직업을 사용해서 설정해야한다.
         players[0].playerName = "Player1";
-        players[0].playerClass = PlayerClass.ePlayerClass.Engineer;
+        players[0].playerClass = PlayerClass.ePlayerClass.Medic;
 
 
         enemyPoints = GameObject.Find("EnemySpawnPoints").GetComponentsInChildren<Transform>();
         Debug.Log("EnemyPoints: " + enemyPoints.Length);
 
-        StartCoroutine(EnemySpawn());
+        StartCoroutine(_coEnemySpawn);
 
     }
 
@@ -133,10 +144,21 @@ public class GameManager : MonoBehaviour
         perk2_Active = false;
 
         players.Clear();
-
-
     }
 
+    public void EnemySpawnDebug()
+    {
+        if (_coEnemySpawn != null)
+        {
+            StopCoroutine(_coEnemySpawn);
+            _coEnemySpawn = null;
+        }
+        else
+        {
+            _coEnemySpawn = EnemySpawn();
+            StartCoroutine(_coEnemySpawn);
+        }
+    }
 
     public List<LivingEntity> enemies = new List<LivingEntity>();
 
@@ -144,9 +166,9 @@ public class GameManager : MonoBehaviour
     {
         /*
          * 0
-         * 1 2 3 4 5 6 7
-         * 8 9 10 11 12 13 14
-         * 15 16 17 18 19 20 21
+         * 1/ 2 3 4 5 6 7
+         * 8/ 9 10 11 12 13 14
+         * 15/ 16 17 18 19 20 21
          */
 
 
@@ -154,7 +176,8 @@ public class GameManager : MonoBehaviour
         GameObject zombie = Resources.Load<GameObject>("Prefabs/Enemy/Zombie");
         while (true)
         {
-            int idx = UnityEngine.Random.Range(2, 7);
+            int idx = UnityEngine.Random.Range(2, 8);
+            idx += (UnityEngine.Random.Range(0, 3) * 7);
             if (enemies.Count < 15)
             {
                 enemies.Add(Instantiate(zombie, enemyPoints[idx].position, Quaternion.identity).GetComponent<LivingEntity>());
@@ -162,7 +185,7 @@ public class GameManager : MonoBehaviour
 
             //Debug.Log("____ ENEMY COUNT: " + enemies.Count + " ____");
 
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.5f);
         }
 
 

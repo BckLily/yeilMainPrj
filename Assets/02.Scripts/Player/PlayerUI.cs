@@ -52,6 +52,8 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     public Text pointText; // 보유 포인트 텍스트
 
+    public Image expImage; // 플레이어 경험치 이미지
+
     #endregion
 
     #region Player Skill
@@ -249,6 +251,13 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
         yield break;
     }
+
+
+    public void ExpUISetting()
+    {
+        expImage.fillAmount = playerCtrl._playerExp / playerCtrl.targetExp;
+    }
+
 
     #endregion
 

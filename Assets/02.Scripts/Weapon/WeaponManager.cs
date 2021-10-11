@@ -381,8 +381,8 @@ public class WeaponManager : MonoBehaviour
             {
                 //Debug.Log("____ Gun Damage: " + currGun.damage + "____");
                 playerCtrl._playerExp += target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
-
-
+                Debug.Log($"____ EXP: {playerCtrl._playerExp} ____");
+                playerCtrl.CheckLevelUp();
                 // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
                 //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 20f);
             }

@@ -7438,6 +7438,7 @@ MonoBehaviour:
   repairSpeedText: {fileID: 2020638596034945528}
   autoRepairText: {fileID: 1148016983325426485}
   pointText: {fileID: 469117245}
+  expImage: {fileID: 1819902105}
   skillPointInfoObj: {fileID: 624708306}
   havingSkillPoint_isRunning: 0
   skillSelectObj: {fileID: 214761941}

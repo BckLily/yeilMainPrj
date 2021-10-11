@@ -82,6 +82,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     public int level = 1;
     public int skillPoint = 0;
     public int _point; // 플레이어가 보유하고 있는 포인트
+
+    internal float targetExp = 50f;
     internal float _playerExp = 0f;
 
     #endregion
@@ -371,6 +373,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     #endregion
 
+
+
+
+    private bool useCheat = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -428,6 +435,56 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             if (skillPoint < 0) { skillPoint = 0; }
         }
 
+#endif
+        #endregion
+
+
+        #region Build Cheat
+
+#if UNITY_STANDALONE_WIN
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            useCheat = true;
+        }
+        if (useCheat)
+        {
+            // 직업 설정 테스트 코드
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                playerClass = PlayerClass.ePlayerClass.Soldier;
+                classDict = null;
+                StartCoroutine(CoPlayerClassSetting());
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                playerClass = PlayerClass.ePlayerClass.Medic;
+                classDict = null;
+                StartCoroutine(CoPlayerClassSetting());
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                playerClass = PlayerClass.ePlayerClass.Engineer;
+                classDict = null;
+                StartCoroutine(CoPlayerClassSetting());
+            }
+            // 포인트 획득
+            else if (Input.GetKeyDown(KeyCode.Backslash))
+            {
+                _point = 10000;
+            }
+            // 레벨 증가
+            else if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                _playerExp += 90;
+                CheckLevelUp();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                GameManager.instance.EnemySpawnDebug();
+            }
+
+
+        }
 #endif
         #endregion
 
@@ -1235,7 +1292,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     public void CheckLevelUp()
     {
-        float targetExp = (level == 1 ? 50f : 90f);
+        targetExp = (level == 1 ? 50f : 90f);
 
 
         if (level < 18 && _playerExp >= targetExp)
@@ -1243,23 +1300,24 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             _playerExp -= targetExp;
             level += 1;
             skillPoint += 1;
-        }
-        else
-        {
-            return;
+
+
+            // 레벨이 올랐을 때 어떤 스킬을 획득할지 표시해주는 코루틴
+            // 스킬을 획득하지 않은 상태이면 동작하지 않는다.
+            StartCoroutine(SelectSkill());
+
+            // having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
+            if (playerUI.havingSkillPoint_isRunning == false)
+            {
+                //Debug.Log("Skill Point is Start");
+                StartCoroutine(playerUI.HaveSkillPoint());
+            }
         }
 
-        // 레벨이 올랐을 때 어떤 스킬을 획득할지 표시해주는 코루틴
-        // 스킬을 획득하지 않은 상태이면 동작하지 않는다.
-        StartCoroutine(SelectSkill());
-
-        // having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
-        if (playerUI.havingSkillPoint_isRunning == false)
-        {
-            //Debug.Log("Skill Point is Start");
-            StartCoroutine(playerUI.HaveSkillPoint());
-        }
+        playerUI.ExpUISetting();
 
     }
+
+
 
 }
