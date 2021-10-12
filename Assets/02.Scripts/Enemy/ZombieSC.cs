@@ -7,7 +7,7 @@ public class ZombieSC : LivingEntity
 {
     public LayerMask target;           // 추적 대상 레이어
     private GameObject targetEntity;   // 추적 대상
-    public GameObject mainDoor;
+    //public GameObject mainDoor;
     public GameObject player;
     public GameObject attackColl;      // 공격 판정 콜라이더
     float traceRange = 10f;            // 추적 반경
@@ -28,6 +28,8 @@ public class ZombieSC : LivingEntity
 
     List<GameObject> list = new List<GameObject>();
 
+    LayerMask targetLayer;
+
     private void Awake()    //초기화
     {
         // 게임 오브젝트로부터 사용할 컴포넌트 가져오기
@@ -35,16 +37,17 @@ public class ZombieSC : LivingEntity
         enemyAnimator = GetComponent<Animator>();
         Setup();
 
-        exp = 1f;
+        LayerMask playerLayer = 1 << LayerMask.NameToLayer("PLAYER");
+        LayerMask defensiveGoodsLayer = 1 << LayerMask.NameToLayer("DEFENSIVEGOODS");
 
+        targetLayer = playerLayer | defensiveGoodsLayer;
+
+        _exp = 1;
     }
 
-    // 임시로 적어둠
     protected override void OnEnable()
     {
         base.OnEnable();
-
-        mainDoor = GameManager.instance.bunkerDoor.gameObject;
     }
 
     public void Setup(float newHP = 20f, float newAP = 0f, float newSpeed = 3f, float newDamage = 10f)
@@ -150,7 +153,7 @@ public class ZombieSC : LivingEntity
             if (colliders.Length >= 1)
                 targetEntity = colliders[0].gameObject;
             else
-                targetEntity = mainDoor;
+                targetEntity = startTarget;
 
             yield return new WaitForSeconds(0.1f);
         }
@@ -280,14 +283,15 @@ public class ZombieSC : LivingEntity
         pathFinder.enabled = false;
         enemyAnimator.SetTrigger("IsDead");
         Debug.Log(MoveDuration(eCharacterState.Die));
+        Die();
 
-        // 임시 작성
+
+        // 테스트 코드
         if (GameManager.instance.enemies.Contains(this))
         {
             GameManager.instance.enemies.Remove(this);
         }
 
-        Die();
     }
 
 

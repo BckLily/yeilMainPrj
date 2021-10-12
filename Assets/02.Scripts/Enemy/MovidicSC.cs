@@ -8,7 +8,7 @@ public class MovidicSC : LivingEntity
     public LayerMask target;
 
     private GameObject targetEntity;
-    public GameObject maindoor;
+    //public GameObject maindoor;
     public GameObject attackColl;
     private GameObject pastTarget; // 이전 타겟 저장 변수
 
@@ -40,6 +40,13 @@ public class MovidicSC : LivingEntity
         pathFinder = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
         Setup();
+
+        _exp = 4f;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
     }
 
     public void Setup(float newHp = 300f, float newAP = 5f, float newSpeed = 2f, float newDamage = 20f)
@@ -122,7 +129,7 @@ public class MovidicSC : LivingEntity
             transform.rotation = Quaternion.RotateTowards(transform.rotation, LookRot, 60f * Time.deltaTime);
         }
 
-        if(pastTarget != null && targetEntity.gameObject != pastTarget.gameObject)
+        if (pastTarget != null && targetEntity.gameObject != pastTarget.gameObject)
         {
             canRush = true;
         }
@@ -254,7 +261,7 @@ public class MovidicSC : LivingEntity
             if (colliders.Length >= 1)
                 targetEntity = colliders[0].gameObject;
             else
-                targetEntity = maindoor;
+                targetEntity = startTarget;
 
             yield return new WaitForSeconds(0.1f);
         }

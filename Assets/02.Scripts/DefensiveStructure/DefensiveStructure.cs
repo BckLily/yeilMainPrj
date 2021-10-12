@@ -86,7 +86,7 @@ public class DefensiveStructure : LivingEntity
     public override float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.Damaged(damage, hitPoint, hitNormal);
-        return exp;
+        return 0;
 
     }
 

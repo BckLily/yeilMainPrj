@@ -33,7 +33,7 @@ public class Spider_BulletSC : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("PLAYER"))
+        if (other.CompareTag("PLAYER")||other.CompareTag("BUNKERDOOR")||other.CompareTag("DEFENSIVEGOODS"))
         {
             Debug.Log("=== PLAYER HIT ===");
             Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);

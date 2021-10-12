@@ -7,7 +7,7 @@ public class SpiderSC : LivingEntity
 {
     public LayerMask target;
     private GameObject targetEnitity;
-    public GameObject mainDoor;
+    //public GameObject mainDoor;
     public GameObject player;
     public GameObject Bulletobj;
 
@@ -22,14 +22,13 @@ public class SpiderSC : LivingEntity
     [SerializeField]
     private bool isAttacking = false;
 
-
+    Coroutine co_updatePath;
+    Coroutine co_changeTarget;
 
     List<GameObject> list = new List<GameObject>();
 
+    LayerMask targetLayer;
 
-
-    Coroutine co_updatePath;
-    Coroutine co_changeTarget;
 
     /// <summary>
     /// 초기화
@@ -39,7 +38,20 @@ public class SpiderSC : LivingEntity
         pathFinder = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
         SetUp();
+
+        LayerMask playerLayer = 1 << LayerMask.NameToLayer("PLAYER");
+        LayerMask defensiveGoodsLayer = 1 << LayerMask.NameToLayer("DEFENSIVEGOODS");
+
+        targetLayer = playerLayer | defensiveGoodsLayer;
+
+        _exp = 1f;
     }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
     /// <summary>
     /// 초기 스텟 설정
     /// </summary>
@@ -187,7 +199,7 @@ public class SpiderSC : LivingEntity
             if (colliders.Length >= 1)
                 targetEnitity = colliders[0].gameObject;
             else
-                targetEnitity = mainDoor;
+                targetEnitity = startTarget;
 
             yield return new WaitForSeconds(0.1f);
         }

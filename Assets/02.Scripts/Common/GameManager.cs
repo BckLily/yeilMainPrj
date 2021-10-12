@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
         // 윈도우에서 동작
 #elif UNITY_STANDALONE_WIN
-        if (Input.GetKeyDown(KeyCode.Backspace))
+        if (Input.GetKeyDown(KeyCode.F12))
         {
             ExitGame();
         }
@@ -80,15 +80,6 @@ public class GameManager : MonoBehaviour
 
 #endif
 
-
-
-        #region Get Skill Information Test Code
-        //List<float> skillInfo = FindSkill.GetSkillInfo("Healing", 2);
-        //for(int i = 0; i < skillInfo.Count; i++)
-        //{
-        //    Debug.Log(skillInfo[i]);
-        //}
-        #endregion
 
     }
 
@@ -227,7 +218,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-
+    // 테스트 코드
 
     public void EnemySpawnDebug()
     {
@@ -265,6 +256,7 @@ public class GameManager : MonoBehaviour
             {
                 enemies.Add(Instantiate(zombie, enemyPoints[idx].position, Quaternion.identity).GetComponent<LivingEntity>());
             }
+
 
             //Debug.Log("____ ENEMY COUNT: " + enemies.Count + " ____");
 

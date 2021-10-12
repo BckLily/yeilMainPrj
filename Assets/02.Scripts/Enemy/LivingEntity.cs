@@ -20,14 +20,20 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
     public bool dead;
     public eCharacterState state;
 
-    protected float exp;
+    public GameObject startTarget;
 
+    protected float _exp;
     //public event Action OnDeath;
     protected virtual void OnEnable()  // 클래스가 생성될때 리셋되는 상태
     {
         down = false;
         dead = false;  // 사망상태가 아님
         currHP = startHp; // 현재 체력은 시작 체력이랑 같음
+
+        if (!this.gameObject.CompareTag("BUNKERDOOR"))
+            startTarget = GameManager.instance.bunkerDoor.gameObject;
+
+
 
     }
 
@@ -42,8 +48,10 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
         if (currHP <= 0 && !dead) // 현재체력이 0보다 작고 사망 상태가 아닐떄
         {
             Down(); // DIE 함수 실행
-            return exp;
+
+            return _exp;
         }
+
         return 0;
     }
 
@@ -68,6 +76,7 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
     {
         // 사망 애니매이션 실행
         state = eCharacterState.Die;
+        GetComponent<Collider>().enabled = false;
         dead = true;
     }
 }

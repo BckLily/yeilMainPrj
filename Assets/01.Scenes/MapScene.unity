@@ -862,6 +862,7 @@ MonoBehaviour:
   down: 0
   dead: 0
   state: 0
+  startTarget: {fileID: 0}
   Hp_Ui: {fileID: 2129377183}
 --- !u!1 &475634705
 GameObject:
@@ -914,7 +915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &484956502
 Transform:
   m_ObjectHideFlags: 0
