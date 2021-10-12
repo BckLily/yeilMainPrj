@@ -332,7 +332,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// <returns></returns>
     IEnumerator CoPlayerClassSetting()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.05f);
         while (classDict == null)
         {
             classDict = DBManager.Instance.GetClassInfo(playerClass);
@@ -394,6 +394,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             // Crosshair를 활성화한다.
             crosshairPanel.SetActive(true);
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            MenuOpen();
+        }
+
         #region Editor Test Code
 #if UNITY_EDITOR
         // 무기 변경 테스트 코드
@@ -418,6 +423,10 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             PlayerWeaponChange(weaponManager.currGun.weaponDict["WeaponUID"]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            GameManager.instance.EnemySpawnDebug();
         }
         else if (Input.GetKeyDown(KeyCode.Backslash))
         {
@@ -1319,5 +1328,28 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     }
 
 
+    protected override void Down()
+    {
+        isUIOpen = true;
+        // 멀티 플레이가 되면 다른 플레이어의 상태를 체크하고 진행
+        OnDeath();
+
+
+    }
+
+    public override void OnDeath()
+    {
+        base.OnDeath();
+        dead = true;
+        GameManager.instance.GameOver();
+
+    }
+
+    public void MenuOpen()
+    {
+        playerUI.menuPanel.gameObject.SetActive(!playerUI.menuPanel.gameObject.activeSelf);
+        isUIOpen = playerUI.menuPanel.gameObject.activeSelf;
+        CursorState.CursorLockedSetting(!isUIOpen);
+    }
 
 }

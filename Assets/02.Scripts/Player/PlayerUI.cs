@@ -95,6 +95,11 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 
     #endregion
 
+    #region Menu UI
+    [Header("Menu UI")]
+    public Image menuPanel;
+    #endregion
+
     private void Start()
     {
         playerSkillManager = GetComponent<PlayerSkillManager>();

@@ -192,12 +192,28 @@ public class WeaponManager : MonoBehaviour
                 // 재장전 동작이 끝날 때까지 기다린다.
                 yield return new WaitForSeconds(currGun.reloadTime);
 
-                // 보유한 총알에 현재 총알만큼 더한 다음 재장전 총알만큼 빼준다.
-                currGun.carryBullet += (currGun.currBullet - currGun.reloadBullet);
-                // 현재 총알을 재장전 총알로 한다.
-                currGun.currBullet = currGun.reloadBullet;
+                // 재장전에 소모될 총알 수
+                int _reloadBullet = (currGun.reloadBullet - currGun.currBullet);
+                // 현재 가지고 있는 총알 수가 재장전에 필요한 수보다 많으면
+                if (currGun.carryBullet >= _reloadBullet)
+                {
+                    // 가지고 있는 총알에서 재장전에 필요한 수만큼 뺀다.
+                    currGun.carryBullet -= _reloadBullet;
+                    // 장전된 총알에 재장전 한 총알 수를 더한다.
+                    currGun.currBullet += _reloadBullet; ;
+                }
+                // 가지고 있는 총알 수가 재장전에 필요한 수보다 적을경우
+                else
+                {
+                    // 가지고 있는 총알 수만큼 더한다.
+                    currGun.currBullet += currGun.carryBullet;
+                    // 가지고 있는 총알을 0으로 한다. (전부 소모될 테니까)
+                    currGun.carryBullet = 0;
 
-                // 총 탄 관련 UI 갱신
+                }
+
+
+                //// 총 탄 관련 UI 갱신
 
             }
         }
