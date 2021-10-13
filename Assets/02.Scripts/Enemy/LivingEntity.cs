@@ -30,11 +30,14 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
         dead = false;  // 사망상태가 아님
         currHP = startHp; // 현재 체력은 시작 체력이랑 같음
 
-        if (!this.gameObject.CompareTag("BUNKERDOOR"))
-            startTarget = GameManager.instance.bunkerDoor.gameObject;
+        StartCoroutine(FindBunker());
 
+    }
 
-
+    IEnumerator FindBunker()
+    {
+        while (GameManager.instance.bunkerDoor == null) { yield return null; }
+        startTarget = GameManager.instance.bunkerDoor.gameObject;
     }
 
     public void Attack()  // 공격시 실행될 함수

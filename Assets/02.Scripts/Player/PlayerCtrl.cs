@@ -385,6 +385,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         if (isUIOpen == false)
             PlayerMove();
 
+        if (Input.GetKeyDown(KeyCode.Escape) && transform.Find("StoreCanvas") == null)
+        {
+            MenuOpen();
+        }
+
         // UI(상점)가 열린 상태이고 Crosshair가 활성화된 상태이면
         if (isUIOpen && crosshairPanel.activeSelf)
             // Crosshair를 비활성화한다.
@@ -394,10 +399,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             // Crosshair를 활성화한다.
             crosshairPanel.SetActive(true);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            MenuOpen();
-        }
 
         #region Editor Test Code
 #if UNITY_EDITOR

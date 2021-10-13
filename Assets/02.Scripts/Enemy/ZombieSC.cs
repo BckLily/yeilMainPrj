@@ -168,7 +168,7 @@ public class ZombieSC : LivingEntity
     {
         if (other.CompareTag("PLAYER"))
         {
-            Debug.Log("Player Contact");
+            //Debug.Log("Player Contact");
             if (!list.Contains(other.gameObject))
             {
                 list.Add(other.gameObject);
@@ -181,7 +181,7 @@ public class ZombieSC : LivingEntity
                 ZombieSC zombie = other.GetComponent<ZombieSC>();
                 other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
 
-                Debug.Log("HIT");
+                //Debug.Log("HIT");
             }
             else
                 return;
@@ -231,7 +231,7 @@ public class ZombieSC : LivingEntity
         StartCoroutine(EndAttacking(attackdelayTime));
         // StartCoroutine(ClearList());
 
-        Debug.Log(MoveDuration(eCharacterState.Attack));
+        //Debug.Log(MoveDuration(eCharacterState.Attack));
     }
 
     //IEnumerator ClearList()
@@ -282,7 +282,7 @@ public class ZombieSC : LivingEntity
         base.Down();
         pathFinder.enabled = false;
         enemyAnimator.SetTrigger("IsDead");
-        Debug.Log(MoveDuration(eCharacterState.Die));
+        //Debug.Log(MoveDuration(eCharacterState.Die));
         Die();
 
 

@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public bool perk2_Active = false;
 
     private int maxStage = 30;
-    public int _stage = 1; // 현재 몇 스테이지인지를 저장한 변수
+    public int _stage; // 현재 몇 스테이지인지를 저장한 변수
     public int _remainEnemyCount; // 스테이지에 남은 적 수
 
     private float stageDelay = 60f;
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator _coEnemySpawn;
 
-
+    UnityEngine.UI.Text stageText;
 
     private void Awake()
     {
@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _coEnemySpawn = EnemySpawn();
+        _stage = 1;
 
         /*
 
@@ -186,9 +187,13 @@ public class GameManager : MonoBehaviour
         enemyPoints = GameObject.Find("EnemySpawnPoints").GetComponentsInChildren<Transform>();
         Debug.Log("EnemyPoints: " + enemyPoints.Length);
 
+        stageText = GameObject.Find("StageText").GetComponent<UnityEngine.UI.Text>();
+        stageText.text = _stage.ToString();
+
         yield return new WaitForSeconds(1f);
 
-        StartCoroutine(_coEnemySpawn);
+        if (_coEnemySpawn != null)
+            StartCoroutine(_coEnemySpawn);
     }
 
 
@@ -196,6 +201,7 @@ public class GameManager : MonoBehaviour
     {
         // 테스트 중에는 오류가 발생할 수 있지만
         // 일반적으로 게임 중에는 항상 적은 스폰되고 있을 것이기 때문에 _coEnemeySpawn이 null일 확률은 없다.
+        // 테스트 코드
         try
         {
             StopCoroutine(_coEnemySpawn);
@@ -204,6 +210,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning(e);
         }
+
+
 
         perk0_Active = false;
         perk1_Active = false;

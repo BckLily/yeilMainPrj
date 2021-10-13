@@ -111,7 +111,7 @@ public class WeaponManager : MonoBehaviour
 
         //Debug.Log(weaponPath + weaponDict["Weapon_Name"]);
         // 새로 생성한 무기를 현재 무기로 만들어준다.
-        Debug.Log("____ Weapon Name: " + weaponDict["Weapon_Name"] + " ____");
+        //Debug.Log("____ Weapon Name: " + weaponDict["Weapon_Name"] + " ____");
         currWeaponObj = (GameObject)Instantiate(Resources.Load(weaponPath + weaponDict["Weapon_Name"]), this.transform);
 
         //currWeapon = weaponTr.GetChild(0).gameObject;
@@ -147,7 +147,7 @@ public class WeaponManager : MonoBehaviour
         // 무기 공격 속도 증가
         //Debug.Log("Fire Delay: " + currGun.fireDelay);
         currGun.fireDelay = ((60 / float.Parse(weaponDict["Weapon_AttackSpeed"])) * (1 - (playerCtrl.currIncAttackSpeed * 0.01f)));
-        Debug.Log("Fire Delay: " + currGun.fireDelay);
+        //Debug.Log("Fire Delay: " + currGun.fireDelay);
 
 
 
@@ -378,7 +378,7 @@ public class WeaponManager : MonoBehaviour
                 target = hitTarget.transform.gameObject;
 
 #if UNITY_EDITOR
-                Debug.Log("______ TARGET NAME: " + target.name);
+                //Debug.Log("______ TARGET NAME: " + target.name);
 #endif
                 //Debug.Log("____ Target Layer: " + LayerMask.LayerToName(target.layer));
             }
@@ -397,13 +397,21 @@ public class WeaponManager : MonoBehaviour
             {
                 //Debug.Log("____ Gun Damage: " + currGun.damage + "____");
                 playerCtrl._playerExp += target.GetComponent<LivingEntity>().Damaged(currGun.damage + playerCtrl.currAddAttack, hitTarget.point, hitTarget.normal);
-                Debug.Log($"____ EXP: {playerCtrl._playerExp} ____");
+                //Debug.Log($"____ EXP: {playerCtrl._playerExp} ____");
                 playerCtrl.CheckLevelUp();
+
+                BloodEffectCtrl _effect = PlayerEffectCtrl.GetBloodEffect();
+                _effect.transform.position = hitTarget.point;
+                _effect.transform.rotation = Quaternion.LookRotation(hitTarget.normal);
+
                 // hitTarget.normal을 이용해서 만약 피 튀기는 이펙트를 만드려면 생성 방향을 저쪽으로 해주면 될 것 같다.
                 //Debug.DrawRay(hitTarget.point, hitTarget.normal, Color.red, 20f);
             }
             else if (target.CompareTag("WALL"))
             {
+                SparkEffectCtrl _effect = PlayerEffectCtrl.GetSparkEffect();
+                _effect.gameObject.transform.position = hitTarget.point;
+                _effect.gameObject.transform.rotation = Quaternion.LookRotation(hitTarget.normal);
                 //Debug.Log("____ TARGET TAG WALL");
             }
             //else if (target.CompareTag("UI"))
