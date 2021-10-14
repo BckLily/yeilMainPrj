@@ -23,30 +23,49 @@ public class ButtonCtrl : MonoBehaviour
 
     public void OnGameStartButtonClick()
     {
-
+        PlayerPrefs.SetString("Player_NickName", transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("PlayerNameText").GetComponent<UnityEngine.UI.Text>().text);
+        PlayerPrefs.SetString("Player_Class", transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("ClassDropdown").Find("Label").GetComponent<UnityEngine.UI.Text>().text);
         // 로딩
-        StartCoroutine(GameSceneLoad());
+
+
+        GameManager.instance.SceneLoadingFunction("MapScene");
 
 
     }
 
     IEnumerator GameSceneLoad()
     {
+        SceneManager.LoadScene("LoadingScene", LoadSceneMode.Additive);
         AsyncOperation _operation = SceneManager.LoadSceneAsync("MapScene");
         _operation.allowSceneActivation = false;
 
+        UnityEngine.UI.Slider _slider = GameObject.Find("LoadingSlider").GetComponent<UnityEngine.UI.Slider>();
+
         Debug.Log("___ Loading... ___");
-        while (_operation.progress < 0.9f)
+        while (_operation.progress <= 0.9f)
         {
+            _slider.value = _operation.progress;
             yield return null;
         }
         Debug.Log("____ Loading almost complete ____ ");
 
+        _slider.value = 0.9f;
 
         //Game Manager Game Start
         GameManager.instance.GameStart(_operation,
-            transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("PlayerNameText").GetComponent<UnityEngine.UI.Text>().text,
-            transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("ClassDropdown").Find("Label").GetComponent<UnityEngine.UI.Text>().text);
+            PlayerPrefs.GetString("Player_NickName"),
+            PlayerPrefs.GetString("Player_Class"));
+        // 이전에 쓰던 방식이 있어서 함수를 유지시켰지만
+        // GameStart 함수 내에서 PlayerPrefs를 통해서 받아도 된다.
+
+        int count = 0;
+        while (count < 10)
+        {
+            _slider.value += 1 / 100f;
+            count++;
+            yield return new WaitForSeconds(0.5f);
+        }
+
         _operation.allowSceneActivation = true;
 
     }
