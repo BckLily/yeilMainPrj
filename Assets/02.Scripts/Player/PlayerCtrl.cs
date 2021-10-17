@@ -806,6 +806,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             // 스킬 포인트가 남아있으면 다시 스킬 선택 UI를 표시하게 한다.
             StartCoroutine(SelectSkill());
         }
+        playerUI.HavingSkillPoint(skillPoint >= 1 ? true : false);
 
     }
 
@@ -1316,12 +1317,13 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             // 스킬을 획득하지 않은 상태이면 동작하지 않는다.
             StartCoroutine(SelectSkill());
 
-            // having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
-            if (playerUI.havingSkillPoint_isRunning == false)
-            {
-                //Debug.Log("Skill Point is Start");
-                StartCoroutine(playerUI.HaveSkillPoint());
-            }
+            playerUI.HavingSkillPoint(skillPoint >= 1 ? true : false);
+            //// having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
+            //if (playerUI.havingSkillPoint_isRunning == false)
+            //{
+            //    //Debug.Log("Skill Point is Start");
+            //    StartCoroutine(playerUI.HaveSkillPoint());
+            //}
         }
 
         playerUI.ExpUISetting();
