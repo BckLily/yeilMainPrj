@@ -212,7 +212,7 @@ public class PlayerAction : MonoBehaviour
 
             try
             {
-                target = (GameObject)cameraRaycast.GetRaycastTarget(10f, allLayerMask).transform.gameObject;
+                target = (GameObject)cameraRaycast.GetRaycastTarget(6f, allLayerMask).transform.gameObject;
                 targetTag = target.tag;
             }
             catch (NullReferenceException e)

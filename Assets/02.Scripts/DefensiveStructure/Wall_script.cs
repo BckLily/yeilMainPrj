@@ -95,7 +95,7 @@ public class Wall_script : MonoBehaviour, IDamaged
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(gameObject.transform.position, 5f);
+        //Gizmos.DrawWireSphere(gameObject.transform.position, 5f);
     }
     public void Die()
     {

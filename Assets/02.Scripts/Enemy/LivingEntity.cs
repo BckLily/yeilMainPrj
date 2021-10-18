@@ -29,8 +29,9 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
         down = false;
         dead = false;  // 사망상태가 아님
         currHP = startHp; // 현재 체력은 시작 체력이랑 같음
-
+        this.GetComponent<Collider>().enabled = true;
         StartCoroutine(FindBunker());
+        state = eCharacterState.Trace;
 
     }
 
@@ -72,14 +73,31 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
 
         dead = true;  // 상태를 사망으로
         // 제거하든 disable처리하든
-        Destroy(this.gameObject, 5f);
-    }
+        if (SpwanManager.Instance.enemies.Contains(this))
+        {
+            SpwanManager.Instance.totalCount -= 1;
+            SpwanManager.Instance.enemies.Remove(this);
+        }
 
+        //Destroy(this.gameObject, 5f);
+        ObjectPooling.ReturnObject(gameObject);
+
+
+    }
     public virtual void OnDeath()
     {
         // 사망 애니매이션 실행
         state = eCharacterState.Die;
-        GetComponent<Collider>().enabled = false;
+        this.GetComponent<Collider>().enabled = false;
         dead = true;
     }
+
+    protected virtual IEnumerator WaitForDieAnimation(float _animTime)
+    {
+        yield return new WaitForSeconds(_animTime);
+
+        Die();
+    }
+
+
 }

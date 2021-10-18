@@ -37,7 +37,7 @@ public class DefensiveStructure : LivingEntity
     }
 
 
-    private void Update()
+    protected virtual void Update()
     {
         Ray();
     }
@@ -50,7 +50,7 @@ public class DefensiveStructure : LivingEntity
         if (rayTime >= rayDelay)
         {
             rayTime -= rayDelay;
-            Collider[] colliders = Physics.OverlapSphere(gameObject.transform.position, 5f, 1 << LayerMask.NameToLayer("PLAYER"));
+            Collider[] colliders = Physics.OverlapSphere(gameObject.transform.position, 4f, 1 << LayerMask.NameToLayer("PLAYER"));
 
             if (colliders.Length == 0)
             {

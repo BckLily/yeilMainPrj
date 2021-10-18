@@ -133,7 +133,8 @@ public class ButtonCtrl : MonoBehaviour
 
     public void OnMainMenuButtonClick()
     {
-        StartCoroutine(MainMenuSceneLoad());
+        //StartCoroutine(MainMenuSceneLoad());
+        GameManager.instance.SceneLoadingFunction("MainMenuScene");
     }
 
     IEnumerator MainMenuSceneLoad()

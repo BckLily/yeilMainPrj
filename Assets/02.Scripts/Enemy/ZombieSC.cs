@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
 public class ZombieSC : LivingEntity
 {
     public LayerMask target;           // 추적 대상 레이어
     private GameObject targetEntity;   // 추적 대상
-    //public GameObject mainDoor;
     public GameObject player;
     public GameObject attackColl;      // 공격 판정 콜라이더
     float traceRange = 10f;            // 추적 반경
@@ -25,17 +25,18 @@ public class ZombieSC : LivingEntity
     Coroutine co_updatePath;
     Coroutine co_chageTarget;
 
-
+    [SerializeField]
     List<GameObject> list = new List<GameObject>();
 
     LayerMask targetLayer;
+    Vector3 targetPosition;
+    Vector3 targetSize;
 
     private void Awake()    //초기화
     {
         // 게임 오브젝트로부터 사용할 컴포넌트 가져오기
         pathFinder = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponent<Animator>();
-        Setup();
 
         LayerMask playerLayer = 1 << LayerMask.NameToLayer("PLAYER");
         LayerMask defensiveGoodsLayer = 1 << LayerMask.NameToLayer("DEFENSIVEGOODS");
@@ -44,10 +45,22 @@ public class ZombieSC : LivingEntity
 
         _exp = 1;
     }
+    private void Start()
+    {
+
+    }
+
 
     protected override void OnEnable()
     {
+        pathFinder.enabled = true;
         base.OnEnable();
+        Setup();
+        co_updatePath = StartCoroutine(UpdatePath());
+        co_chageTarget = StartCoroutine(ChangeTarget());
+        targetPosition = targetEntity.GetComponent<Collider>().bounds.center;
+        targetSize = targetEntity.GetComponent<Collider>().bounds.size;
+
     }
 
     public void Setup(float newHP = 20f, float newAP = 0f, float newSpeed = 3f, float newDamage = 10f)
@@ -96,11 +109,6 @@ public class ZombieSC : LivingEntity
         return time;
     }
 
-    private void Start()
-    {
-        co_updatePath = StartCoroutine(UpdatePath());
-        co_chageTarget = StartCoroutine(ChangeTarget());
-    }
 
     private void Update()
     {
@@ -108,14 +116,14 @@ public class ZombieSC : LivingEntity
         if (dead)
             return;
 
-        if (state == eCharacterState.Trace && Vector3.Distance(new Vector3(targetEntity.transform.position.x, 0, targetEntity.transform.position.z), new Vector3(this.transform.position.x, 0, this.transform.position.z)) <= attackDistance && !isAttacking)
+        if (state == eCharacterState.Trace && Vector3.Distance(new Vector3(targetPosition.x, (targetPosition.y - (targetSize.y / 2)), targetPosition.z), this.transform.position) <= attackDistance && !isAttacking)
         {
             NowAttack();
         }
 
         if (isAttacking == true)
         {
-            Quaternion lookRot = Quaternion.LookRotation(new Vector3(targetEntity.transform.position.x, 0, targetEntity.transform.position.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
+            Quaternion lookRot = Quaternion.LookRotation(new Vector3(targetPosition.x, (targetPosition.y - (targetSize.y / 2)), targetPosition.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, 60f * Time.deltaTime);
         }
     }
@@ -132,7 +140,9 @@ public class ZombieSC : LivingEntity
             if (pathFinder.enabled)
             {
                 pathFinder.isStopped = false;
-                pathFinder.SetDestination(targetEntity.transform.position);
+                targetPosition = targetEntity.GetComponent<Collider>().bounds.center;
+                targetSize = targetEntity.GetComponent<Collider>().bounds.size;
+                pathFinder.SetDestination(new Vector3(targetPosition.x, (targetPosition.y - (targetSize.y / 2)), targetPosition.z));
             }
 
             yield return new WaitForSeconds(0.1f);
@@ -148,12 +158,64 @@ public class ZombieSC : LivingEntity
         while (!dead)
         {
             // 오버랩 스피어로 범위내에 있는 PLAYER 레이어 콜라이더 추출
-            Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, 1 << LayerMask.NameToLayer("PLAYER"));
+            Collider[] colliders = Physics.OverlapSphere(this.transform.position, traceRange, targetLayer);
+
+            //Debug.Log("____ Colliders ____");
+            //foreach (var target in colliders)
+            //{
+            //    Debug.Log(target.name);
+            //}
+            //Debug.Log("____ End Colliders ____");
 
             if (colliders.Length >= 1)
-                targetEntity = colliders[0].gameObject;
+            {
+
+                int targetValue = 5;
+                foreach (var collider in colliders)
+                {
+                    // targetValue = 0
+                    if (collider.CompareTag("PLAYER"))
+                    {
+                        targetValue = 0;
+                        targetEntity = collider.gameObject;
+                        break;
+                    }
+                    // targetValue = 1 
+                    else if (collider.CompareTag("FENCE") && targetValue > 1)
+                    {
+                        targetValue = 1;
+                        targetEntity = collider.gameObject;
+                    }
+                    // targetValue = 2
+                    else if (collider.CompareTag("BUNKERDOOR") && targetValue > 2)
+                    {
+                        targetValue = 2;
+                        targetEntity = collider.gameObject;
+                    }
+
+                }
+
+
+
+                //if (colliders[0].gameObject.layer == LayerMask.NameToLayer("DEFENSIVEGOODS"))
+                //{
+                //    if (colliders[0].gameObject.CompareTag("FENCE"))
+                //    {
+                //        targetEntity = colliders[0].gameObject;
+                //    }
+                //}
+                //else
+                //    targetEntity = colliders[0].gameObject;
+            }
             else
                 targetEntity = startTarget;
+
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, 1 << LayerMask.NameToLayer("DEFENSIVEGOODS")))
+            {
+                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; }
+            }
+
 
             yield return new WaitForSeconds(0.1f);
         }
@@ -183,9 +245,24 @@ public class ZombieSC : LivingEntity
 
                 //Debug.Log("HIT");
             }
+
+        }
+        else if (other.CompareTag("BUNKERDOOR") || other.CompareTag("FENCE"))
+        {
+            //Debug.Log("____ Target Setting " + other.tag + " ____");
+
+            if (!list.Contains(other.gameObject))
+            {
+                list.Add(other.gameObject);
+                isTrace = false;
+
+                Vector3 hitPoint = other.ClosestPoint(gameObject.GetComponent<Collider>().bounds.center);
+                Vector3 hitNormal = new Vector3(hitPoint.x, hitPoint.y, hitPoint.z).normalized;
+
+                other.GetComponent<LivingEntity>().Damaged(damage, hitPoint, hitNormal);
+            }
             else
                 return;
-
 
         }
     }
@@ -229,18 +306,9 @@ public class ZombieSC : LivingEntity
         StartCoroutine(NowAttacking(collidertime));
         float attackdelayTime = MoveDuration(eCharacterState.Attack);
         StartCoroutine(EndAttacking(attackdelayTime));
-        // StartCoroutine(ClearList());
 
         //Debug.Log(MoveDuration(eCharacterState.Attack));
     }
-
-    //IEnumerator ClearList()
-    //{
-    //    float delaytime = MoveDuration(eCharacterState.Attack);
-    //    yield return new WaitForSeconds(delaytime);
-
-    //    list.Clear();
-    //}
 
     public void ClearList()
     {
@@ -283,17 +351,9 @@ public class ZombieSC : LivingEntity
         pathFinder.enabled = false;
         enemyAnimator.SetTrigger("IsDead");
         //Debug.Log(MoveDuration(eCharacterState.Die));
-        Die();
 
-
-        // 테스트 코드
-        if (GameManager.instance.enemies.Contains(this))
-        {
-            GameManager.instance.enemies.Remove(this);
-        }
+        StartCoroutine(WaitForDieAnimation(MoveDuration(eCharacterState.Die)));
 
     }
-
-
 
 }

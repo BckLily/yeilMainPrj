@@ -15,6 +15,9 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     public Text playerHpText; // 플레이어 체력 텍스트
     private PlayerUI playerUI; // 플레이어 UI 스크립트
 
+    [SerializeField]
+    private Text playerLevelText;
+
     public bool isUIOpen; // 플레이어가 UI(상점)을 열었는지를 판단하는 변수
     // 플레이어가 건설, 수리, 회복 등의 동작을 하고 있는지 판단하는 불리언 변수
     public bool doAction
@@ -314,7 +317,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         _select_SkillList = new List<string>();
 
         // 시작 포인트는 50포인트로 설정했다.
-        _point = 50;
+        _point = 100;
     }
 
 
@@ -427,7 +430,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            GameManager.instance.EnemySpawnDebug();
+            SpwanManager.Instance.EnemySpawnDebug();
         }
         else if (Input.GetKeyDown(KeyCode.Backslash))
         {
@@ -490,7 +493,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             }
             else if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                GameManager.instance.EnemySpawnDebug();
+                SpwanManager.Instance.EnemySpawnDebug();
             }
 
 
@@ -1146,7 +1149,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 나중에 아이템을 사용할 때 어떤 아이템을 가지고 있는지 아는게 편리하므로 bool 값으로 설정하는 것이 맞을수도 있다.
         // 상황에 따라 다를 듯.
 
-        _haveItemUID = _itemUid;
+
         int firstUID = 0;
         int middleUID = 0;
         int lastUID = 0;
@@ -1161,6 +1164,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             Debug.LogWarning($"____ Input item uid is Wrong {_itemUid} ____");
         }
 
+
         switch (firstUID)
         {
             // 아이템 타입
@@ -1173,8 +1177,10 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         {
                             // 회복 아이템
                             case 0:
+                                _haveItemUID = _itemUid;
                                 //isHaveItem = true;
                                 haveMedikit = true;
+
 
                                 playerUI.ItemUISetting(lastUID);
                                 break;
@@ -1203,6 +1209,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 if (playerSkillManager.perk0_Level >= 1)
                                     return false;
                                 GameManager.instance.perk0_Active = true;
+                                //AchievementManager.havePerk0 = true;
                                 SkillLevelUp(classDict["Perk0_UID"]);
 
                                 break;
@@ -1211,6 +1218,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 if (playerSkillManager.perk1_Level >= 1)
                                     return false;
                                 GameManager.instance.perk1_Active = true;
+                                //AchievementManager.havePerk1 = true;
                                 SkillLevelUp(classDict["Perk1_UID"]);
 
                                 break;
@@ -1219,6 +1227,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 if (playerSkillManager.perk2_Level >= 1)
                                     return false;
                                 GameManager.instance.perk2_Active = true;
+                                //AchievementManager.havePerk2 = true;
                                 SkillLevelUp(classDict["Perk2_UID"]);
 
                                 break;
@@ -1241,6 +1250,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                 {
                     // 방어 물자
                     case 0:
+                        _haveItemUID = _itemUid;
                         //isHaveItem = true;
                         haveDefStruct = true;
 
@@ -1312,6 +1322,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             level += 1;
             skillPoint += 1;
 
+            playerLevelText.text = level.ToString();
 
             // 레벨이 올랐을 때 어떤 스킬을 획득할지 표시해주는 코루틴
             // 스킬을 획득하지 않은 상태이면 동작하지 않는다.
@@ -1342,10 +1353,12 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     public override void OnDeath()
     {
-        base.OnDeath();
-        dead = true;
-        GameManager.instance.GameOver();
-
+        if (dead == false)
+        {
+            dead = true;
+            base.OnDeath();
+            GameManager.instance.GameOver();
+        }
     }
 
     public void MenuOpen()

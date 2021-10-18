@@ -324,7 +324,7 @@ public class WeaponManager : MonoBehaviour
                 if (dontUseBullet)
                 {
                     percent = UnityEngine.Random.Range(0, 100);
-                    Debug.Log("____Percent: " + percent + "____");
+                    //Debug.Log("____Percent: " + percent + "____");
                 }
                 if (!(percent >= (100 - dontUseBulletPercent)))
                 {

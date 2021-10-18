@@ -1154,7 +1154,7 @@ Transform:
   - {fileID: 6556190070212519273}
   m_Father: {fileID: 6556190070212519371}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -89.98021, y: 8.592991e-31, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 1.0383388e-30, z: 0}
 --- !u!1 &6556190070212294731
 GameObject:
   m_ObjectHideFlags: 0
@@ -3056,7 +3056,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6556190070212519371
 Transform:
   m_ObjectHideFlags: 0
@@ -3065,8 +3065,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6556190070212295083}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.51, y: 0, z: 14.32}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6556190070212519017}
   - {fileID: 6556190070212519019}
@@ -3106,7 +3106,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 122
   m_CollisionDetection: 0
@@ -3120,10 +3120,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 1.4
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0.37}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!195 &8277426479980491349
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3133,16 +3133,16 @@ NavMeshAgent:
   m_GameObject: {fileID: 6556190070212295083}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 2.25
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 3
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -3169,7 +3169,6 @@ MonoBehaviour:
   target:
     serializedVersion: 2
     m_Bits: 99328
-  mainDoor: {fileID: 0}
   attackColl: {fileID: 7576004938321180424}
   isTrace: 0
 --- !u!1 &6556190070212295085
@@ -4652,5 +4651,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.75, y: 0.5, z: 0.65}
-  m_Center: {x: 0, y: 1.16, z: 3.5}
+  m_Size: {x: 2.06, y: 1.5, z: 3.92}
+  m_Center: {x: 0, y: 1.16, z: 2.05}

@@ -65,10 +65,10 @@ public class HPBar : MonoBehaviour
         }
     }
 
-    public void Repair()
-    {
+    //public void Repair()
+    //{
 
-    }
+    //}
 
     public void Value_Percent(float value)
     {

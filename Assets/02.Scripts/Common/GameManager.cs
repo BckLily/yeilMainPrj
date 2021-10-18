@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour
     public int _stage; // 현재 몇 스테이지인지를 저장한 변수
     public int _remainEnemyCount; // 스테이지에 남은 적 수
 
-    private float stageDelay = 60f;
-    private float stageTime;
 
     // 멀티가 된다면 사용하게될? 플레이어들 목록
     // Photon에서는 PhotonNetwork.CurrentRoom.Players 을 사용해서 플레이어 목록을 확인할 수 있다.
@@ -30,7 +28,6 @@ public class GameManager : MonoBehaviour
     // 적을 생성할 위치
     Transform[] enemyPoints;
 
-    private IEnumerator _coEnemySpawn;
 
     UnityEngine.UI.Text stageText;
 
@@ -51,11 +48,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _coEnemySpawn = EnemySpawn();
         _stage = 1;
 
         /*
-
         // 지금은 게임 씬에서 시작하니까 바로 GameStart를 실행시킨다.
         GameStart();
         */
@@ -126,8 +121,21 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(2f);
-        gameCanvas.GetComponent<ButtonCtrl>().OnMainMenuButtonClick();
-        GameFail();
+        try
+        {
+            gameCanvas.GetComponent<ButtonCtrl>().OnMainMenuButtonClick();
+        }
+        catch (System.Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
+        }
+        finally
+        {
+            GameFail();
+        }
+
     }
 
 
@@ -193,8 +201,6 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        if (_coEnemySpawn != null)
-            StartCoroutine(_coEnemySpawn);
     }
 
 
@@ -203,16 +209,6 @@ public class GameManager : MonoBehaviour
         // 테스트 중에는 오류가 발생할 수 있지만
         // 일반적으로 게임 중에는 항상 적은 스폰되고 있을 것이기 때문에 _coEnemeySpawn이 null일 확률은 없다.
         // 테스트 코드
-        try
-        {
-            StopCoroutine(_coEnemySpawn);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogWarning(e);
-        }
-
-
 
         perk0_Active = false;
         perk1_Active = false;
@@ -220,61 +216,37 @@ public class GameManager : MonoBehaviour
 
         players.Clear();
         bunkerDoor = null;
-        enemies.Clear();
+        SpwanManager.Instance.enemies.Clear();
 
         CursorState.CursorLockedSetting(false);
 
     }
 
-
-    // 테스트 코드
-
-    public void EnemySpawnDebug()
+    /// <summary>
+    /// 스테이지 클리어시 플레이어에게 포인트와 경험치를 주는 함수
+    /// </summary>
+    public void StageClear()
     {
-        if (_coEnemySpawn != null)
+        StartCoroutine(StageClearCo());
+    }
+
+    IEnumerator StageClearCo()
+    {
+        foreach (var player in players)
         {
-            StopCoroutine(_coEnemySpawn);
-            _coEnemySpawn = null;
-        }
-        else
-        {
-            _coEnemySpawn = EnemySpawn();
-            StartCoroutine(_coEnemySpawn);
+            PlayerCtrl _playerCtrl = player.GetComponent<PlayerCtrl>();
+            _playerCtrl._point += 200;
+            _playerCtrl._playerExp += 50f;
+            yield return null;
         }
     }
 
-    public List<LivingEntity> enemies = new List<LivingEntity>();
 
-    IEnumerator EnemySpawn()
-    {
-        /*
-         * 0
-         * 1/ 2 3 4 5 6 7
-         * 8/ 9 10 11 12 13 14
-         * 15/ 16 17 18 19 20 21
-         */
-
-
-        yield return new WaitForSeconds(3f);
-        GameObject zombie = Resources.Load<GameObject>("Prefabs/Enemy/Zombie");
-        while (true)
-        {
-            int idx = UnityEngine.Random.Range(2, 8);
-            idx += (UnityEngine.Random.Range(0, 3) * 7);
-            if (enemies.Count < 15)
-            {
-                enemies.Add(Instantiate(zombie, enemyPoints[idx].position, Quaternion.identity).GetComponent<LivingEntity>());
-            }
-
-
-            //Debug.Log("____ ENEMY COUNT: " + enemies.Count + " ____");
-
-            yield return new WaitForSeconds(0.5f);
-        }
-
-    }
-
-
+    #region 씬 로딩 함수
+    /// <summary>
+    /// 다른 씬으로 넘어갈 때 로딩씬을 사용할 경우 사용하는 함수.
+    /// </summary>
+    /// <param name="_sceneName">Scene Name</param>
     public void SceneLoadingFunction(string _sceneName)
     {
         StartCoroutine(SceneLoadingCoroutine(_sceneName));
@@ -303,12 +275,15 @@ public class GameManager : MonoBehaviour
         _slider.value = 0.9f;
 
 
-        //Game Manager Game Start
-        GameManager.instance.GameStart(_operation,
-            PlayerPrefs.GetString("Player_NickName"),
-            PlayerPrefs.GetString("Player_Class"));
-        // 이전에 쓰던 방식이 있어서 함수를 유지시켰지만
-        // GameStart 함수 내에서 PlayerPrefs를 통해서 받아도 된다.
+        if (_sceneName == "MapScene")
+        {
+            //Game Manager Game Start
+            GameManager.instance.GameStart(_operation,
+                PlayerPrefs.GetString("Player_NickName"),
+                PlayerPrefs.GetString("Player_Class"));
+            // 이전에 쓰던 방식이 있어서 함수를 유지시켰지만
+            // GameStart 함수 내에서 PlayerPrefs를 통해서 받아도 된다.
+        }
 
         int count = 0;
         while (count < 10)
@@ -321,6 +296,10 @@ public class GameManager : MonoBehaviour
         _operation.allowSceneActivation = true;
 
     }
+
+    #endregion
+
+
 
 
 }

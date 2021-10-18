@@ -63,7 +63,7 @@ public class CameraRaycast : MonoBehaviour
         {
             if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
             {
-                Debug.DrawLine(transform.position, transform.forward, Color.green, _raycastRange);
+                //Debug.DrawLine(transform.position, transform.forward, Color.green, _raycastRange);
 
                 _returnHit.Add(hit);
             }
