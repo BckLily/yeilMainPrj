@@ -6929,7 +6929,6 @@ MonoBehaviour:
   _stage: 0
   _remainEnemyCount: 0
   players: []
-  enemies: []
 --- !u!114 &1434895717
 MonoBehaviour:
   m_ObjectHideFlags: 0

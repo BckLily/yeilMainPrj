@@ -5,22 +5,6 @@ using UnityEngine;
 public class CameraRaycast : MonoBehaviour
 {
 
-    #region LayerMask
-
-    #endregion
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
 
     /// <summary>
     /// 보고 있는 타겟 오브젝트를 그대로 넘겨주는 함수
@@ -34,20 +18,8 @@ public class CameraRaycast : MonoBehaviour
     {
         RaycastHit hit;
 
-        //Vector3 mousePos = Input.mousePosition;
-        //Camera camera = GetComponent<Camera>();
-        //mousePos.z = camera.farClipPlane; // 카메라가 보는 방향과 시야를 가져온다.
-        //Vector3 dir = camera.ScreenToWorldPoint(mousePos);
-
-        // 마우스를 고정 시켜도 마우스 위치랑 카메라 정면이랑 동일히자 않다.
-        //if (Physics.Raycast(transform.position, dir, out hit, _raycastRange, targerLayerMasks))
-        if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
-        {
-            //Debug.Log("Hit Object: " + hit.transform.gameObject.name.ToString());
-
-            //Debug.Log(target.tag);
-        }
-
+        // 마우스를 고정 시켜도 마우스 위치랑 카메라 정면이랑 동일하지 않다.
+        if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks)) { }
 
         return hit;
     }
@@ -63,7 +35,6 @@ public class CameraRaycast : MonoBehaviour
         {
             if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.DrawLine(transform.position, transform.forward, Color.green, _raycastRange);
 
                 _returnHit.Add(hit);
             }
@@ -77,32 +48,26 @@ public class CameraRaycast : MonoBehaviour
             // 정면
             if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.Log("____ HIT 1 ____");
                 _returnHit.Add(hit);
             }
             // 위
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, _value, 0f), out hit, _raycastRange, targetLayerMasks))
-            //if (Physics.Raycast(transform.position, new Vector3(dir.x + _value, dir.y + _value, transform.forward.z), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.Log("____ HIT 2 ____");
                 _returnHit.Add(hit);
             }
             // 아래
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, -_value, 0f), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.Log("____ HIT 3 ____");
                 _returnHit.Add(hit);
             }
             // 좌
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(-_value, 0f, 0f), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.Log("____ HIT 4 ____");
                 _returnHit.Add(hit);
             }
             // 우
             if (Physics.Raycast(transform.position, transform.forward + new Vector3(_value, 0f, 0f), out hit, _raycastRange, targetLayerMasks))
             {
-                //Debug.Log("____ HIT 5 ____");
                 _returnHit.Add(hit);
             }
 

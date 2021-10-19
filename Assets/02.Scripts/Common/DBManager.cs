@@ -18,9 +18,9 @@ public class DBManager : MonoBehaviour
 
 
     [Header("PHP URL String")]
-    private string classUrl;
+    //private string classUrl;
     private string allClassUrl;
-    private string weaponUrl;
+    //private string weaponUrl;
     private string allWeaponUrl;
     private string allSkillUrl;
     private string allPlayerSkillUrl;
@@ -32,7 +32,7 @@ public class DBManager : MonoBehaviour
 
 
     [Header("File Path")]
-    private string resourcePath;
+    //private string resourcePath;
     private string streamingAssetPath;
     private string jsonPath;
     private string classPath;
@@ -60,9 +60,9 @@ public class DBManager : MonoBehaviour
         }
 
 
-        classUrl = "127.0.0.1/Unity/Class.php";
+        //classUrl = "127.0.0.1/Unity/Class.php";
         allClassUrl = "127.0.0.1/Unity/AllClass.php";
-        weaponUrl = "127.0.0.1/Unity/Weapon.php";
+        //weaponUrl = "127.0.0.1/Unity/Weapon.php";
         allWeaponUrl = "127.0.0.1/Unity/AllWeapon.php";
         allSkillUrl = "127.0.0.1/Unity/AllSkill.php";
         allPlayerSkillUrl = "127.0.0.1/Unity/AllPlayerSkill.php";
@@ -73,7 +73,7 @@ public class DBManager : MonoBehaviour
         allStageSpawnUrl = "127.0.0.1/Unity/AllStageSpawn.php";
 
 
-        resourcePath = "/Resources/";
+        //resourcePath = "/Resources/";
         streamingAssetPath = Application.streamingAssetsPath + "/";
         jsonPath = "JSON/";
         classPath = "Class/";
@@ -97,101 +97,7 @@ public class DBManager : MonoBehaviour
         StartCoroutine(GetAllMonsterCo());
         StartCoroutine(GetAllPlayerSkillCo());
 
-        //Debug.Log(streamingAssetPath); // Attsets/StreamingAssets/
     }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Debug.Log(Application.dataPath); // Assets
-        //Debug.Log(Application.streamingAssetsPath); // >> 런타임중 작성 불가 Assets/StreamingAssets
-        //Debug.Log(Application.persistentDataPath); // >> 로컬 폴더 // C:/Users/name/AppData/LocalLow/CompanyName/ProjectName
-
-
-
-    }
-
-
-    #region 실시간으로 Json 요청해서 원하는 값 반환하는 방식 ///실패
-    //public void GetClassInfo(ePlayerClass playerClass)
-    //{
-    //    // playerClass를 받아서 String 값으로 전달하면서 코루틴 실행.
-    //    //StartCoroutine(GetClassCo(playerClass.ToString()));
-    //    // 플레이어의 직업을 받아서 실시간으로 정보를 넘겨주는 방식에서
-    //    // 시작할 때 데이터를 받아서 json파일로 만들어 놓고
-    //    // 요청이 들어오면 json 파일을 읽어서 Dictionary로 되돌려주는 방식으로 변경.
-
-
-
-    //}
-
-    //IEnumerator GetClassCo(string playerClass)
-    //{
-    //    // POST 방식의 요청
-    //    WWWForm form = new WWWForm();
-
-    //    form.AddField("Input_className", playerClass);
-
-    //    // classUrl(php)에 form 값을 넘겨준다.
-    //    WWW webRequest = new WWW(classUrl, form);
-
-    //    yield return webRequest;
-
-    //    // classUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-    //    if (string.IsNullOrEmpty(webRequest.error))
-    //    {
-    //        // 실행
-    //        yield return GetClassJson(webRequest.text);
-    //    }
-
-    //}
-
-    //private object GetClassJson(string _jsonData)
-    //{
-    //    // 입력받은 데이터를 Parsing 하는 단계
-    //    var parseData = JSON.Parse(_jsonData);
-    //    // {"results":[]} 형태의 파일
-    //    var arrayData = parseData["results"];
-    //    // []와 같이 데이터만 남는다.
-
-    //    Dictionary<string, string> classDic = new Dictionary<string, string>();
-
-    //    // 개수가 0개보다 많을 경우
-    //    if (arrayData.Count > 0)
-    //    {
-    //        classDic.Add("ClassName", arrayData[0]["ClassName"].Value);
-    //        classDic.Add("WeaponUID", arrayData[0]["WeaponUID"].Value);
-    //        classDic.Add("StatusSkill0_UID", arrayData[0]["StatusSkill0_UID"].Value);
-    //        classDic.Add("StatusSkill1_UID", arrayData[0]["StatusSkill1_UID"].Value);
-    //        classDic.Add("StatusSkill2_UID", arrayData[0]["StatusSkill2_UID"].Value);
-    //        classDic.Add("AbilitySkill0_UID", arrayData[0]["AbilitySkill0_UID"].Value);
-    //        classDic.Add("AbilitySkill1_UID", arrayData[0]["AbilitySkill1_UID"].Value);
-    //        classDic.Add("Perk0_UID", arrayData[0]["Perk0_UID"].Value);
-    //        classDic.Add("Perk1_UID", arrayData[0]["Perk1_UID"].Value);
-    //        classDic.Add("Perk2_UID", arrayData[0]["Perk2_UID"].Value);
-
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("없는 직업입니다.");
-    //    }
-
-    //    dataText.text = "ClassName: " + classDic["ClassName"] + "\n";
-    //    dataText.text += "WeaponUID: " + classDic["WeaponUID"] + "\n";
-    //    dataText.text += "StatusSkill0_UID: " + classDic["StatusSkill0_UID"] + "\n";
-    //    dataText.text += "StatusSkill1_UID: " + classDic["StatusSkill1_UID"] + "\n";
-    //    dataText.text += "StatusSkill2_UID: " + classDic["StatusSkill2_UID"] + "\n";
-    //    dataText.text += "AbilitySkill0_UID: " + classDic["AbilitySkill0_UID"] + "\n";
-    //    dataText.text += "AbilitySkill1_UID: " + classDic["AbilitySkill1_UID"] + "\n";
-    //    dataText.text += "Perk0_UID: " + classDic["Perk0_UID"] + "\n";
-    //    dataText.text += "Perk1_UID: " + classDic["Perk1_UID"] + "\n";
-    //    dataText.text += "Perk2_UID: " + classDic["Perk2_UID"] + "\n";
-
-    //    return 0;
-    //}
-
-    #endregion
 
 
     #region 미리 Json을 만들어 놓고 요청하면 값 반환
@@ -205,21 +111,19 @@ public class DBManager : MonoBehaviour
         string jsonString = null;
         try
         {
-            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
             jsonString = File.ReadAllText(streamingAssetPath + jsonPath + classPath + playerClass.ToString() + ".json");
         }
         catch (Exception e)
         {
-            //Debug.LogWarning(e);
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
             return null;
         }
 
         JsonData classData = JsonMapper.ToObject(jsonString);
 
-        //Debug.Log(classData["ClassName"].ToString());
-
         Dictionary<string, string> _classDict = new Dictionary<string, string>();
-
 
         _classDict.Add("ClassName", classData["ClassName"].ToString());
         _classDict.Add("WeaponUID", classData["WeaponUID"].ToString());
@@ -291,14 +195,15 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["ClassName"].Value;
                 JsonData classJson = JsonMapper.ToJson(classDic);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + classPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + classPath + fileName + ".json", classJson.ToString());
                 classDic.Clear();
             }
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("없는 직업입니다.");
+#endif
         }
     }
     #endregion
@@ -312,13 +217,9 @@ public class DBManager : MonoBehaviour
     /// <returns></returns>
     public Dictionary<string, string> GetWeaponInfo(string _weaponUID)
     {
-        //string jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
         string jsonString = File.ReadAllText(streamingAssetPath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
 
-
         JsonData weaponData = JsonMapper.ToObject(jsonString);
-
-        //Debug.Log(weaponData["Weapon_UID"].ToString());
 
         Dictionary<string, string> _weaponDict = new Dictionary<string, string>();
 
@@ -390,7 +291,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Weapon_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(weaponDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
 
                 weaponDict.Clear();
@@ -398,7 +298,9 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("무기 데이터가 없습니다.");
+#endif
         }
     }
 
@@ -417,7 +319,6 @@ public class DBManager : MonoBehaviour
         string jsonString = null;
         try
         {
-            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
             jsonString = File.ReadAllText(streamingAssetPath + jsonPath + skillPath + skillUID.ToString() + ".json");
         }
         catch (Exception e)
@@ -430,8 +331,6 @@ public class DBManager : MonoBehaviour
         }
 
         JsonData skillData = JsonMapper.ToObject(jsonString);
-
-        //Debug.Log(classData["ClassName"].ToString());
 
         Dictionary<string, string> _skillDict = new Dictionary<string, string>();
 
@@ -490,7 +389,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Skill_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(skillDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + skillPath + fileName + ".json", classJson.ToString());
 
                 skillDict.Clear();
@@ -498,10 +396,10 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("스킬 데이터가 없습니다.");
+#endif
         }
-
-
     }
 
     #endregion
@@ -516,21 +414,19 @@ public class DBManager : MonoBehaviour
         string jsonString = null;
         try
         {
-            //jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + classPath + playerClass.ToString() + ".json");
             jsonString = File.ReadAllText(streamingAssetPath + jsonPath + playerSkillPath + _skillUID.ToString() + ".json");
         }
         catch (Exception e)
         {
-            //Debug.LogWarning(e);
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
             return null;
         }
 
         JsonData playerSkillData = JsonMapper.ToObject(jsonString);
 
-        //Debug.Log(classData["ClassName"].ToString());
-
         Dictionary<string, string> _playerSkillDict = new Dictionary<string, string>();
-
 
         _playerSkillDict.Add("PlayerSkill_UID", playerSkillData["PlayerSkill_UID"].ToString());
         _playerSkillDict.Add("PlayerSkill_Name", playerSkillData["PlayerSkill_Name"].ToString());
@@ -591,7 +487,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["PlayerSkill_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(playerSkillDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + playerSkillPath + fileName + ".json", classJson.ToString());
 
                 playerSkillDict.Clear();
@@ -599,7 +494,9 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("플레이어 스킬이 없습니다.");
+#endif
         }
     }
 
@@ -609,13 +506,10 @@ public class DBManager : MonoBehaviour
     #region DefensiveStructure
     public Dictionary<string, string> GetDefInfo(string _defUID)
     {
-        //string jsonString = File.ReadAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + _weaponUID.ToString() + ".json");
         string jsonString = File.ReadAllText(streamingAssetPath + jsonPath + defensiveStructurePath + _defUID.ToString() + ".json");
 
 
         JsonData defData = JsonMapper.ToObject(jsonString);
-
-        //Debug.Log(weaponData["Weapon_UID"].ToString());
 
         Dictionary<string, string> _defDict = new Dictionary<string, string>();
 
@@ -679,7 +573,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Defensive_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(structDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + defensiveStructurePath + fileName + ".json", classJson.ToString());
 
                 structDict.Clear();
@@ -687,7 +580,9 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("방어물자 정보가 없습니다.");
+#endif
         }
     }
 
@@ -746,7 +641,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Item_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(itemDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + itemPath + fileName + ".json", classJson.ToString());
 
                 itemDict.Clear();
@@ -754,7 +648,9 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("아이템 정보가 없습니다.");
+#endif
         }
     }
 
@@ -776,7 +672,9 @@ public class DBManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            //Debug.LogWarning(e);
+#if UNITY_EDITOR
+            Debug.LogWarning(e);
+#endif
             return null;
         }
 
@@ -855,7 +753,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Monster_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(monsterDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + monsterPath + fileName + ".json", classJson.ToString());
 
                 monsterDict.Clear();
@@ -863,15 +760,15 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("몬스터 정보가 없습니다.");
+#endif
         }
     }
-
 
     #endregion
 
     #region MonsterSkill
-
 
     /// <summary>
     /// DB에서 모든 몬스터 스킬 정보를 가져오는 코루틴
@@ -921,7 +818,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["MonsterSkill_UID"].Value;
                 JsonData classJson = JsonMapper.ToJson(monsterSkillDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + monsterSkillPath + fileName + ".json", classJson.ToString());
 
                 monsterSkillDict.Clear();
@@ -929,7 +825,9 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("몬스터 스킬 데이터가 없습니다.");
+#endif
         }
     }
 
@@ -984,7 +882,6 @@ public class DBManager : MonoBehaviour
                 string fileName = arrayData[i]["Stage_Count"].Value;
                 JsonData classJson = JsonMapper.ToJson(spawnDict);
 
-                //File.WriteAllText(Application.dataPath + resourcePath + jsonPath + weaponPath + fileName + ".json", classJson.ToString());
                 File.WriteAllText(streamingAssetPath + jsonPath + stageSpawnPath + fileName + ".json", classJson.ToString());
 
                 spawnDict.Clear();
@@ -992,17 +889,13 @@ public class DBManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR
             Debug.Log("스테이지 정보가 없습니다.");
+#endif
         }
     }
 
     #endregion
-
-
-
-    // 통합해서 php에서 데이터를 읽어오고 파일을 저장하려고 했는데 파일 이름을 정하는데 오류가 있어 그냥 포기함.
-    // 다른 방식이 있을 수 있으나 지금은 하나하나 작성하는 것으로 한다.
-
 
 
 }

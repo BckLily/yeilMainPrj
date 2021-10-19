@@ -25,7 +25,7 @@ public static class ObjectCounting
         }
         if (_stage % 10 == 0)
         {
-            MovidicSpwanCount = 5;
+            MovidicSpwanCount = 1;
         }
         else
         {
@@ -38,17 +38,6 @@ public static class ObjectCounting
         spawnCount.Add(MovidicSpwanCount);
 
         return spawnCount;
-
-        //for(int i =1; i <= stage; i++)
-        //{
-        //    zombieSpwanCount += (i* 5);
-        //    if (i % 3 == 0)
-        //        spiderSpwanCount += (i* 3);
-        //    if (i % 5 == 0)
-        //        clutchSpwanCount += (i* 2);
-        //    if (i % 10 == 0)
-        //        MovidicSpwanCount = 1;
-        //}
     }
 
 

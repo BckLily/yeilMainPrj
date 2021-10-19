@@ -66,7 +66,7 @@ public class PlayerSkillManager : MonoBehaviour
             if (playerCtrl._select_SkillList[i] == "030000000")
             {
 
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"공격력 증가".ToString()}</size></b>\n" +
                     $"공격력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $" 증가합니다.";
             }
@@ -74,7 +74,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"방어력 증가".ToString()}</size></b>\n" +
                     $"방어력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $" 증가합니다.";
             }
@@ -82,7 +82,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"최대 체력 증가".ToString()}</size></b>\n" +
                     $"최대 체력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $" 증가합니다.";
             }
@@ -90,7 +90,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"최대 탄약 증가".ToString()}</size></b>\n" +
                     $"보유 최대 총알이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $"% 증가합니다.";
             }
@@ -98,7 +98,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"공격 속도 증가".ToString()}</size></b>\n" +
                     $"공격 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $"% 증가합니다.";
             }
@@ -106,7 +106,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"회복량 증가".ToString()}</size></b>\n" +
                     $"아이템 회복량이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $" 증가합니다.";
             }
@@ -114,7 +114,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"회복 속도 증가".ToString()}</size></b>\n" +
                     $"아이템 사용 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $"% 증가합니다.";
             }
@@ -122,7 +122,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"].ToString()}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"건설 속도 증가".ToString()}</size></b>\n" +
                     $"건설 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $"% 증가합니다.";
             }
@@ -130,7 +130,7 @@ public class PlayerSkillManager : MonoBehaviour
             {
 
                 //playerUI.skillInfo_ImageList
-                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{skillInfo["PlayerSkill_Name"]}</size></b>\n" +
+                playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"수리 속도 증가".ToString()}</size></b>\n" +
                     $"수리 속도가 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +
                     $"% 증가합니다.";
             }

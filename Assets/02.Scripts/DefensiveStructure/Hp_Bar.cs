@@ -8,33 +8,26 @@ public class Hp_Bar : MonoBehaviour
     public float hp;
     public float maxhp;
 
-
     public Slider hp_fillamount;//hp 슬라이더 바
     public Text hp_percent;//hp바 남은 퍼센테이지 텍스트
     public Text hp_function;//hp바 알림 텍스트
-    //Transform cam;
-
 
     bool IsRepair;
 
     void Start()
     {
-        //hp_percent = GetComponent<Text>();
-        //hp_function = GetComponent<Text>();
-
         IsRepair = false;
 
     }
+
     void Update()
     {
         fillamount(0f);
         Value_Percent(0f);
 
     }
-    //void LateUpdate()
-    //{
-    //    transform.LookAt(transform.position + cam.forward);
-    //}
+
+
     public void Need_Repair()
     {
         if ((maxhp * 50 / 100) <= hp)
@@ -64,10 +57,6 @@ public class Hp_Bar : MonoBehaviour
         }
     }
 
-    public void Repair()
-    {
-
-    }
 
     public void Value_Percent(float value)
     {

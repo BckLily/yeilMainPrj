@@ -139,7 +139,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     #region 플레이어 행동 bool 변수
     private bool isMove; // 플레이어가 움직이고 있는지 판단하는 변수
     private bool isCrouch; // 플레이어가 앉아있는지 판단하는 변수
-    private bool doCrouch; // 플레이어가 앉아있을 때 달리면 이 값을 True로 만들어서 TryCrouch가 동작하게 한다.
+    //private bool doCrouch; // 플레이어가 앉아있을 때 달리면 이 값을 True로 만들어서 TryCrouch가 동작하게 한다.
 
     #endregion
 
@@ -302,7 +302,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 앉아있다가 달릴때 doCrouch가 true가 되어야 하므로 초기값은 doCrouch가 false가 된다
         isMove = false;
         isCrouch = false;
-        doCrouch = false;
+        //doCrouch = false;
 
         // 시작할 때 카메라의 현재 위치를 저장한다.
         cameraPosition = playerCameraTr.localPosition;
@@ -533,22 +533,14 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         int firstUID;
         int middleUID;
         int lastUID;
-        // _skillUID.Substring(startIdx, endIdx);
+
         try
         {
-            //Debug.Log("___UID: " + _playerSkillUID + "___");
             firstUID = int.Parse(_playerSkillUID.Substring(0, 2));
-            //Debug.Log("____UID: " + firstUID + "____");
-            if (firstUID != 03)
-            {
-                //Debug.Log("____Worng Skill UID Input____");
-                return;
-            }
+            if (firstUID != 03) { return; }
 
             middleUID = int.Parse(_playerSkillUID.Substring(2, 3));
-            //Debug.Log("____UID: " + middleUID + "____");
             lastUID = int.Parse(_playerSkillUID.Substring(5, 4));
-            //Debug.Log("____UID: " + lastUID + "____");
         }
         catch (System.Exception e)
         {
@@ -575,27 +567,23 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         if (playerSkillManager.status0_Level > statusMaxLevel) { return; }
                         addAttack = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
-                        //Debug.Log("Add Attack: " + addAttack);
-
                         break;
                     case 0001:
                         // Increase Player Armor
                         if (playerSkillManager.status1_Level > statusMaxLevel) { return; }
                         addArmour = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
-                        //Debug.Log("Add Armour: " + addArmour);
-
                         break;
                     case 0002:
                         // Increase Player Max HP
                         if (playerSkillManager.status2_Level > statusMaxLevel) { return; }
                         addHP = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-                        //Debug.Log("___Max Hp: " + maxHp);
                         HPGaugeChange();
                         break;
                     default:
-                        //Debug.Log("__Wrong UID Input__");
-
+#if UNITY_EDITOR
+                        Debug.Log("__Wrong UID Input__");
+#endif
                         break;
                 }
 
@@ -608,7 +596,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         if (playerSkillManager.ability0_Level > abilityMaxLevel) { return; }
                         incCarryBullet = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
                         //Debug.Log(playerSkillManager.status0_Level);
-                        //Debug.Log("___Inc Carry Bullet: " + incCarryBullet + "___");
 
                         break;
                     case 0001:
@@ -616,40 +603,36 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         if (playerSkillManager.ability1_Level > abilityMaxLevel) { return; }
                         incAttackSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
                         //Debug.Log(playerSkillManager.status0_Level);
-                        //Debug.Log("___Inc Attack Speed: " + incAttackSpeed + "___");
 
                         break;
                     case 0002:
                         // Increase Item Healing Point
                         if (playerSkillManager.ability0_Level > abilityMaxLevel) { return; }
                         playerAction.incHealingPoint = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-                        //Debug.Log("___INC HEALING POINT: " + playerAction.incHealingPoint + "___");
 
                         break;
                     case 0003:
                         // Increase Healing Item Use Speed
                         if (playerSkillManager.ability1_Level > abilityMaxLevel) { return; }
                         playerAction.incHealingSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-                        //Debug.Log("___INC HEALING SPEED: " + playerAction.incHealingSpeed + "___");
 
                         break;
                     case 0004:
                         // Increase Build Speed
                         if (playerSkillManager.ability0_Level > abilityMaxLevel) { return; }
                         playerAction.incBuildSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-                        //Debug.Log("___INC BUILD SPEED: " + playerAction.incBuildSpeed + "____");
 
                         break;
                     case 0005:
                         // Increase Repair Speed
                         if (playerSkillManager.ability1_Level > abilityMaxLevel) { return; }
                         playerAction.incRepairSpeed = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-                        //Debug.Log("___INC REPAIR SPEED: " + playerAction.incRepairSpeed + "___");
 
                         break;
                     default:
-                        //Debug.Log("__Wrong UID Input__");
-
+#if UNITY_EDITOR
+                        Debug.Log("__Wrong UID Input__");
+#endif
                         break;
                 }
 
@@ -662,7 +645,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         // Increase Attack Speed Perk
                         incAttackSpeed_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
                         StartCoroutine(weaponManager.WeaponStatusSetting());
-                        //Debug.Log("___INC ATTACK SPEED PERK: " + incAttackSpeed_Perk + "___");
 
                         break;
                     case 0001:
@@ -672,8 +654,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         weaponManager.dontUseBulletPercent = _value * _coefficient;
                         weaponManager.dontUseBullet = (_value == 1f * _skillLevel) ? true : false;
 
-                        //Debug.Log("___Dont Use Bullet: " + weaponManager.dontUseBullet + "___");
-
                         break;
                     case 0002:
                         // Increase Weapon Damage Perk
@@ -682,9 +662,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         attackPerk_Percent = _list[0];
                         addAttack_Perk = _list[1] * _coefficient;
 
-                        //Debug.Log("___Attack Perk: " + addAttack_Perk + "____");
-
-
                         break;
                     case 0003:
                         // Increase Healing Point Perk
@@ -692,15 +669,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         // 회복 아이템의 회복량 증가
                         playerAction.incHealingPoint_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
-                        //Debug.Log("____ Healing Point Perk Increase ____");
-
                         break;
                     case 0004:
                         // Increase Healing Speed Perk 
                         if (playerSkillManager.perk1_Level > perkMaxLevel) { return; }
                         playerAction.incHealingSpeed_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-
-                        //Debug.Log("____ Healing Speed Perk Increase ____");
 
                         break;
                     case 0005:
@@ -708,15 +681,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         if (playerSkillManager.perk2_Level > perkMaxLevel) { return; }
                         playerAction.dontUseHealingItem_Percent = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
-                        //Debug.Log("____ Healing Item Dont Use ____");
-
                         break;
                     case 0006:
                         // Increase Build Speed Perk
                         if (playerSkillManager.perk0_Level > perkMaxLevel) { return; }
                         playerAction.incBuildSpeed_Perk = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
-
-                        //Debug.Log("____ Build Speed Up Perk ____" + playerAction.incBuildSpeed_Perk);
 
                         break;
                     case 0007:
@@ -724,28 +693,22 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                         if (playerSkillManager.perk1_Level > perkMaxLevel) { return; }
                         playerAction.incBuildMaxHealthPoint = FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] * _coefficient;
 
-                        //Debug.Log("___ Building Max Health Point Incrase ____" + playerAction.incBuildMaxHealthPoint);
-
                         break;
                     case 0008:
                         // Building Auto Repair Perk
                         if (playerSkillManager.perk2_Level > perkMaxLevel) { return; }
                         playerAction.buildingAutoRepair = (FindPlayerSkill.GetPlayerSkill(_name, _skillUID, _skillLevel)[0] == 1);
 
-                        //Debug.Log("____ Building Auto Repair ____" + playerAction.buildingAutoRepair);
-
                         break;
                     default:
-                        //Debug.Log("__Wrong UID Input__");
-
+#if UNITY_EDITOR
+                        Debug.Log("__Wrong UID Input__" + _skillUID);
+#endif
                         break;
                 }
 
                 break;
             default:
-                //Debug.Log("__Wrong UID Input__");
-                //Debug.Log("Middle UID: " + middleUID);
-                //Debug.Log("Last UID: " + lastUID);
 
                 break;
         }
@@ -914,18 +877,18 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                 */
                 default:
 #if UNITY_EDITOR
-                    //Debug.LogWarning("____Out of Range____");
+                    Debug.LogWarning("____Out of Range____");
 #endif
                     break;
             }
             yield return null;
         }
 
-        foreach (var _skill in _select_SkillList)
-        {
+        //foreach (var _skill in _select_SkillList)
+        //{
 
-            //Debug.Log($"Skill List: {_skill}");
-        }
+        //Debug.Log($"Skill List: {_skill}");
+        //}
 
         playerSkillManager.skillSettingComplete = true;
 
@@ -939,34 +902,36 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     #region 플레이어의 움직임을 컨트롤 하는 영역
     /// <summary>
     /// 플레이어가 앉는 동작을 실행(시도)하는 함수
-    /// 사용하지 않는 함수.
+
+    #region 사용하지 않는 함수
     /// </summary>
-    private void TryCrouch()
-    {
-        // Left Ctrl 키가 눌리면 실행, doCrouch가 true일 경우 실행
-        if (Input.GetKey(KeyCode.LeftControl) || doCrouch)
-        {
-            // doCrouch를 false로
-            doCrouch = false;
-            // 앉아있으면 서고 서있으면 앉게 변경한다.
-            isCrouch = !isCrouch;
+    //private void TryCrouch()
+    //{
+    //    // Left Ctrl 키가 눌리면 실행, doCrouch가 true일 경우 실행
+    //    if (Input.GetKey(KeyCode.LeftControl) || doCrouch)
+    //    {
+    //        // doCrouch를 false로
+    //        doCrouch = false;
+    //        // 앉아있으면 서고 서있으면 앉게 변경한다.
+    //        isCrouch = !isCrouch;
 
-            // 앉아 있으면
-            if (isCrouch)
-            {
-                // 앉아있을 때의 속도로 설정
-                changedSpeed = crouchSpeed;
-                //cameraPosition.y -= cameraMoveValue;
-            }
-            // 서 있으면
-            else
-            {
-                changedSpeed = walkSpeed;
-                //cameraPosition.y += cameraMoveValue;
-            }
+    //        // 앉아 있으면
+    //        if (isCrouch)
+    //        {
+    //            // 앉아있을 때의 속도로 설정
+    //            changedSpeed = crouchSpeed;
+    //            //cameraPosition.y -= cameraMoveValue;
+    //        }
+    //        // 서 있으면
+    //        else
+    //        {
+    //            changedSpeed = walkSpeed;
+    //            //cameraPosition.y += cameraMoveValue;
+    //        }
 
-        }
-    }
+    //    }
+    //}
+    #endregion
 
     /// <summary>
     /// 플레이어의 움직임을 조절하는 함수
@@ -979,13 +944,14 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 왼쪽 shift가 눌리면 달린다.
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            //// 앉아있으면 일어서게 한다.
-            //// 사용하지 않게 되었다.
+            // 앉아있으면 일어서게 한다.
+            // 사용하지 않게 되었다.
             //if (isCrouch == true)
             //{
             //    doCrouch = true;
             //    TryCrouch();
             //}
+
             // 일어서기만 하면 이동 속도가 walkSpeed가 되기때문에
             // 이동속도를 runSpeed로 설정한다.
             changedSpeed = runSpeed;
@@ -1051,7 +1017,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 자기 자신을 기준으로 회전
         tr.Rotate(characterRotationY, Space.Self);
 
-        //myRb.MoveRotation(myRb.rotation * Quaternion.Euler(characterRotationY));
     }
 
     /// <summary>
@@ -1071,7 +1036,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // upperBodyRotation으로 넣으면 상 하 반전 있음.
         playerAnim.SetFloat("Looking", -upperBodyRotation);
 
-        //playerCameraTr.localRotation = Quaternion.Euler(new Vector3(upperBodyRotation * 0.75f, playerCameraTr.rotation.y, playerCameraTr.localRotation.z));
         // 자연스럽게 카메라가 위 아래를 보도록 값을 보정
         playerCameraTr.localRotation = Quaternion.Euler(new Vector3(upperBodyRotation * 0.85f, -12.5f, 0));
 
@@ -1079,13 +1043,16 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
     /// <summary>
     /// 플레이어의 카메라가 움직이는 함수(앉았다 일어설 때)<br/>
+
+    #region 사용하지 않는 함수
     /// 기능 제거
     /// </summary>
-    private void PlayerCameraMove()
-    {
-        // Slerp, 구형 보간, Lerp, 선형 보간
-        //playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
-    }
+    //private void PlayerCameraMove()
+    //{
+    //    // Slerp, 구형 보간, Lerp, 선형 보간
+    //    //playerCameraTr.localPosition = Vector3.Lerp(playerCameraTr.localPosition, cameraPosition, Time.deltaTime * cameraMoveSpeed);
+    //}
+    #endregion
 
     #endregion
 
@@ -1105,7 +1072,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         if (currHP <= 0)
         {
             currHP = 0f;
-
         }
         return 0;
     }
@@ -1149,7 +1115,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 나중에 아이템을 사용할 때 어떤 아이템을 가지고 있는지 아는게 편리하므로 bool 값으로 설정하는 것이 맞을수도 있다.
         // 상황에 따라 다를 듯.
 
-
         int firstUID = 0;
         int middleUID = 0;
         int lastUID = 0;
@@ -1161,7 +1126,9 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         catch (System.Exception e)
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"____ Input item uid is Wrong {_itemUid} ____");
+#endif
         }
 
 
@@ -1180,9 +1147,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 _haveItemUID = _itemUid;
                                 //isHaveItem = true;
                                 haveMedikit = true;
-
-
                                 playerUI.ItemUISetting(lastUID);
+
                                 break;
                             // 탄 보급
                             case 1:
@@ -1209,7 +1175,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 if (playerSkillManager.perk0_Level >= 1)
                                     return false;
                                 GameManager.instance.perk0_Active = true;
-                                //AchievementManager.havePerk0 = true;
                                 SkillLevelUp(classDict["Perk0_UID"]);
 
                                 break;
@@ -1218,7 +1183,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 if (playerSkillManager.perk1_Level >= 1)
                                     return false;
                                 GameManager.instance.perk1_Active = true;
-                                //AchievementManager.havePerk1 = true;
                                 SkillLevelUp(classDict["Perk1_UID"]);
 
                                 break;
@@ -1227,7 +1191,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                                 if (playerSkillManager.perk2_Level >= 1)
                                     return false;
                                 GameManager.instance.perk2_Active = true;
-                                //AchievementManager.havePerk2 = true;
                                 SkillLevelUp(classDict["Perk2_UID"]);
 
                                 break;
@@ -1251,7 +1214,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
                     // 방어 물자
                     case 0:
                         _haveItemUID = _itemUid;
-                        //isHaveItem = true;
                         haveDefStruct = true;
 
                         Debug.Log("____ Last UID: " + lastUID + " ____");
@@ -1286,8 +1248,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// <param name="_healingPoint">회복할 양</param>
     public void Healing(float _healingPoint)
     {
-        //isHaveItem = false;
-
         // 회복할 양만큼 증가시킨 다음 
         currHP += _healingPoint;
         // 최대체력보다 많으면 최대체력으로 설정해준다.
@@ -1325,9 +1285,10 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             playerLevelText.text = level.ToString();
 
             // 레벨이 올랐을 때 어떤 스킬을 획득할지 표시해주는 코루틴
-            // 스킬을 획득하지 않은 상태이면 동작하지 않는다.
+            // 스킬을 획득하지 않은 상태이면(스킬 포인트를 이미 가지고 있는 경우) 동작하지 않는다.
             StartCoroutine(SelectSkill());
 
+            // 스킬 포인트를 가지고 있느냐에 따라 동작이 달라진다.
             playerUI.HavingSkillPoint(skillPoint >= 1 ? true : false);
             //// having Skill Point 코루틴이 실행되고 있지 않을 때만 실행한다.
             //if (playerUI.havingSkillPoint_isRunning == false)
@@ -1348,9 +1309,9 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 멀티 플레이가 되면 다른 플레이어의 상태를 체크하고 진행
         OnDeath();
 
-
     }
 
+    // 사망할 경우 게임이 종료된다
     public override void OnDeath()
     {
         if (dead == false)

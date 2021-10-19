@@ -111,7 +111,9 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     {
         MyButton _myButton = eventData.pointerCurrentRaycast.gameObject.GetComponent<MyButton>();
 
+#if UNITY_EDITOR
         Debug.Log("____ On Pointer Click: " + eventData.pointerCurrentRaycast.gameObject.name + " ____");
+#endif
 
         switch (_myButton.buttonType)
         {
@@ -256,7 +258,9 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // 마우스를 올렸을 때 정보를 가져오기 위해서 사용
     public void OnPointerEnter(PointerEventData eventData)
     {
+#if UNITY_EDITOR
         Debug.Log("___ Pointer Enter: " + eventData.pointerCurrentRaycast.gameObject.name + " ____");
+#endif
         try
         {
             _preButton = eventData.pointerCurrentRaycast.gameObject;
@@ -279,9 +283,10 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         catch (System.Exception e)
         {
             // 어떤 오브젝트에 닿아서 어떤 에러가 발생했는지 확인
+#if UNITY_EDITOR
             Debug.LogWarning(_preButton.name + e.Message);
+#endif
         }
-
     }
 
     // 빈 곳으로 마우스가 옮겼을 때 이전 정보를 초기화하기 위해서 사용
@@ -296,15 +301,14 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         }
         catch (System.Exception e)
         {
+#if UNITY_EDITOR
             Debug.LogWarning(e);
+#endif
         }
 
     }
 
     #endregion
-
-
-
 
 
     private bool BuyItem(MyBuyButton _myBuyButton)
@@ -315,6 +319,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         // 보유한 포인트와 가격의 비교를 통해서 구매 가능 여부를 표시해줄 필요가 있다.
         if (_playerCtrl._point < _myBuyButton._price)
         {
+            _playerCtrl.ActionTextSetting("포인트가 부족합니다.");
             return false;
         }
 
@@ -328,8 +333,11 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         // 무기 구매
         if (firstUID == "01")
         {
-            Debug.Log("____ My Buy Button Item UID: " + _myBuyButton._uid + " ____");
+            //Debug.Log("____ My Buy Button Item UID: " + _myBuyButton._uid + " ____");
+
             // 동일한 무기를 가지고 있으면 스킵하는 기능 필요
+            // 해보려고 했는데 무기 UID 설정을 먼저하고 무기를 세팅하는 방식이다보니
+            // 이전 무기의 UID를 저장할 방법이 없어 UID를 체크하는 방식은 무조건 동일한 UID가 나와서 다른 방법이 필요하다.
 
             canBuy = _playerCtrl.PlayerWeaponChange(_myBuyButton._uid);
 
@@ -341,6 +349,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
             // 회복 아이템의 경우에만
             if (_playerCtrl.isHaveItem == true && middleUID == "000" && lastUID == "0000")
             {
+                _playerCtrl.ActionTextSetting("이미 다른 아이템을 보유하고 있습니다..");
                 return false;
             }
             // 지금은 경우의 수가 몇 없기 때문에 그냥 if로 처리했는데
@@ -359,6 +368,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
             // 이미 아이템을 가지고 있으면 추가적인 구매를 할 수 없다.
             if (_playerCtrl.isHaveItem == true)
             {
+                _playerCtrl.ActionTextSetting("이미 다른 아이템을 보유하고 있습니다..");
                 return false;
             }
 
@@ -371,6 +381,8 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
             _playerCtrl._point -= _myBuyButton._price;
             _playerCtrl.ActionTextSetting("구매 완료");
         }
+
+
         return canBuy;
     }
 

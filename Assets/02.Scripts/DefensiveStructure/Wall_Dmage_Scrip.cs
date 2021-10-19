@@ -136,7 +136,6 @@ public class Wall_Dmage_Scrip : MonoBehaviour, IDamaged
         {
             Hp_Ui.SetActive(true);
         }
-        //Debug.Log(colliders.Length);
     }
 
     private void OnDrawGizmos()
@@ -146,10 +145,8 @@ public class Wall_Dmage_Scrip : MonoBehaviour, IDamaged
     }
     public void Die()
     {
-        Debug.Log($"__ hp: {hp_bar.hp}");
         if (hp_bar.hp <= 0)
         {
-            //gameObject.SetActive(false);//구조물의 체력이 0이하가 되어 사라진다. 
             build_fence_damage.BuildingDestroy();
         }
 

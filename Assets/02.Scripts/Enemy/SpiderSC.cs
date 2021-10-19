@@ -125,8 +125,9 @@ public class SpiderSC : LivingEntity
 
         if (isAttacking == true)
         {
-            Debug.Log("____ ROTATION ____");
-            Debug.Log($"Position {targetPosition})");
+
+            //Debug.Log("____ ROTATION ____");
+            //Debug.Log($"Position {targetPosition})");
 
             Quaternion LookRot = Quaternion.LookRotation(new Vector3(targetPosition.x, (targetPosition.y - (targetSize.y / 2)), targetPosition.z) - new Vector3(this.transform.position.x, 0, this.transform.position.z));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, LookRot, 60f * Time.deltaTime);
@@ -244,7 +245,7 @@ public class SpiderSC : LivingEntity
             if (Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, 1 << LayerMask.NameToLayer("DEFENSIVEGOODS")))
             {
 
-                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; Debug.Log("____ SPIDER RAYCAST _____"); }
+                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; }
             }
 
             yield return new WaitForSeconds(0.1f);
@@ -290,7 +291,7 @@ public class SpiderSC : LivingEntity
         base.Down();
         pathFinder.enabled = false;
         enemyAnimator.SetTrigger("IsDead");
-        Debug.Log(MoveDuration(eCharacterState.Die));
+        //Debug.Log(MoveDuration(eCharacterState.Die));
         Die();
     }
 }

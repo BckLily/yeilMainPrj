@@ -51,10 +51,7 @@ public class Weapon : MonoBehaviour
         attackDistance = float.Parse(weaponDict["Weapon_AttackDistance"]);
         attackRange = float.Parse(weaponDict["Weapon_AttackRange"]);
 
-        //Debug.Log("Fire Delay On Weapon Scr: " + fireDelay);
         fireDelay = 60 / float.Parse(weaponDict["Weapon_AttackSpeed"]);
-        //Debug.Log("Fire Delay On Weapon Scr: " + fireDelay);
-        //Debug.Log(fireDelay);
 
         yield return null;
 

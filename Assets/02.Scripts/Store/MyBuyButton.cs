@@ -13,15 +13,5 @@ public class MyBuyButton : MyButton
     public int _price;
     public string _info;
 
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

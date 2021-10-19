@@ -23,52 +23,56 @@ public class ButtonCtrl : MonoBehaviour
 
     public void OnGameStartButtonClick()
     {
+        Debug.Log("____ Game Start Button Clicked ____");
+
         PlayerPrefs.SetString("Player_NickName", transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("PlayerNameText").GetComponent<UnityEngine.UI.Text>().text);
         PlayerPrefs.SetString("Player_Class", transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("ClassDropdown").Find("Label").GetComponent<UnityEngine.UI.Text>().text);
         // 로딩
 
+        Debug.Log($"Get Player Prefs {PlayerPrefs.GetString("Player_NickName")}");
+        Debug.Log($"Get Player Prefs {PlayerPrefs.GetString("Player_Class")}");
 
         GameManager.instance.SceneLoadingFunction("MapScene");
 
 
     }
 
-    IEnumerator GameSceneLoad()
-    {
-        SceneManager.LoadScene("LoadingScene", LoadSceneMode.Additive);
-        AsyncOperation _operation = SceneManager.LoadSceneAsync("MapScene");
-        _operation.allowSceneActivation = false;
+    // GameManager에 씬 로드에 사용할 함수를 만들어서 사용하고 있다.
+    //IEnumerator GameSceneLoad()
+    //{
+    //    SceneManager.LoadScene("LoadingScene", LoadSceneMode.Additive);
+    //    AsyncOperation _operation = SceneManager.LoadSceneAsync("MapScene");
+    //    _operation.allowSceneActivation = false;
 
-        UnityEngine.UI.Slider _slider = GameObject.Find("LoadingSlider").GetComponent<UnityEngine.UI.Slider>();
+    //    UnityEngine.UI.Slider _slider = GameObject.Find("LoadingSlider").GetComponent<UnityEngine.UI.Slider>();
 
-        Debug.Log("___ Loading... ___");
-        while (_operation.progress <= 0.9f)
-        {
-            _slider.value = _operation.progress;
-            yield return null;
-        }
-        Debug.Log("____ Loading almost complete ____ ");
+    //    Debug.Log("___ Loading... ___");
+    //    while (_operation.progress <= 0.9f)
+    //    {
+    //        _slider.value = _operation.progress;
+    //        yield return null;
+    //    }
+    //    Debug.Log("____ Loading almost complete ____ ");
 
-        _slider.value = 0.9f;
+    //    _slider.value = 0.9f;
 
-        //Game Manager Game Start
-        GameManager.instance.GameStart(_operation,
-            PlayerPrefs.GetString("Player_NickName"),
-            PlayerPrefs.GetString("Player_Class"));
-        // 이전에 쓰던 방식이 있어서 함수를 유지시켰지만
-        // GameStart 함수 내에서 PlayerPrefs를 통해서 받아도 된다.
+    //    //Game Manager Game Start
+    //    GameManager.instance.GameStart(_operation,
+    //        PlayerPrefs.GetString("Player_NickName"),
+    //        PlayerPrefs.GetString("Player_Class"));
+    //    // 이전에 쓰던 방식이 있어서 함수를 유지시켰지만
+    //    // GameStart 함수 내에서 PlayerPrefs를 통해서 받아도 된다.
 
-        int count = 0;
-        while (count < 10)
-        {
-            _slider.value += 1 / 100f;
-            count++;
-            yield return new WaitForSeconds(0.5f);
-        }
+    //    int count = 0;
+    //    while (count < 10)
+    //    {
+    //        _slider.value += 1 / 100f;
+    //        count++;
+    //        yield return new WaitForSeconds(0.5f);
+    //    }
 
-        _operation.allowSceneActivation = true;
-
-    }
+    //    _operation.allowSceneActivation = true;
+    //}
 
 
     public void OnGameExitButtonClick()
@@ -137,23 +141,21 @@ public class ButtonCtrl : MonoBehaviour
         GameManager.instance.SceneLoadingFunction("MainMenuScene");
     }
 
-    IEnumerator MainMenuSceneLoad()
-    {
-        AsyncOperation _operation = SceneManager.LoadSceneAsync("MainMenuScene");
-        _operation.allowSceneActivation = false;
-
-        Debug.Log("____ Loading... ____");
-        while (_operation.progress < 0.9f)
-        {
-            yield return null;
-        }
-        Debug.Log("____ Loading almost Complete ____");
-
-        GameManager.instance.GameFail();
-        yield return null;
-        _operation.allowSceneActivation = true;
-
-    }
+    // 이걸 사용하다가 GameManager에 씬을 로드하는 함수를 따로 만들어서 사용하고 있다.
+    //IEnumerator MainMenuSceneLoad()
+    //{
+    //    AsyncOperation _operation = SceneManager.LoadSceneAsync("MainMenuScene");
+    //    _operation.allowSceneActivation = false;
+    //    //Debug.Log("____ Loading... ____");
+    //    while (_operation.progress < 0.9f)
+    //    {
+    //        yield return null;
+    //    }
+    //    //Debug.Log("____ Loading almost Complete ____");
+    //    GameManager.instance.GameFail();
+    //    yield return null;
+    //    _operation.allowSceneActivation = true;
+    //}
 
 
     public void OnKeyInformationOpenButtonClick()

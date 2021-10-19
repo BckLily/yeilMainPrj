@@ -58,8 +58,6 @@ public class Store : MonoBehaviour
     /// </summary>
     public void CloseStore(Transform _playerTr)
     {
-        //Debug.Log("____ Store Closed ____");
-
         // Canvas의 Script를 통해서 자신에게 Canvas가 자식으로 돌아왔을 것이다.
         // 돌아온 Canvas를 비활성화 해준다.
         storeCanvas.SetActive(false);

@@ -24,26 +24,10 @@ public class CameraCtrl : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        //Vector3 pos = new Vector3();
-        //Vector3 value = tr.forward * (-0.035f) + tr.up * 0.075f + tr.right * (-0.035f);
-        //pos = value + neckTr.position;
-
-        //tr.position = Vector3.Lerp(tr.position, pos, 4f * Time.deltaTime);
-        ////tr.up = transform.up;
-
-    }
-
     private void LateUpdate()
     {
         // 목의 위치를 기준으로 Off Set 값 만큼 항상 상대적으로 위쪽에 있게 설정.
         tr.position = neckTr.position - (neckTr.up * offset.y + neckTr.right * offset.x + neckTr.forward * offset.z);
-
-        //Debug.Log("Cross: " + Vector3.Cross((neckTr.right * right + neckTr.up * up + neckTr.forward * forward), offset));
-        //Debug.Log("Dot: " + Vector3.Dot((neckTr.right * right + neckTr.up * up + neckTr.forward * forward), offset));
 
     }
 

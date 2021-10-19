@@ -33,7 +33,7 @@ public class BunkerDoor : DefensiveStructure
     {
         base.OnEnable();
         currHP = startHp;
-        Debug.Log($"____ Bunker Hp {currHP} ____");
+        //Debug.Log($"____ Bunker Hp {currHP} ____");
     }
 
     public override void OnDeath()
@@ -45,7 +45,7 @@ public class BunkerDoor : DefensiveStructure
     public override float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         base.Damaged(damage, hitPoint, hitNormal);
-        Debug.Log($"____ Bunker Curr Hp: {this.currHP} ____");
+        //Debug.Log($"____ Bunker Curr Hp: {this.currHP} ____");
 
         StartCoroutine(BunkerDamaged());
 

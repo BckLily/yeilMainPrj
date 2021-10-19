@@ -23,7 +23,9 @@ public class DefensiveStructure : LivingEntity
         }
         catch (System.Exception e)
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"____ {this.gameObject.name} {e} ____");
+#endif
         }
 
         boxCollder = GetComponent<BoxCollider>();
@@ -60,9 +62,8 @@ public class DefensiveStructure : LivingEntity
             {
                 Hp_Ui.SetActive(true);
             }
-            //Debug.Log(colliders.Length);
-        }
 
+        }
     }
 
     private void OnDrawGizmos()
@@ -75,7 +76,9 @@ public class DefensiveStructure : LivingEntity
     public override void OnDeath()
     {
         base.OnDeath();
+#if UNITY_EDITOR
         Debug.Log($"__ hp: {currHP}");
+#endif
         if (currHP <= 0)
         {
             //gameObject.SetActive(false);//구조물의 체력이 0이하가 되어 사라진다. 
@@ -105,11 +108,14 @@ public class DefensiveStructure : LivingEntity
 
     IEnumerator CoBuildingAutoRepair()
     {
-        yield return new WaitForSeconds(5f);
-        currHP += 5f;
-        if (currHP >= startHp)
+        while (!dead)
         {
-            currHP = startHp;
+            yield return new WaitForSeconds(5f);
+            currHP += 5f;
+            if (currHP >= startHp)
+            {
+                currHP = startHp;
+            }
         }
     }
 

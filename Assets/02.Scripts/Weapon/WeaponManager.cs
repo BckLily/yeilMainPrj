@@ -81,7 +81,9 @@ public class WeaponManager : MonoBehaviour
         }
         catch (Exception e)
         {
-
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -252,7 +254,9 @@ public class WeaponManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                //Debug.LogWarning(e);
+#if UNITY_EDITOR
+                Debug.LogWarning(e);
+#endif
                 return;
             }
 
@@ -333,7 +337,9 @@ public class WeaponManager : MonoBehaviour
                 }
                 else
                 {
+#if UNITY_EDITOR
                     Debug.Log("___Bullet Dont Use!!____");
+#endif
                 }
 
                 // 발사 이펙트 생성
@@ -377,10 +383,6 @@ public class WeaponManager : MonoBehaviour
             {
                 target = hitTarget.transform.gameObject;
 
-#if UNITY_EDITOR
-                //Debug.Log("______ TARGET NAME: " + target.name);
-#endif
-                //Debug.Log("____ Target Layer: " + LayerMask.LayerToName(target.layer));
             }
             catch (System.Exception e)
             {

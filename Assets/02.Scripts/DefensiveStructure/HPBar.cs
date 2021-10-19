@@ -10,20 +10,13 @@ public class HPBar : MonoBehaviour
     public Slider hp_fillamount;//hp 슬라이더 바
     public Text hp_percent;//hp바 남은 퍼센테이지 텍스트
     public Text hp_function;//hp바 알림 텍스트
-    //Transform cam;
-
-
-    bool IsRepair;
 
     void Start()
     {
         _parent = transform.parent.GetComponent<LivingEntity>();
-        //hp_percent = GetComponent<Text>();
-        //hp_function = GetComponent<Text>();
-
-        IsRepair = false;
 
     }
+
     void Update()
     {
         fillamount(0f);
@@ -55,20 +48,7 @@ public class HPBar : MonoBehaviour
             hp_function.text = "수리 필요!!!!!";
         }
 
-        if (IsRepair == true)
-        {
-
-        }
-        else if (IsRepair == false)
-        {
-
-        }
     }
-
-    //public void Repair()
-    //{
-
-    //}
 
     public void Value_Percent(float value)
     {
@@ -79,8 +59,5 @@ public class HPBar : MonoBehaviour
     {
         hp_fillamount.value = _parent.currHP / _parent.startHp;
     }
-
-
-
 
 }

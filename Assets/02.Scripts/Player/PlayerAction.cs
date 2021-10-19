@@ -217,7 +217,9 @@ public class PlayerAction : MonoBehaviour
             }
             catch (NullReferenceException e)
             {
-                //Debug.Log(e);
+#if UNITY_EDITOR
+                Debug.Log(e);
+#endif
                 targetTag = null;
                 targetInfoPanel.SetActive(false);
                 return;
@@ -354,7 +356,7 @@ public class PlayerAction : MonoBehaviour
         else if (targetTag == "STORE" && Vector3.Distance(this.transform.position, target.transform.position) <= 5f)
         {
             if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
-            targetInfoText.text = TargetInfoTextSetting(targetTag);
+            targetInfoText.text = TargetInfoTextSetting("상점");
             if (Input.GetKeyDown(KeyCode.E))
             {
                 // Modify
@@ -372,7 +374,8 @@ public class PlayerAction : MonoBehaviour
             if (_targetPlayer.currHP < _targetPlayer.maxHp)
             {
                 if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
-                targetInfoText.text = TargetInfoTextSetting("동료 회복 가능");
+                // 뭔가 이상한 오류가 발생함.
+                //targetInfoText.text = TargetInfoTextSetting("동료 회복 가능");
                 if (Input.GetKey(KeyCode.E))
                 {
                     isHeal = true;

@@ -35,10 +35,10 @@ public class ObjectPooling : MonoBehaviour
 
     private void Start()
     {
-        CreatePool(zombiePrefab, 50);
-        CreatePool(spiderPrefab, 50);
-        CreatePool(clutchPrefab, 30);
-        CreatePool(movidicPrefab, 20);
+        CreatePool(zombiePrefab, 40);
+        CreatePool(spiderPrefab, 20);
+        CreatePool(clutchPrefab, 10);
+        CreatePool(movidicPrefab, 1);
     }
     /// <summary>
     /// 새로운 오브젝트를 생성해주는 함수

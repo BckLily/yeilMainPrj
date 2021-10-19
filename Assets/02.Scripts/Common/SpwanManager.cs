@@ -29,7 +29,6 @@ public class SpwanManager : MonoBehaviour
 
     #endregion
 
-
     private void Awake()
     {
         if (instance == null)
@@ -45,7 +44,6 @@ public class SpwanManager : MonoBehaviour
     private void Start()
     {
         enemyPoints.AddRange(GameObject.Find("EnemySpawnPoints").GetComponentsInChildren<Transform>());
-        Debug.Log("EnemyPoints: " + enemyPoints.Count);
 
         StageTextSetting();
 
@@ -114,66 +112,80 @@ public class SpwanManager : MonoBehaviour
             int idx = UnityEngine.Random.Range(2, 8);
             idx += (UnityEngine.Random.Range(0, 3) * 7);
 
+            List<int> _list = new List<int>();
+            if (enemyCount[0] > 0)
+            {
+                _list.Add(0);
+            }
+            if (enemyCount[1] > 0)
+            {
+                _list.Add(1);
+            }
+            if (enemyCount[2] > 0)
+            {
+                _list.Add(2);
+            }
+            if (enemyCount[3] > 0)
+            {
+                _list.Add(3);
+            }
+
             //Debug.Log("____ Total Count: " + totalCount + " ____");
 
             if (enemies.Count < 15 && enemies.Count < totalCount)
             {
-                int selectEnemy = UnityEngine.Random.Range(0, 4);
+                float randomSpeed = UnityEngine.Random.Range(-0.2f, 0.2f);
 
+                //int selectEnemy = UnityEngine.Random.Range(0, 4);
+                int selectEnemy = _list[UnityEngine.Random.Range(0, _list.Count)];
                 Monster mob = (Monster)selectEnemy;
 
-                //var obj = ObjectPooling.GetObject(Monster.Zombie);
-                //obj.transform.position = enemyPoints[idx].position;
-                //obj.SetActive(true);
-
-                // 소환하려고한 대상이 남은 소환수 >> 0
-                // spawnTime = 0.01
-                // 소환 했으면 spawnTime 0.5
-
-                if (enemyCount[selectEnemy] >= 1)
+                //if (enemyCount[selectEnemy] >= 1)
+                //{
+                GameObject obj;
+                switch (mob)
                 {
-                    GameObject obj;
-                    switch (mob)
-                    {
-                        case Monster.Zombie:
-                            obj = ObjectPooling.GetObject(Monster.Zombie);
-                            obj.transform.position = enemyPoints[idx].position;
-                            obj.SetActive(true);
+                    case Monster.Zombie:
+                        obj = ObjectPooling.GetObject(Monster.Zombie);
+                        obj.transform.position = enemyPoints[idx].position;
+                        obj.SetActive(true);
+                        obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
 
-                            break;
-                        case Monster.Spider:
-                            obj = ObjectPooling.GetObject(Monster.Spider);
-                            obj.transform.position = enemyPoints[idx].position;
-                            obj.SetActive(true);
+                        break;
+                    case Monster.Spider:
+                        obj = ObjectPooling.GetObject(Monster.Spider);
+                        obj.transform.position = enemyPoints[idx].position;
+                        obj.SetActive(true);
+                        obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
 
-                            break;
-                        case Monster.Clutch:
-                            obj = ObjectPooling.GetObject(Monster.Clutch);
-                            obj.transform.position = enemyPoints[idx].position;
-                            obj.SetActive(true);
-                            break;
-                        case Monster.Movidic:
-                            obj = ObjectPooling.GetObject(Monster.Movidic);
-                            obj.transform.position = enemyPoints[idx].position;
-                            obj.SetActive(true);
-                            break;
-                        default:
-                            obj = null;
-                            break;
-                    }
+                        break;
+                    case Monster.Clutch:
+                        obj = ObjectPooling.GetObject(Monster.Clutch);
+                        obj.transform.position = enemyPoints[idx].position;
+                        obj.SetActive(true);
+                        obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
 
-                    //Debug.Log("Reduce Spawn Count");
+                        break;
+                    case Monster.Movidic:
+                        obj = ObjectPooling.GetObject(Monster.Movidic);
+                        obj.transform.position = enemyPoints[idx].position;
+                        obj.SetActive(true);
+                        obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
 
-                    // 소환한 것 count 감소
-                    enemyCount[selectEnemy]--;
-
-                    //Debug.Log(enemyPoints[idx].position);
-                    //Debug.Log(obj.transform.position);
-                    if (obj != null)
-                    {
-                        enemies.Add(obj.GetComponent<LivingEntity>());
-                    }
+                        break;
+                    default:
+                        obj = null;
+                        break;
                 }
+
+                // 소환한 것 count 감소
+                enemyCount[selectEnemy]--;
+
+                if (obj != null)
+                {
+                    enemies.Add(obj.GetComponent<LivingEntity>());
+                }
+                //}
 
             }
 
@@ -190,10 +202,17 @@ public class SpwanManager : MonoBehaviour
                 // 클리어 하면 다음 스테이지까지 여유시간 좀 주고
                 // 여유시간 끝나면 바로 다음 스테이지 시작(코루틴 돌리고)
                 GameManager.instance._stage++;
+                GameManager.instance.StageClear();
                 StageTextSetting();
                 break;
             }
         }
+
+        if (GameManager.instance._stage > 30)
+        {
+            yield break;
+        }
+
         StartCoroutine(WaitNextStage());
         _coEnemySpawn = null;
 
