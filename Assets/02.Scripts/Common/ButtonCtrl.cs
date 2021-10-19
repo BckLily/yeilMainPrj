@@ -23,14 +23,16 @@ public class ButtonCtrl : MonoBehaviour
 
     public void OnGameStartButtonClick()
     {
-        Debug.Log("____ Game Start Button Clicked ____");
 
         PlayerPrefs.SetString("Player_NickName", transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("PlayerNameText").GetComponent<UnityEngine.UI.Text>().text);
         PlayerPrefs.SetString("Player_Class", transform.Find("LobbyPanel").Find("PlayerListPanel").Find("PlayerInfoPanel_0").Find("ClassDropdown").Find("Label").GetComponent<UnityEngine.UI.Text>().text);
         // 로딩
 
-        Debug.Log($"Get Player Prefs {PlayerPrefs.GetString("Player_NickName")}");
-        Debug.Log($"Get Player Prefs {PlayerPrefs.GetString("Player_Class")}");
+#if UNITY_EDITOR
+        Debug.Log("____ Game Start Button Clicked ____");
+        //Debug.Log($"Get Player Prefs {PlayerPrefs.GetString("Player_NickName")}");
+        //Debug.Log($"Get Player Prefs {PlayerPrefs.GetString("Player_Class")}");
+#endif
 
         GameManager.instance.SceneLoadingFunction("MapScene");
 

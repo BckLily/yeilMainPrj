@@ -5,10 +5,10 @@ using UnityEngine;
 public static class ObjectCounting
 {
     // 각 몬스터 오브젝트 소환갯수를 저장하는 변수
-    static int zombieSpwanCount = 10;
-    static int spiderSpwanCount = 0;
-    static int clutchSpwanCount = 0;
-    static int MovidicSpwanCount = 0;
+    public static int zombieSpwanCount = 10;
+    public static int spiderSpwanCount = 0;
+    public static int clutchSpwanCount = 0;
+    public static int MovidicSpwanCount = 0;
 
     public static List<int> SpwanCounting(int _stage)
     {

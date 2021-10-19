@@ -217,9 +217,9 @@ public class PlayerAction : MonoBehaviour
             }
             catch (NullReferenceException e)
             {
-#if UNITY_EDITOR
-                Debug.Log(e);
-#endif
+//#if UNITY_EDITOR
+//                Debug.Log(e);
+//#endif
                 targetTag = null;
                 targetInfoPanel.SetActive(false);
                 return;

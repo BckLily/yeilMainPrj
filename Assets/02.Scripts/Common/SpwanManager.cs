@@ -14,7 +14,7 @@ public class SpwanManager : MonoBehaviour
     // 현재 소환된 수 카운트 용
     public List<LivingEntity> enemies = new List<LivingEntity>();
     public int totalCount;
-    private float waitNextStageTime = 45f;
+    private float waitNextStageTime = 30f;
 
     private IEnumerator _coEnemySpawn;
 

@@ -58,10 +58,11 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     //public List<UnityEngine.UI.Button> defStructList;
     public List<MyButton> defStructList;
 
-
+    [Header("Text UI")]
     // 판매 목록의 정보를 표시해주는 텍스트
     public UnityEngine.UI.Text infoText;
-
+    // 플레이어가 보유한 포인트를 표시해주는 텍스트
+    public UnityEngine.UI.Text _playerPointText;
 
     // Start is called before the first frame update
     void Start()
@@ -72,7 +73,6 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // Update is called once per frame
     void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnStoreCloseBtn();
@@ -89,6 +89,11 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
 
     }
 
+    public void PlayerPointSetting()
+    {
+        PlayerCtrl _playerCtrl = transform.parent.GetComponent<PlayerCtrl>();
+        _playerPointText.text = string.Format($"보유 포인트: {_playerCtrl._point}");
+    }
 
     /// <summary>
     /// 상점을 닫는 버튼을 눌렀을 때 동작하는 함수
@@ -265,8 +270,9 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         {
             _preButton = eventData.pointerCurrentRaycast.gameObject;
             // 마우스가 올라간 버튼의 기존 색을 _preColor에 저장하고 회색으로 한다.
-            _preColor = _preButton.GetComponent<UnityEngine.UI.Image>().color;
-            _preButton.GetComponent<UnityEngine.UI.Image>().color = Color.gray;
+            UnityEngine.UI.Image _image = _preButton.GetComponent<UnityEngine.UI.Image>();
+            _preColor = _image.color;
+            _image.color = Color.gray;
 
             // 구매할 수 있는 목록의 버튼에 올라가면 그 버튼의 아이템 정보를 가져온다.
             if (_preButton.GetComponent<MyButton>().buttonType == StoreButtonType.ButtonType.BuyButton)
@@ -294,10 +300,10 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     {
         try
         {
-            // 정보가 없으므로 정보를 비워준다.
-            infoText.text = "";
             // 버튼 영역을 벗어났으므로 기존의 색으로 되돌려 준다.
             _preButton.GetComponent<UnityEngine.UI.Image>().color = _preColor;
+            // 정보가 없으므로 정보를 비워준다.
+            infoText.text = "";
         }
         catch (System.Exception e)
         {
@@ -380,6 +386,10 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         {
             _playerCtrl._point -= _myBuyButton._price;
             _playerCtrl.ActionTextSetting("구매 완료");
+
+            // 구매할 때마다 플레이어 보유 포인트를 다시 확인한다.
+            PlayerPointSetting();
+
         }
 
 

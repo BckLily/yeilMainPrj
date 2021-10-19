@@ -44,11 +44,11 @@ public class Store : MonoBehaviour
 
         // Canvas의 설정
         StoreCtrl storeCtrl = storeCanvas.GetComponent<StoreCtrl>();
+        storeCtrl.PlayerPointSetting();
+
         Canvas _canvas = storeCtrl.GetComponent<Canvas>();
         _canvas.worldCamera = _playerTr.Find("UICamera").GetComponent<Camera>();
         _canvas.planeDistance = 0.0105f;
-
-
 
         return true;
     }

@@ -316,7 +316,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
         _select_SkillList = new List<string>();
 
-        // 시작 포인트는 50포인트로 설정했다.
+        // 시작 포인트는 100포인트로 설정했다.
         _point = 100;
     }
 
@@ -442,11 +442,11 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             CheckLevelUp();
 
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            skillPoint -= 1;
-            if (skillPoint < 0) { skillPoint = 0; }
-        }
+        //else if (Input.GetKeyDown(KeyCode.Alpha9))
+        //{
+        //    skillPoint -= 1;
+        //    if (skillPoint < 0) { skillPoint = 0; }
+        //}
 
 #endif
         #endregion
@@ -554,7 +554,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         string _name = __skillInfo["PlayerSkill_Name"];
         string _skillUID = __skillInfo["PlayerSkill_SkillUID"];
         float _coefficient = float.Parse(__skillInfo["PlayerSkill_Coefficient"]);
-
 
         switch (middleUID)
         {
@@ -726,46 +725,75 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         // 각 스킬이 스킬의 최대 레벨이 아닐 경우 레벨을 증가시키고 증가 값에 따라 세팅을 한다.
         if (_skillUID == classDict["StatusSkill0_UID"])
         {
-            if (playerSkillManager.status0_Level < statusMaxLevel) { playerSkillManager.status0_Level++; }
-            PlayerSkillSetting(classDict["StatusSkill0_UID"], playerSkillManager.status0_Level);
+            if (playerSkillManager.status0_Level < statusMaxLevel)
+            {
+                playerSkillManager.status0_Level++;
+                _select_SkillList.Clear();
+                PlayerSkillSetting(classDict["StatusSkill0_UID"], playerSkillManager.status0_Level);
+            }
         }
         else if (_skillUID == classDict["StatusSkill1_UID"])
         {
-            if (playerSkillManager.status1_Level < statusMaxLevel) { playerSkillManager.status1_Level++; }
-            PlayerSkillSetting(classDict["StatusSkill1_UID"], playerSkillManager.status1_Level);
+            if (playerSkillManager.status1_Level < statusMaxLevel)
+            {
+                playerSkillManager.status1_Level++;
+                _select_SkillList.Clear();
+                PlayerSkillSetting(classDict["StatusSkill1_UID"], playerSkillManager.status1_Level);
+            }
         }
         else if (_skillUID == classDict["StatusSkill2_UID"])
         {
-            if (playerSkillManager.status2_Level < statusMaxLevel) { playerSkillManager.status2_Level++; }
-            PlayerSkillSetting(classDict["StatusSkill2_UID"], playerSkillManager.status2_Level);
+            if (playerSkillManager.status2_Level < statusMaxLevel)
+            {
+                playerSkillManager.status2_Level++;
+                _select_SkillList.Clear();
+                PlayerSkillSetting(classDict["StatusSkill2_UID"], playerSkillManager.status2_Level);
+            }
         }
         else if (_skillUID == classDict["AbilitySkill0_UID"])
         {
-            if (playerSkillManager.ability0_Level < abilityMaxLevel) { playerSkillManager.ability0_Level++; }
-            PlayerSkillSetting(classDict["AbilitySkill0_UID"], playerSkillManager.ability0_Level);
+            if (playerSkillManager.ability0_Level < abilityMaxLevel)
+            {
+                playerSkillManager.ability0_Level++;
+                _select_SkillList.Clear();
+                PlayerSkillSetting(classDict["AbilitySkill0_UID"], playerSkillManager.ability0_Level);
+            }
         }
         else if (_skillUID == classDict["AbilitySkill1_UID"])
         {
-            if (playerSkillManager.ability1_Level < abilityMaxLevel) { playerSkillManager.ability1_Level++; }
-            PlayerSkillSetting(classDict["AbilitySkill1_UID"], playerSkillManager.ability1_Level);
+            if (playerSkillManager.ability1_Level < abilityMaxLevel)
+            {
+                playerSkillManager.ability1_Level++;
+                _select_SkillList.Clear();
+                PlayerSkillSetting(classDict["AbilitySkill1_UID"], playerSkillManager.ability1_Level);
+            }
         }
         else if (_skillUID == classDict["Perk0_UID"])
         {
-            if (playerSkillManager.perk0_Level < perkMaxLevel) { playerSkillManager.perk0_Level++; }
-            PlayerSkillSetting(classDict["Perk0_UID"], playerSkillManager.perk0_Level);
+            if (playerSkillManager.perk0_Level < perkMaxLevel)
+            {
+                playerSkillManager.perk0_Level++;
+                PlayerSkillSetting(classDict["Perk0_UID"], playerSkillManager.perk0_Level);
+            }
         }
         else if (_skillUID == classDict["Perk1_UID"])
         {
-            if (playerSkillManager.perk1_Level < perkMaxLevel) { playerSkillManager.perk1_Level++; }
-            PlayerSkillSetting(classDict["Perk1_UID"], playerSkillManager.perk1_Level);
+            if (playerSkillManager.perk1_Level < perkMaxLevel)
+            {
+                playerSkillManager.perk1_Level++;
+                PlayerSkillSetting(classDict["Perk1_UID"], playerSkillManager.perk1_Level);
+            }
         }
         else if (_skillUID == classDict["Perk2_UID"])
         {
-            if (playerSkillManager.perk2_Level < perkMaxLevel) { playerSkillManager.perk2_Level++; }
-            PlayerSkillSetting(classDict["Perk2_UID"], playerSkillManager.perk2_Level);
+            if (playerSkillManager.perk2_Level < perkMaxLevel)
+            {
+                playerSkillManager.perk2_Level++;
+                PlayerSkillSetting(classDict["Perk2_UID"], playerSkillManager.perk2_Level);
+            }
         }
 
-        _select_SkillList.Clear();
+        //_select_SkillList.Clear();
 
         if (skillPoint >= 1)
         {

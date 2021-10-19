@@ -290,7 +290,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
             playerCtrl.skillPoint -= 1;
             // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
             playerSkillManager.skillSettingComplete = false;
-            //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
+            Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[0]);
 
             select = true;
@@ -301,7 +301,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
             playerCtrl.skillPoint -= 1;
             // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
             playerSkillManager.skillSettingComplete = false;
-            //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
+            Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[1]);
 
             select = true;
@@ -312,7 +312,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
             playerCtrl.skillPoint -= 1;
             // 스킬 레벨을 올릴 것이므로 스킬 세팅이 되었는가를 false로 변경한다.
             playerSkillManager.skillSettingComplete = false;
-            //Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
+            Debug.Log("____ GameObject : " + eventData.pointerCurrentRaycast.ToString());
             playerCtrl.SkillLevelUp(playerCtrl._select_SkillList[2]);
 
             select = true;

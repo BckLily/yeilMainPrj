@@ -153,11 +153,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // classUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllClassJson(webRequest.text);
+            // classUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllClassJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if    UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -251,11 +260,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // classUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllWeaponJson(webRequest.text);
+            // classUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllWeaponJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -354,11 +372,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllSkillJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllSkillJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -450,11 +477,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllPlayerSkillJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllPlayerSkillJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -465,7 +501,6 @@ public class DBManager : MonoBehaviour
     /// <param name="_jsonData">Player Skill Data가 저장된 json 형식의 string text</param>
     private void GetAllPlayerSkillJson(string _jsonData)
     {
-
         // 입력받은 데이터를 Parsing 하는 단계
         var parseData = JSON.Parse(_jsonData);
         // {"results":[]} 형태의 파일
@@ -536,11 +571,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllDefensiveStructureJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllDefensiveStructureJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -605,11 +649,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllItemJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllItemJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -712,11 +765,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllMonsterJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllMonsterJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -783,11 +845,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllMonsterSkillJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllMonsterSkillJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
@@ -849,11 +920,20 @@ public class DBManager : MonoBehaviour
 
         yield return webRequest;
 
-        // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
-        if (string.IsNullOrEmpty(webRequest.error))
+        try
         {
-            // 실행
-            GetAllStageSpawnJson(webRequest.text);
+            // skillUrl로 넘겨준 값에 error가 반환이 되는 것이 아니면
+            if (string.IsNullOrEmpty(webRequest.error))
+            {
+                // 실행
+                GetAllStageSpawnJson(webRequest.text);
+            }
+        }
+        catch (Exception e)
+        {
+#if UNITY_EDITOR
+            Debug.Log(e);
+#endif
         }
     }
 
