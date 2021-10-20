@@ -102,6 +102,7 @@ public class GameManager : MonoBehaviour
     // 게임이 종료되면 실행되는 함수.
     public void GameOver()
     {
+        PlayerPrefs.Save();
         // 대충 화면이 어두워지고 Game Over 라거나 패배 라는 글자가 뜨고
         // 잠시후에 로비로 돌아가는 버튼이 활성화되거나 하면 된다.
 

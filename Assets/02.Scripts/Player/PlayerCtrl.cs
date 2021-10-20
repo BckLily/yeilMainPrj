@@ -22,7 +22,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     // 플레이어가 건설, 수리, 회복 등의 동작을 하고 있는지 판단하는 불리언 변수
     public bool doAction
     {
-        get { return playerAction.isBuild || playerAction.isRepair || playerAction.isHeal; }
+        get { return playerAction.isBuild || playerAction.isRepair || playerAction.isHeal || playerAction.selfHealing; }
     }
 
     #endregion
@@ -127,6 +127,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// 화면(카메라) 회전 속도
     /// </summary>
     /// <param name=""></param>
+    [SerializeField]
+    [Range(1.5f, 8f)]
     private float lookSensitivity;
     /// <summary>
     /// 카메라가 움직일 때 보간 값
@@ -288,7 +290,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         #endregion
 
         upperBodyRotation = 0f;
-        lookSensitivity = 6f;
+        //lookSensitivity = 6f;
         upperBodyRotationLimit = 35f;
         #region 주석
         /*
@@ -325,6 +327,16 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     {
         base.OnEnable();
         currHP = maxHp;
+
+        if (PlayerPrefs.HasKey("LookSensitivity"))
+        {
+            Debug.Log("Load Sensitivity");
+            lookSensitivity = PlayerPrefs.GetFloat("LookSensitivity");
+        }
+        else
+        {
+            lookSensitivity = 6f;
+        }
     }
 
 
@@ -384,6 +396,24 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.KeypadPlus))
+        {
+            lookSensitivity += 0.05f;
+            lookSensitivity = Mathf.Clamp(lookSensitivity, 1.5f, 8f);
+        }
+        else if (Input.GetKey(KeyCode.KeypadMinus))
+        {
+            lookSensitivity -= 0.05f;
+            lookSensitivity = Mathf.Clamp(lookSensitivity, 1.5f, 8f);
+        }
+        else if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            Debug.Log("Save Sensitivity");
+            PlayerPrefs.SetFloat("LookSensitivity", lookSensitivity);
+            PlayerPrefs.Save();
+        }
+
+
         // Player Move 함수 실행, 상점을 열고 있는 상황이 아닐경우 플레이어가 움직일 수 있게 한다.
         if (isUIOpen == false)
             PlayerMove();
@@ -774,6 +804,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             {
                 playerSkillManager.perk0_Level++;
                 PlayerSkillSetting(classDict["Perk0_UID"], playerSkillManager.perk0_Level);
+                ActionTextSetting("특전1이 활성화되었습니다.");
             }
         }
         else if (_skillUID == classDict["Perk1_UID"])
@@ -782,6 +813,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             {
                 playerSkillManager.perk1_Level++;
                 PlayerSkillSetting(classDict["Perk1_UID"], playerSkillManager.perk1_Level);
+                ActionTextSetting("특전2가 활성화되었습니다.");
             }
         }
         else if (_skillUID == classDict["Perk2_UID"])
@@ -790,6 +822,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             {
                 playerSkillManager.perk2_Level++;
                 PlayerSkillSetting(classDict["Perk2_UID"], playerSkillManager.perk2_Level);
+                ActionTextSetting("특전3이 활성화되었습니다.");
             }
         }
 
@@ -1304,7 +1337,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         targetExp = (level == 1 ? 50f : 90f);
 
 
-        if (level < 18 && _playerExp >= targetExp)
+        if (level < playerMaxLevel && _playerExp >= targetExp)
         {
             _playerExp -= targetExp;
             level += 1;

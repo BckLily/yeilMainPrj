@@ -20,7 +20,6 @@ public class ButtonCtrl : MonoBehaviour
 
     }
 
-
     public void OnGameStartButtonClick()
     {
 
@@ -142,23 +141,6 @@ public class ButtonCtrl : MonoBehaviour
         //StartCoroutine(MainMenuSceneLoad());
         GameManager.instance.SceneLoadingFunction("MainMenuScene");
     }
-
-    // 이걸 사용하다가 GameManager에 씬을 로드하는 함수를 따로 만들어서 사용하고 있다.
-    //IEnumerator MainMenuSceneLoad()
-    //{
-    //    AsyncOperation _operation = SceneManager.LoadSceneAsync("MainMenuScene");
-    //    _operation.allowSceneActivation = false;
-    //    //Debug.Log("____ Loading... ____");
-    //    while (_operation.progress < 0.9f)
-    //    {
-    //        yield return null;
-    //    }
-    //    //Debug.Log("____ Loading almost Complete ____");
-    //    GameManager.instance.GameFail();
-    //    yield return null;
-    //    _operation.allowSceneActivation = true;
-    //}
-
 
     public void OnKeyInformationOpenButtonClick()
     {

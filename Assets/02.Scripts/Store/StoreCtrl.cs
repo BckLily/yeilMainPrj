@@ -16,6 +16,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // 지금은 상점의 버튼과 Canvas 등을 전부 하나하나 프리팹으로 생성해뒀지만
     // 나중에 JSON 같은 것으로 정리하면 열 때 정보를 가져와서 로드하는 방식을 사용할 수 있을 것이다.
 
+    #region Button List
     // 상점에서 판매하는 것들의 종류를 구분한 버튼 리스트
     //public List<UnityEngine.UI.Button> typeButtonList;
     public List<MyButton> typeButtonList;
@@ -57,17 +58,32 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // 방어 물자 리스트
     //public List<UnityEngine.UI.Button> defStructList;
     public List<MyButton> defStructList;
+    #endregion
 
+    #region Text UI
     [Header("Text UI")]
     // 판매 목록의 정보를 표시해주는 텍스트
     public UnityEngine.UI.Text infoText;
     // 플레이어가 보유한 포인트를 표시해주는 텍스트
     public UnityEngine.UI.Text _playerPointText;
+    #endregion
+
+    //// Enter에서 Exit 속도 확인 용 
+    //System.Diagnostics.Stopwatch iPointerWatch;
+    //// 코드 속도 확인 용
+    //System.Diagnostics.Stopwatch codeWatch;
+    //// Exit에서 Enter 속도 확인 용
+    //System.Diagnostics.Stopwatch nextPointerWatch;
+
 
     // Start is called before the first frame update
     void Start()
     {
         _preColor = new Color();
+
+        //iPointerWatch = new System.Diagnostics.Stopwatch();
+        //codeWatch = new System.Diagnostics.Stopwatch();
+        //nextPointerWatch = new System.Diagnostics.Stopwatch();
     }
 
     // Update is called once per frame
@@ -263,8 +279,14 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // 마우스를 올렸을 때 정보를 가져오기 위해서 사용
     public void OnPointerEnter(PointerEventData eventData)
     {
+        //iPointerWatch.Start();
+        //codeWatch.Start();
+        //nextPointerWatch.Stop();
+        //Debug.Log($"____ Next Point Time: {codeWatch.ElapsedMilliseconds.ToString()} ms ____");
+        //nextPointerWatch.Reset();
+            
 #if UNITY_EDITOR
-        Debug.Log("___ Pointer Enter: " + eventData.pointerCurrentRaycast.gameObject.name + " ____");
+        //Debug.Log("___ Pointer Enter: " + eventData.pointerCurrentRaycast.gameObject.name + " ____");
 #endif
         try
         {
@@ -298,19 +320,31 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
     // 빈 곳으로 마우스가 옮겼을 때 이전 정보를 초기화하기 위해서 사용
     public void OnPointerExit(PointerEventData eventData)
     {
+        //iPointerWatch.Stop();
+        //nextPointerWatch.Start();
+
+        //Debug.Log($"____ IPointerHandler Time: {iPointerWatch.ElapsedMilliseconds.ToString()} ms ____");
+        //iPointerWatch.Reset();
+
         try
         {
             // 버튼 영역을 벗어났으므로 기존의 색으로 되돌려 준다.
             _preButton.GetComponent<UnityEngine.UI.Image>().color = _preColor;
+            //Debug.Log(_preColor);
             // 정보가 없으므로 정보를 비워준다.
-            infoText.text = "";
+            infoText.text = "".ToString();
+
         }
         catch (System.Exception e)
         {
 #if UNITY_EDITOR
-            Debug.LogWarning(e);
+            //Debug.LogWarning(e);
 #endif
         }
+
+        //codeWatch.Stop();
+        //Debug.Log($"____ Code Time: {codeWatch.ElapsedMilliseconds.ToString()} ms ____");
+        //codeWatch.Reset();
 
     }
 

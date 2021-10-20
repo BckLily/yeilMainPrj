@@ -2621,6 +2621,7 @@ MonoBehaviour:
   incRepairSpeed: 0
   incBuildMaxHealthPoint: 0
   buildingAutoRepair: 0
+  selfHealing: 0
   targetInfoText: {fileID: 637376907}
   targetInfoPanel: {fileID: 1084163996}
   crosshair: {fileID: 1317229164}
@@ -8432,6 +8433,7 @@ MonoBehaviour:
   _point: 0
   controller: {fileID: -3133774589751300096}
   playerCameraTr: {fileID: 963194228}
+  lookSensitivity: 0
   playerAnim: {fileID: 3410318660562277931}
   weaponManager: {fileID: 9109198102555188477}
   incCarryBullet: 0

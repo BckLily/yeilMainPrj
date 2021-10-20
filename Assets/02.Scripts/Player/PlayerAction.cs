@@ -109,6 +109,7 @@ public class PlayerAction : MonoBehaviour
     public float incBuildMaxHealthPoint = 0f;
 
     public bool buildingAutoRepair = false;
+    public bool selfHealing = false;
 
     #endregion
 
@@ -217,9 +218,9 @@ public class PlayerAction : MonoBehaviour
             }
             catch (NullReferenceException e)
             {
-//#if UNITY_EDITOR
-//                Debug.Log(e);
-//#endif
+                //#if UNITY_EDITOR
+                //                Debug.Log(e);
+                //#endif
                 targetTag = null;
                 targetInfoPanel.SetActive(false);
                 return;
@@ -242,12 +243,11 @@ public class PlayerAction : MonoBehaviour
         //Debug.Log(target);
 
         // 방어 물자가 건설되어 있지 않은 상태이면 건설할 수 있다고 표시해주어야 한다.
-        if (targetTag == "BLUEPRINT")
+        if (selfHealing == false && targetTag == "BLUEPRINT")
         {
             // 각각의 상황에 따로 SetActive를 처리하는 이유는 Raycast를 통해서 무언가를 비추고는 있는데
             // 내가 원하는 타겟이 아닌 경우가 있기 때문에 원하는 타겟일 경우에만 표시하도록 처리한 것.
             if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
-
 
             bool canBuild = !target.GetComponent<Blueprint>().isBuild;
 
@@ -285,14 +285,16 @@ public class PlayerAction : MonoBehaviour
 
                                 playerCtrl.ActionTextSetting("건설 완료");
 
-                                target.GetComponent<Blueprint>().BuildingBuild();
+                                Blueprint _bluePrint = target.GetComponent<Blueprint>();
+
+                                _bluePrint.BuildingBuild();
+
                                 // 건물 자동 회복 특전을 가지고 있을 경우
                                 if (buildingAutoRepair == true)
                                 {
                                     // 건물의 자동 회복을 활성화시킨다.
-                                    target.GetComponent<Blueprint>().StartAutoRepair();
+                                    _bluePrint.StartAutoRepair();
                                 }
-
                             }
                         }
                         // 놓았을 경우
@@ -314,7 +316,7 @@ public class PlayerAction : MonoBehaviour
                 }
             }
         }
-        else if (targetTag == "FENCE" || targetTag == "BARBEDWIRE")
+        else if (selfHealing == false && (targetTag == "FENCE" || targetTag == "BARBEDWIRE"))
         {
             // 각각의 상황에 따로 SetActive를 처리하는 이유는 Raycast를 통해서 무언가를 비추고는 있는데
             // 내가 원하는 타겟이 아닌 경우가 있기 때문에 원하는 타겟일 경우에만 표시하도록 처리한 것.
@@ -353,7 +355,7 @@ public class PlayerAction : MonoBehaviour
         }
 
         // 상점에 다가가면 상점이라고 표시가 뜨고 키를 누르면 상점이 열린다.
-        else if (targetTag == "STORE" && Vector3.Distance(this.transform.position, target.transform.position) <= 5f)
+        else if (selfHealing == false && (targetTag == "STORE" && Vector3.Distance(this.transform.position, target.transform.position) <= 5f))
         {
             if (targetInfoPanel.activeSelf == false) { targetInfoPanel.SetActive(true); }
             targetInfoText.text = TargetInfoTextSetting("상점");
@@ -368,7 +370,7 @@ public class PlayerAction : MonoBehaviour
             }
         }
         // 플레이어에게 다가가면 플레이어의 이름이 표시된다.
-        else if (targetTag == "PLAYER")
+        else if (selfHealing == false && targetTag == "PLAYER")
         {
             PlayerCtrl _targetPlayer = target.GetComponent<PlayerCtrl>();
             if (_targetPlayer.currHP < _targetPlayer.maxHp)
@@ -404,9 +406,9 @@ public class PlayerAction : MonoBehaviour
             }
             //Debug.Log("Player Live State");
         }
+
         //else if(targetTag == "MAINDOOR")
         //{
-
         //}
         // 보고있는 대상은 있는데 그 대상이 내가 원하는 대상이 아닐 경우 정보 표시가 필요없다.
         else
@@ -419,7 +421,7 @@ public class PlayerAction : MonoBehaviour
                 targetInfoText.text = TargetInfoTextSetting("회복 가능");
                 if (Input.GetKey(KeyCode.E))
                 {
-                    isHeal = true;
+                    selfHealing = true;
                     if (FillGauge(healingSpeed))
                     {
                         playerCtrl.ActionTextSetting("회복 완료");
@@ -434,7 +436,7 @@ public class PlayerAction : MonoBehaviour
                 }
                 else if (Input.GetKeyUp(KeyCode.E))
                 {
-                    isHeal = false;
+                    selfHealing = false;
                     GaugeClear();
                 }
 
@@ -497,6 +499,7 @@ public class PlayerAction : MonoBehaviour
             isHeal = false;
             isRepair = false;
             isBuild = false;
+            selfHealing = false;
 
             gaugeRing.GetComponent<Image>().fillAmount = 0f;
             gaugeRing.SetActive(false);

@@ -23,10 +23,10 @@ public class BunkerDoor : DefensiveStructure
     {
         base.Update();
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Damaged(10f, Vector3.zero, Vector3.zero);
-        }
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    Damaged(10f, Vector3.zero, Vector3.zero);
+        //}
     }
 
     protected override void OnEnable()

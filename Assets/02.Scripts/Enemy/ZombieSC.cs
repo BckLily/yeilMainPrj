@@ -11,7 +11,7 @@ public class ZombieSC : LivingEntity
     public GameObject player;
     public GameObject attackColl;      // 공격 판정 콜라이더
     float traceRange = 10f;            // 추적 반경
-    float attackDistance = 1.5f;       // 공격 거리
+    float attackDistance = 2.1f;       // 공격 거리
 
     private NavMeshAgent pathFinder;   // 경로 계산 에이전트
     private Animator enemyAnimator;    // 애니매이션
