@@ -319,7 +319,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         _select_SkillList = new List<string>();
 
         // 시작 포인트는 100포인트로 설정했다.
-        _point = 100;
+        _point = 400;
     }
 
 
@@ -391,7 +391,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
 
 
-    private bool useCheat = false;
+
 
     // Update is called once per frame
     void Update()
@@ -460,7 +460,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            SpwanManager.Instance.EnemySpawnDebug();
+            SpwanManager.Instance.EnemySpawnFunc();
         }
         else if (Input.GetKeyDown(KeyCode.Backslash))
         {
@@ -472,11 +472,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             CheckLevelUp();
 
         }
-        //else if (Input.GetKeyDown(KeyCode.Alpha9))
-        //{
-        //    skillPoint -= 1;
-        //    if (skillPoint < 0) { skillPoint = 0; }
-        //}
 
 #endif
         #endregion
@@ -484,12 +479,15 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
 
         #region Build Cheat
 
-#if UNITY_STANDALONE_WIN
         if (Input.GetKeyDown(KeyCode.F6))
         {
-            useCheat = true;
+            GameManager.instance.useCheat = true;
+            ActionTextSetting("테스트 모드 활성화");
         }
-        if (useCheat)
+
+#if UNITY_STANDALONE_WIN
+
+        if (GameManager.instance.useCheat)
         {
             // 직업 설정 테스트 코드
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -523,7 +521,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             }
             else if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                SpwanManager.Instance.EnemySpawnDebug();
+                SpwanManager.Instance.EnemySpawnFunc();
             }
 
 

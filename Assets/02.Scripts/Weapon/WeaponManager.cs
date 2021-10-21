@@ -345,6 +345,8 @@ public class WeaponManager : MonoBehaviour
                 // 발사 이펙트 생성
                 currGun.BulletFire();
 
+                //Camera.main.transform.Rotate(Vector3.right, 100 * Mathf.Deg2Rad);
+
                 CheckFireRaycast();
             }
             else

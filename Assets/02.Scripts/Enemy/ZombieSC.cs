@@ -45,10 +45,6 @@ public class ZombieSC : LivingEntity
 
         _exp = 1;
     }
-    private void Start()
-    {
-
-    }
 
 
     protected override void OnEnable()

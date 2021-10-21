@@ -88,10 +88,10 @@ public class ObjectPooling : MonoBehaviour
         switch (_monster)
         {
             case Monster.Zombie:
-                obj = Instance.poolingObjectZombie.Dequeue();
-                if (obj != null)
+
+                if (Instance.poolingObjectZombie.Count > 0)
                 {
-                    //obj.SetActive(true);
+                    obj = Instance.poolingObjectZombie.Dequeue();
                     return obj;
                 }
                 else
@@ -102,9 +102,9 @@ public class ObjectPooling : MonoBehaviour
                     return obj;
                 }
             case Monster.Spider:
-                obj = Instance.poolingObjectSpider.Dequeue();
-                if (obj != null)
+                if (Instance.poolingObjectSpider.Count > 0)
                 {
+                    obj = Instance.poolingObjectSpider.Dequeue();
                     //obj.SetActive(true);
                     return obj;
                 }
@@ -116,9 +116,9 @@ public class ObjectPooling : MonoBehaviour
                     return obj;
                 }
             case Monster.Clutch:
-                obj = Instance.poolingObjectClutch.Dequeue();
-                if (obj != null)
+                if (Instance.poolingObjectClutch.Count > 0)
                 {
+                    obj = Instance.poolingObjectClutch.Dequeue();
                     //obj.SetActive(true);
                     return obj;
                 }
@@ -130,9 +130,9 @@ public class ObjectPooling : MonoBehaviour
                     return obj;
                 }
             case Monster.Movidic:
-                obj = Instance.poolingObjectMovidic.Dequeue();
-                if (obj != null)
+                if (Instance.poolingObjectMovidic.Count > 0)
                 {
+                    obj = Instance.poolingObjectMovidic.Dequeue();
                     //obj.SetActive(true);
                     return obj;
                 }
@@ -154,7 +154,7 @@ public class ObjectPooling : MonoBehaviour
     /// <param name="zombieSC"></param>
     public static void ReturnObject(GameObject obj)
     {
-        obj.SetActive(false);   
+        obj.SetActive(false);
         obj.transform.SetParent(Instance.transform);
 
         if (obj.name.Contains("Zombie"))

@@ -18,6 +18,7 @@ public class SpwanManager : MonoBehaviour
 
     private IEnumerator _coEnemySpawn;
 
+    bool skipWaitTime = false;
 
     #region UI 영역
     [SerializeField]
@@ -41,6 +42,7 @@ public class SpwanManager : MonoBehaviour
         }
     }
 
+
     private void Start()
     {
         enemyPoints.AddRange(GameObject.Find("EnemySpawnPoints").GetComponentsInChildren<Transform>());
@@ -48,6 +50,35 @@ public class SpwanManager : MonoBehaviour
         StageTextSetting();
 
         StartCoroutine(WaitNextStage());
+    }
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            skipWaitTime = true;
+        }
+        else if (GameManager.instance.useCheat && Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            DebugEnemySpawn(Monster.Zombie);
+        }
+        else if (GameManager.instance.useCheat && Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            DebugEnemySpawn(Monster.Spider);
+        }
+        else if (GameManager.instance.useCheat && Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            DebugEnemySpawn(Monster.Clutch);
+        }
+        else if (GameManager.instance.useCheat && Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            DebugEnemySpawn(Monster.Movidic);
+        }
+        else if (GameManager.instance.useCheat)
+        {
+            remainEnemiesText.text = string.Format($"{(enemies.Count).ToString()}");
+        }
     }
 
     private IEnumerator WaitNextStage()
@@ -62,6 +93,15 @@ public class SpwanManager : MonoBehaviour
             nextStageTimeText.text = string.Format($"{_time:N1}");
             yield return new WaitForFixedUpdate();
             _time -= Time.fixedDeltaTime;
+            if (skipWaitTime)
+            {
+                skipWaitTime = false;
+                break;
+            }
+            if (GameManager.instance.useCheat)
+            {
+                yield break;
+            }
 
         }
         _coEnemySpawn = EnemySpawn();
@@ -72,7 +112,7 @@ public class SpwanManager : MonoBehaviour
     }
 
 
-    public void EnemySpawnDebug()
+    public void EnemySpawnFunc()
     {
         if (_coEnemySpawn != null)
         {
@@ -132,7 +172,7 @@ public class SpwanManager : MonoBehaviour
 
             //Debug.Log("____ Total Count: " + totalCount + " ____");
 
-            if (enemies.Count < 15 && enemies.Count < totalCount)
+            if (enemies.Count < 20 && enemies.Count < totalCount)
             {
                 float randomSpeed = UnityEngine.Random.Range(-0.2f, 0.2f);
 
@@ -208,7 +248,7 @@ public class SpwanManager : MonoBehaviour
             }
         }
 
-        if (GameManager.instance._stage > 30)
+        if (GameManager.instance._stage > GameManager.instance.maxStage)
         {
             yield break;
         }
@@ -229,4 +269,65 @@ public class SpwanManager : MonoBehaviour
     }
 
 
+    private void DebugEnemySpawn(Monster _monster)
+    {
+        int idx = UnityEngine.Random.Range(2, 8);
+        idx += (UnityEngine.Random.Range(0, 3) * 7);
+
+
+        if (enemies.Count < 30)
+        {
+            float randomSpeed = UnityEngine.Random.Range(-0.2f, 0.2f);
+
+            //int selectEnemy = UnityEngine.Random.Range(0, 4);
+            int selectEnemy = (int)_monster;
+            Monster mob = (Monster)selectEnemy;
+
+            GameObject obj;
+
+            switch (_monster)
+            {
+                case Monster.Zombie:
+                    obj = ObjectPooling.GetObject(Monster.Zombie);
+                    obj.transform.position = enemyPoints[idx].position;
+                    obj.SetActive(true);
+                    obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
+
+                    break;
+                case Monster.Spider:
+                    obj = ObjectPooling.GetObject(Monster.Spider);
+                    obj.transform.position = enemyPoints[idx].position;
+                    obj.SetActive(true);
+                    obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
+
+                    break;
+                case Monster.Clutch:
+                    obj = ObjectPooling.GetObject(Monster.Clutch);
+                    obj.transform.position = enemyPoints[idx].position;
+                    obj.SetActive(true);
+                    obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
+
+                    break;
+                case Monster.Movidic:
+                    obj = ObjectPooling.GetObject(Monster.Movidic);
+                    obj.transform.position = enemyPoints[idx].position;
+                    obj.SetActive(true);
+                    obj.GetComponent<UnityEngine.AI.NavMeshAgent>().speed += randomSpeed;
+
+                    break;
+                default:
+
+                    obj = null;
+                    break;
+            }
+            if (obj != null)
+            {
+                enemies.Add(obj.GetComponent<LivingEntity>());
+            }
+
+        }
+
+    }
+
 }
+

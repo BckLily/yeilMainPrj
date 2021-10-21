@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public bool perk2_Active = false;
 
     [Header("Stage")]
-    private int maxStage = 30;
+    internal int maxStage = 5;
     public int _stage; // 현재 몇 스테이지인지를 저장한 변수
     public int _remainEnemyCount; // 스테이지에 남은 적 수
 
@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     // Photon에서는 PhotonNetwork.CurrentRoom.Players 을 사용해서 플레이어 목록을 확인할 수 있다.
     // 특전이 활성화되면 특전 활성화에 사용해야한다.
     public List<PlayerCtrl> players;
+    public bool useCheat = false;
+
 
     // 적을 생성할 위치
     Transform[] enemyPoints;
@@ -78,9 +80,7 @@ public class GameManager : MonoBehaviour
             ExitGame();
         }
 
-
 #endif
-
 
     }
 
@@ -214,7 +214,6 @@ public class GameManager : MonoBehaviour
 
 
         yield return new WaitForSeconds(1f);
-
     }
 
 
@@ -227,6 +226,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Fail");
 
         _stage = 1;
+
+        useCheat = false;
 
         perk0_Active = false;
         perk1_Active = false;
@@ -271,8 +272,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Stage Clear Coroutine");
             PlayerCtrl _playerCtrl = player.GetComponent<PlayerCtrl>();
-            _playerCtrl._point += 200;
-            _playerCtrl._playerExp += 50f;
+            _playerCtrl._point += 800;
+            _playerCtrl._playerExp += 400f;
             _playerCtrl.CheckLevelUp();
             yield return null;
         }

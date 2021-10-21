@@ -30,10 +30,12 @@ public class CameraRaycast : MonoBehaviour
         List<RaycastHit> _returnHit = new List<RaycastHit>();
         RaycastHit hit;
 
+        Vector3 dist = new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f));
+
         // 샷건이 아닌 경우 한 발을 사용
         if (_gunType != ItemGun.GunType.SG)
         {
-            if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
+            if (Physics.Raycast(transform.position, transform.forward + dist, out hit, _raycastRange, targetLayerMasks))
             {
 
                 _returnHit.Add(hit);
@@ -46,27 +48,27 @@ public class CameraRaycast : MonoBehaviour
             float _value = 0.1f;
 
             // 정면
-            if (Physics.Raycast(transform.position, transform.forward, out hit, _raycastRange, targetLayerMasks))
+            if (Physics.Raycast(transform.position, transform.forward + dist, out hit, _raycastRange, targetLayerMasks))
             {
                 _returnHit.Add(hit);
             }
             // 위
-            if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, _value, 0f), out hit, _raycastRange, targetLayerMasks))
+            if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, _value, 0f) + dist, out hit, _raycastRange, targetLayerMasks))
             {
                 _returnHit.Add(hit);
             }
             // 아래
-            if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, -_value, 0f), out hit, _raycastRange, targetLayerMasks))
+            if (Physics.Raycast(transform.position, transform.forward + new Vector3(0f, -_value, 0f) + dist, out hit, _raycastRange, targetLayerMasks))
             {
                 _returnHit.Add(hit);
             }
             // 좌
-            if (Physics.Raycast(transform.position, transform.forward + new Vector3(-_value, 0f, 0f), out hit, _raycastRange, targetLayerMasks))
+            if (Physics.Raycast(transform.position, transform.forward + new Vector3(-_value, 0f, 0f) + dist, out hit, _raycastRange, targetLayerMasks))
             {
                 _returnHit.Add(hit);
             }
             // 우
-            if (Physics.Raycast(transform.position, transform.forward + new Vector3(_value, 0f, 0f), out hit, _raycastRange, targetLayerMasks))
+            if (Physics.Raycast(transform.position, transform.forward + new Vector3(_value, 0f, 0f) + dist, out hit, _raycastRange, targetLayerMasks))
             {
                 _returnHit.Add(hit);
             }
