@@ -228,8 +228,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     // Start is called before the first frame update
     void Start()
     {
-
-
         //playerName = string.Format("Player1");
         //playerClass = PlayerClass.ePlayerClass.Soldier;
         // 플레이어의 이름 및 플레이어의 직업 설정
@@ -249,7 +247,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         StartCoroutine(CoPlayerClassSetting());
 
         controller.enabled = true;
-
 
         // 지금은 그냥 설정하고 있지만 나중에는 Init함수를 만들어서 PlayerClassSetting 코루틴의 마지막에 함수를 실행하는 방식으로 변경
         // 나중에는 함수를 사용해서 체력 및 방어력, 공격력 등을 설정할 것.
@@ -387,10 +384,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     }
 
     #endregion
-
-
-
-
 
 
     // Update is called once per frame
@@ -547,7 +540,6 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             //PlayerCameraMove(); // 기능 제거
         }
     }
-
 
 
     #region 플레이어 스킬 관련 
@@ -997,8 +989,8 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     /// </summary>
     private void PlayerMove()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
 
         // 왼쪽 shift가 눌리면 달린다.
         if (Input.GetKey(KeyCode.LeftShift))
@@ -1040,11 +1032,16 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             useSpeed = changedSpeed;
         }
 
-        // 이거 찾아봐야 하고
+        // 로컬 좌표를 글로벌 좌표로 변경해주는 것.
         dir = transform.TransformDirection(dir);
+
+        //Debug.Log($"Use Speed: {useSpeed}");
+        //Debug.Log($"DIr: {dir}");
 
         //dir *= useSpeed;
         dir *= useSpeed * Time.deltaTime;
+
+        //Debug.Log($"DIr: {dir}");
 
         // dir의 크기가 0.01보다 작으면 움직이는게 아니고
         // 0.01보다 크면 움직이는 것이다.
