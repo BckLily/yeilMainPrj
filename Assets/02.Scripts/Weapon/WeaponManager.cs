@@ -78,6 +78,9 @@ public class WeaponManager : MonoBehaviour
         try
         {
             weaponTr.LookAt(leftHandTr);
+            //weaponTr.LookAt(playerCtrl.transform.forward * 20f);
+            //Debug.Log(playerCameraTr.transform.forward * 100f);
+
         }
         catch (Exception e)
         {

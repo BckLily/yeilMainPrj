@@ -244,7 +244,6 @@ public class SpiderSC : LivingEntity
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, 1 << LayerMask.NameToLayer("DEFENSIVEGOODS")))
             {
-
                 if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; }
             }
 

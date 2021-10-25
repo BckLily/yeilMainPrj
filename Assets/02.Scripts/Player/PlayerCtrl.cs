@@ -389,12 +389,12 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.KeypadPlus))
+        if (Input.GetKey(KeyCode.RightBracket))
         {
             lookSensitivity += 0.05f;
             lookSensitivity = Mathf.Clamp(lookSensitivity, 1.5f, 8f);
         }
-        else if (Input.GetKey(KeyCode.KeypadMinus))
+        else if (Input.GetKey(KeyCode.LeftBracket))
         {
             lookSensitivity -= 0.05f;
             lookSensitivity = Mathf.Clamp(lookSensitivity, 1.5f, 8f);
