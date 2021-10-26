@@ -29,6 +29,7 @@ public class SpiderSC : LivingEntity
     LayerMask targetLayer;
     Vector3 targetPosition;
     Vector3 targetSize;
+    int targetValue = 5;
 
     Coroutine co_updatePath;
     Coroutine co_changeTarget;
@@ -203,7 +204,6 @@ public class SpiderSC : LivingEntity
             if (colliders.Length >= 1)
             {
 
-                int targetValue = 5;
                 foreach (var collider in colliders)
                 {
                     // targetValue = 0
@@ -239,12 +239,15 @@ public class SpiderSC : LivingEntity
                 //    targetEntity = colliders[0].gameObject;
             }
             else
+            {
                 targetEntity = startTarget;
+                targetValue = 2;
+            }
 
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, 1 << LayerMask.NameToLayer("DEFENSIVEGOODS")))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, 1 << LayerMask.NameToLayer("WALL") | 1 << LayerMask.NameToLayer("DEFENSIVEGOODS")))
             {
-                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; }
+                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; targetValue = 1; }
             }
 
             yield return new WaitForSeconds(0.1f);

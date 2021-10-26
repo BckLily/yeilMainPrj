@@ -28,6 +28,7 @@ public class ClutchSC : LivingEntity
     LayerMask targetLayer;
     Vector3 targetPosition;
     Vector3 targetSize;
+    int targetValue = 5;
 
     private void Awake()
     {
@@ -247,7 +248,6 @@ public class ClutchSC : LivingEntity
 
             if (colliders.Length >= 1)
             {
-                int targetValue = 5;
                 foreach (var collider in colliders)
                 {
                     // targetValue = 0
@@ -283,12 +283,15 @@ public class ClutchSC : LivingEntity
                 //    targetEntity = colliders[0].gameObject;
             }
             else
+            {
                 targetEntity = startTarget;
+                targetValue = 2;
+            }
 
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.forward, out hit, attackDistance, 1 << LayerMask.NameToLayer("DEFENSIVEGOODS")))
             {
-                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; }
+                if (hit.collider.CompareTag("FENCE")) { targetEntity = hit.collider.gameObject; targetValue = 1; }
             }
 
             yield return new WaitForSeconds(0.1f);

@@ -262,6 +262,7 @@ public class GameManager : MonoBehaviour
     private void GameClear()
     {
         //SceneLoadingFunction("MainMenuScene");
+        Time.timeScale = 0f;
         CursorState.CursorLockedSetting(false);
         GameObject.Find("GameWorldCanvas").transform.Find("GameClearPanel").gameObject.SetActive(true);
     }
@@ -293,6 +294,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator SceneLoadingCoroutine(string _sceneName)
     {
+        Time.timeScale = 1f;
         AsyncOperation _loadingOperation = SceneManager.LoadSceneAsync("LoadingScene");
 
         while (_loadingOperation.progress < 0.9f) { yield return null; }

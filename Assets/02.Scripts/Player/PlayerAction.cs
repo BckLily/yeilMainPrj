@@ -67,7 +67,7 @@ public class PlayerAction : MonoBehaviour
         get
         {
             float _value = healingSpeed * (1 - ((incHealingSpeed + incHealingSpeed_Perk) * 0.01f));
-            return ((_value >= 0.5f) ? _value : 0.5f);
+            return ((_value >= 0.05f) ? _value : 0.05f);
         }
     }
 
@@ -384,11 +384,16 @@ public class PlayerAction : MonoBehaviour
                     if (FillGauge(healingSpeed))
                     {
                         playerCtrl.ActionTextSetting("회복 완료");
-                        // 회복 아이템을 사용했으므로 haveMedikit을 false로
-                        playerCtrl.haveMedikit = false;
-                        // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
-                        playerCtrl.ItemSetting("0");
 
+                        float _rand = UnityEngine.Random.Range(0f, 100f);
+                        // 회복 아이템을 사용하지 않는 특전이 활성화 되어 있을 경우 확률 계산을 해서 처리한다.
+                        if (dontUseHealingItem_Percent < _rand)
+                        {
+                            // 회복 아이템을 사용했으므로 haveMedikit을 false로
+                            playerCtrl.haveMedikit = false;
+                            // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
+                            playerCtrl.ItemSetting("0");
+                        }
                         // Healing 함수 안에 넣으면 회복되는 대상의 아이템을 사용해버리는 문제가 생긴다.
                         // 회복시키는 대상의 아이템을 사용해야한다.
                         //Debug.Log("____ 회복 ____");
@@ -425,10 +430,16 @@ public class PlayerAction : MonoBehaviour
                     if (FillGauge(healingSpeed))
                     {
                         playerCtrl.ActionTextSetting("회복 완료");
-                        // 회복 아이템을 사용했으므로 haveMedikit을 false로
-                        playerCtrl.haveMedikit = false;
-                        // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
-                        playerCtrl.ItemSetting("0");
+
+                        float _rand = UnityEngine.Random.Range(0f, 100f);
+                        // 회복 아이템을 사용하지 않는 특전이 활성화 되어 있을 경우 확률 계산을 해서 처리한다.
+                        if (dontUseHealingItem_Percent < _rand)
+                        {
+                            // 회복 아이템을 사용했으므로 haveMedikit을 false로
+                            playerCtrl.haveMedikit = false;
+                            // 아이템이 없으므로 넘기는 UID 값을 0으로 한다.
+                            playerCtrl.ItemSetting("0");
+                        }
 
                         //Debug.Log("____ 회복 ____");
                         playerCtrl.Healing(currHealingPoint);

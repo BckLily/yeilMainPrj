@@ -34,8 +34,6 @@ public class ButtonCtrl : MonoBehaviour
 #endif
 
         GameManager.instance.SceneLoadingFunction("MapScene");
-
-
     }
 
     // GameManager에 씬 로드에 사용할 함수를 만들어서 사용하고 있다.
@@ -152,5 +150,18 @@ public class ButtonCtrl : MonoBehaviour
         transform.Find("KeyInfoPanel").gameObject.SetActive(false);
     }
 
+    public void OnReadmeOpenButtonClick()
+    {
+        // 현재 폴더의 위치 확인.
+        System.IO.DirectoryInfo currDir = new System.IO.DirectoryInfo(Application.dataPath);
+        if (currDir.Parent != null) { currDir = currDir.Parent; }
+
+#if UNITY_EDITOR
+        Debug.Log($"____Path: {currDir.FullName}____");
+#elif UNITY_STANDALONE_WIN
+        Debug.LogWarning($"____Path: {currDir.FullName}____");
+#endif
+        System.Diagnostics.Process.Start(currDir + "/readme.txt");
+    }
 
 }

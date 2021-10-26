@@ -332,7 +332,7 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
         else
         {
-            lookSensitivity = 6f;
+            lookSensitivity = 4.5f;
         }
     }
 
@@ -392,12 +392,12 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         if (Input.GetKey(KeyCode.RightBracket))
         {
             lookSensitivity += 0.05f;
-            lookSensitivity = Mathf.Clamp(lookSensitivity, 1.5f, 8f);
+            lookSensitivity = Mathf.Clamp(lookSensitivity, 0.5f, 8f);
         }
         else if (Input.GetKey(KeyCode.LeftBracket))
         {
             lookSensitivity -= 0.05f;
-            lookSensitivity = Mathf.Clamp(lookSensitivity, 1.5f, 8f);
+            lookSensitivity = Mathf.Clamp(lookSensitivity, 0.5f, 8f);
         }
         else if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
@@ -1353,9 +1353,13 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
             //    StartCoroutine(playerUI.HaveSkillPoint());
             //}
         }
+        else
+        {
+            return;
+        }
 
         playerUI.ExpUISetting();
-
+        if (_playerExp >= targetExp) { CheckLevelUp(); }
     }
 
 

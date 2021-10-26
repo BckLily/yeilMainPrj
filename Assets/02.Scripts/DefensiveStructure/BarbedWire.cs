@@ -9,7 +9,7 @@ public class BarbedWire : DefensiveStructure
     {
         base.Awake();
         startHp = 150f;
-        damage = 2f;
+        damage = 10f;
     }
 
     private void OnTriggerEnter(Collider other)

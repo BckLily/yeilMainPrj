@@ -130,9 +130,9 @@ public class SpwanManager : MonoBehaviour
     {
         /*
          * 0
-         * 1/ 2 3 4 5 6 7
-         * 8/ 9 10 11 12 13 14
-         * 15/ 16 17 18 19 20 21
+         * 1/ 2 3 4 5 6 7 /8 9 10 11
+         * 12/ 13 14 15 16 17 18 /19 20 21 22
+         * 23/ 24 25 26 27 28 29 /30 31 32 33
          */
 
         // 어떤걸 몇 마리 소환하는지 받아옴
@@ -150,7 +150,7 @@ public class SpwanManager : MonoBehaviour
         {
 
             int idx = UnityEngine.Random.Range(2, 8);
-            idx += (UnityEngine.Random.Range(0, 3) * 7);
+            idx += (UnityEngine.Random.Range(0, 3) * 11);
 
             List<int> _list = new List<int>();
             if (enemyCount[0] > 0)

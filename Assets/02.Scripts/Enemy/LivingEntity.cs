@@ -48,7 +48,7 @@ public class LivingEntity : MonoBehaviour, IAttack, IDamaged
 
     public virtual float Damaged(float damage, Vector3 hitPoint, Vector3 hitNormal) // 피헤 받을시 실행될 함수 (데미지, 피격 위치, 피격 방향)
     {
-        currHP -= damage; // 현재체력에 데미지 만큼 감소
+        currHP -= (damage - armour) >= 0 ? (damage - armour) : 0; // 현재체력에 데미지 만큼 감소
         if (currHP <= 0 && !dead) // 현재체력이 0보다 작고 사망 상태가 아닐떄
         {
             Down(); // DIE 함수 실행
