@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Weapon 과 WeaponManager를 합쳐도 될 것이다.
+
 public class Weapon : MonoBehaviour
 {
     protected string UID = null; // 무기 UID

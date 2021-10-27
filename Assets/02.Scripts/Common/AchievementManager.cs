@@ -50,6 +50,4 @@ public static class AchievementManager
     }
 
 
-
-
 }

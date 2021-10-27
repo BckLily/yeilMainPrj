@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 
 
-public class PlayerCtrl : LivingEntity, IAttack, IDamaged
+public class PlayerCtrl : LivingEntity
 {
     #region 플레이어 UI 관련 변수
     public Image playerHpImage; // 플레이어 체력바
@@ -1033,19 +1033,13 @@ public class PlayerCtrl : LivingEntity, IAttack, IDamaged
         }
 
         // 로컬 좌표를 글로벌 좌표로 변경해주는 것.
-        dir = transform.TransformDirection(dir);
-
-        //Debug.Log($"Use Speed: {useSpeed}");
-        //Debug.Log($"DIr: {dir}");
-
-        //dir *= useSpeed;
-        dir *= useSpeed * Time.deltaTime;
+        dir = transform.TransformDirection(dir) * useSpeed * Time.deltaTime;
+        // dir *= useSpeed * Time.deltaTime;
 
         //Debug.Log($"DIr: {dir}");
 
-        // dir의 크기가 0.01보다 작으면 움직이는게 아니고
-        // 0.01보다 크면 움직이는 것이다.
-        // 위에서 dir을 크기가 1인 벡터로 만들도록 했으므로 방향키를 누르면 일단 움직인다고 판단한다.
+        // dir의 크기가 0.01보다 크면 움직이는 것이다.
+        // normalize를 하고 deltaTime을 곱했지만 60프레임 기준 0.016초로 0.01보다는 큰 값이 나올 것이다.
         if (dir.magnitude >= 0.01f) { isMove = true; }
         else { isMove = false; }
 

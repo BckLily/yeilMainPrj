@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Guns 스크립트와 합쳐도 된다.
+// Scriptable Object를 사용하지 않은 이유는 고정된 수치를 직접 입력해야 하기 때문.
 // Asset Menu 생성 / 파일 이름 / 메뉴 이름 / 메뉴에서 위치
 [CreateAssetMenu(fileName ="New Gun", menuName ="New Gun/Gun", order =int.MaxValue)]
 public class ItemGun : ScriptableObject

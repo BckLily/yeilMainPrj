@@ -207,7 +207,7 @@ public class GameManager : MonoBehaviour
         stageText = GameObject.Find("StageText").GetComponent<UnityEngine.UI.Text>();
         stageText.text = _stage.ToString();
 
-        ObjectCounting.zombieSpwanCount = 10;
+        ObjectCounting.zombieSpwanCount = 15;
         ObjectCounting.spiderSpwanCount = 0;
         ObjectCounting.clutchSpwanCount = 0;
         ObjectCounting.MovidicSpwanCount = 0;

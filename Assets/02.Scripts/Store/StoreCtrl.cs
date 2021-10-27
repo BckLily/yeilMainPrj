@@ -102,7 +102,6 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         // UI가 켜졌으므로 커서 고정을 끈다.
         CursorState.CursorLockedSetting(false);
 
-
     }
 
     public void PlayerPointSetting()
@@ -201,7 +200,6 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         _checkObject.GetComponent<UnityEngine.UI.Image>().color = _preCheckColor;
 
     }
-
 
 
     #region Panel Active 모음
