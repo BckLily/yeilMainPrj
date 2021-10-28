@@ -21,6 +21,7 @@ public class BloodEffectCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Invoke를 사용하는 방법도 있었을 듯?
         if (_time >= removeTime)
         {
             _time = 0f;

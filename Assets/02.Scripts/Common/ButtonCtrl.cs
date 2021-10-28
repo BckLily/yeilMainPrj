@@ -36,44 +36,6 @@ public class ButtonCtrl : MonoBehaviour
         GameManager.instance.SceneLoadingFunction("MapScene");
     }
 
-    // GameManager에 씬 로드에 사용할 함수를 만들어서 사용하고 있다.
-    //IEnumerator GameSceneLoad()
-    //{
-    //    SceneManager.LoadScene("LoadingScene", LoadSceneMode.Additive);
-    //    AsyncOperation _operation = SceneManager.LoadSceneAsync("MapScene");
-    //    _operation.allowSceneActivation = false;
-
-    //    UnityEngine.UI.Slider _slider = GameObject.Find("LoadingSlider").GetComponent<UnityEngine.UI.Slider>();
-
-    //    Debug.Log("___ Loading... ___");
-    //    while (_operation.progress <= 0.9f)
-    //    {
-    //        _slider.value = _operation.progress;
-    //        yield return null;
-    //    }
-    //    Debug.Log("____ Loading almost complete ____ ");
-
-    //    _slider.value = 0.9f;
-
-    //    //Game Manager Game Start
-    //    GameManager.instance.GameStart(_operation,
-    //        PlayerPrefs.GetString("Player_NickName"),
-    //        PlayerPrefs.GetString("Player_Class"));
-    //    // 이전에 쓰던 방식이 있어서 함수를 유지시켰지만
-    //    // GameStart 함수 내에서 PlayerPrefs를 통해서 받아도 된다.
-
-    //    int count = 0;
-    //    while (count < 10)
-    //    {
-    //        _slider.value += 1 / 100f;
-    //        count++;
-    //        yield return new WaitForSeconds(0.5f);
-    //    }
-
-    //    _operation.allowSceneActivation = true;
-    //}
-
-
     public void OnGameExitButtonClick()
     {
         GameManager.instance.ExitGame();
