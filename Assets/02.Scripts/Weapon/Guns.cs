@@ -21,6 +21,7 @@ public class Guns : Weapon
         base.Awake();
 
     }
+
     private void OnEnable()
     {
         muzzlePath = "FireMuzzle/Prefabs/";
@@ -37,12 +38,6 @@ public class Guns : Weapon
         StartCoroutine(CoWeaponTypeSetting());
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     private IEnumerator CoWeaponTypeSetting()
     {

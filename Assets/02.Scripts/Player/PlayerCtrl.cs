@@ -389,6 +389,7 @@ public class PlayerCtrl : LivingEntity
     // Update is called once per frame
     void Update()
     {
+        // 마우스 민감도 변경
         if (Input.GetKey(KeyCode.RightBracket))
         {
             lookSensitivity += 0.05f;
@@ -838,9 +839,8 @@ public class PlayerCtrl : LivingEntity
 
         // 레벨 업 가능한 스킬 리스트
         List<int> _skillList = new List<int>();
-        // 선택한 스킬 리스트
-        List<int> _selectList = new List<int>();
 
+        // 레벨업 가능한 스킬 추가
         if (playerSkillManager.status0_Level < statusMaxLevel)
         {
             _skillList.Add(0);
@@ -878,6 +878,7 @@ public class PlayerCtrl : LivingEntity
         }
         */
 
+        // 표시될 스킬 선택
         for (int i = 0; i < 3; i++)
         {
             int _rand = _skillList[UnityEngine.Random.Range(0, _skillList.Count)];
@@ -945,7 +946,6 @@ public class PlayerCtrl : LivingEntity
 
         StartCoroutine(playerSkillManager.SelectSkillSetting());
     }
-
 
 
     #endregion
@@ -1032,7 +1032,10 @@ public class PlayerCtrl : LivingEntity
             useSpeed = changedSpeed;
         }
 
+
         // 로컬 좌표를 글로벌 좌표로 변경해주는 것.
+        // 로컬 (1, 0, 0)이더라도 글로벌로는 (0, 1, 0)일 수 있으니
+        // 글로벌 좌표를 기준으로 움직이는 CharacterController에서 사용하기 위해서 글로벌 좌표로 변경.
         dir = transform.TransformDirection(dir) * useSpeed * Time.deltaTime;
         // dir *= useSpeed * Time.deltaTime;
 
@@ -1202,6 +1205,7 @@ public class PlayerCtrl : LivingEntity
                                 break;
                             // 탄 보급
                             case 1:
+                                // 탄 보급에 대한 함수가 있으면 함수 실행하면 되는데 왜 이렇게 했지...
                                 weaponManager.currGun.carryBullet += weaponManager.currGun.maxCarryBullet;
 
                                 break;
@@ -1313,7 +1317,7 @@ public class PlayerCtrl : LivingEntity
     // 이러한 방식으로 PlayerCtrl을 거쳐서 PlayerUI가 가지고 있는
     // PlayerActionTextSetting에 접근하게 한다.
     // 지금은 대부분이 public 으로 되어있어서 큰 차이가 없으나 playerUI의 경우 PlayerCtrl과 동일한 위치에 있으므로
-    // getCompenent를 ㅌ옹해서도 받을 수 있다는 점을봤을 때
+    // getCompenent를 통해서도 받을 수 있다는 점을봤을 때
     // 이후 보안?을 높일때 private로 변경 후 진행할 수 있기 때문이다.
     public void ActionTextSetting(string _text)
     {

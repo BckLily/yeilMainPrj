@@ -56,10 +56,6 @@ public class GameManager : MonoBehaviour
     {
         _stage = 1;
 
-        /*
-        // 지금은 게임 씬에서 시작하니까 바로 GameStart를 실행시킨다.
-        GameStart();
-        */
     }
 
     // Update is called once per frame
@@ -91,7 +87,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         // 윈도우에서 동작
-#elif UNITY_STANDALONE_WIN
+#elif UNITY_STANDALONE_WIN // #else와 차이는 없다. 대부분의 OS에서 Application.Quit()로 종료한다고 하던데 확인 필요.
         Application.Quit();
 
 #endif
@@ -109,10 +105,10 @@ public class GameManager : MonoBehaviour
         GameObject gameCanvas = GameObject.Find("GameWorldCanvas");
         gameCanvas.transform.Find("GameOverPanel").gameObject.SetActive(true);
 
-        StartCoroutine(CoFadeIn());
+        StartCoroutine(CoFadeOut());
     }
 
-    IEnumerator CoFadeIn()
+    IEnumerator CoFadeOut()
     {
         GameObject gameCanvas = GameObject.Find("GameWorldCanvas");
         UnityEngine.UI.Image fadein = gameCanvas.transform.Find("GameOverPanel").Find("GameOverFadeIn").GetComponent<UnityEngine.UI.Image>();
@@ -218,11 +214,7 @@ public class GameManager : MonoBehaviour
 
     internal void GameFail()
     {
-        // 테스트 중에는 오류가 발생할 수 있지만
-        // 일반적으로 게임 중에는 항상 적은 스폰되고 있을 것이기 때문에 _coEnemeySpawn이 null일 확률은 없다.
-        // 테스트 코드
-
-        Debug.Log("Game Fail");
+        //Debug.Log("Game Fail");
 
         _stage = 1;
 

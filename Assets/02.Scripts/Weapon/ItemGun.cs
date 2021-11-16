@@ -8,6 +8,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="New Gun", menuName ="New Gun/Gun", order =int.MaxValue)]
 public class ItemGun : ScriptableObject
 {
+    // 새로 클래스를 만드는게 나았을 것 같네
     // 무기 종류 (Enum)
     public enum GunType
     {
@@ -34,8 +35,8 @@ public class ItemGun : ScriptableObject
 
     public string gunName { get; private set; } // 총의 이름
 
-    public GameObject gunPrefab;  // 총의 프리팹 (사용될 프리팹)
-    public Sprite gunImage; // 총 이미지 (상점에 사용될 이미지)
+    //public GameObject gunPrefab;  // 총의 프리팹 (사용될 프리팹)
+    //public Sprite gunImage; // 총 이미지 (상점에 사용될 이미지)
 
 
 }

@@ -114,6 +114,4 @@ public class PlayerEffectCtrl : MonoBehaviour
         Instance.sparkQ.Enqueue(_effect);
     }
 
-
-
 }

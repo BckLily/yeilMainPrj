@@ -35,11 +35,7 @@ public class PlayerSkillManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
 
     /// <summary>
     /// 설정된 스킬 3개를 가져와서 UID를 통해서 스킬 정보를 가져오고 UI에 표시하는 함수.
@@ -72,7 +68,6 @@ public class PlayerSkillManager : MonoBehaviour
             }
             else if (playerCtrl._select_SkillList[i] == "030000001")
             {
-
                 //playerUI.skillInfo_ImageList
                 playerUI.skillInfo_TextList[i].text = $"<b><size=50>{"방어력 증가".ToString()}</size></b>\n" +
                     $"방어력이 <color=red>{(FindPlayerSkill.GetPlayerSkill(skillInfo["PlayerSkill_Name"], skillInfo["PlayerSkill_SkillUID"], 1)[0] * float.Parse(skillInfo["PlayerSkill_Coefficient"])).ToString()}</color>" +

@@ -61,7 +61,7 @@ public class WeaponManager : MonoBehaviour
 
         LayerMask enemyLayer = LayerMask.NameToLayer("ENEMY");
         LayerMask wallLayer = LayerMask.NameToLayer("WALL");
-        LayerMask uiLayer = LayerMask.NameToLayer("UI");
+        //LayerMask uiLayer = LayerMask.NameToLayer("UI");
 
         //alllTargetLayerMask = ((1 << enemyLayer) | (1 << wallLayer) | (1 << uiLayer));
         alllTargetLayerMask = ((1 << enemyLayer) | (1 << wallLayer));
@@ -280,7 +280,7 @@ public class WeaponManager : MonoBehaviour
                 // 총을 쏠 수 있는 상황이면
                 if (CheckCanFire())
                 {
-                    // fireTime에서 delay만큼 감소시켜 공격 속도보다 빠른 발사를 할 수 없게 한다.
+                    // fireTime을 0으로 초기화해서 fireTime을 다시 계산하게 한다.
                     currGun.fireTime = 0f;
 
                 }
@@ -421,12 +421,7 @@ public class WeaponManager : MonoBehaviour
                 _effect.gameObject.transform.rotation = Quaternion.LookRotation(hitTarget.normal);
                 //Debug.Log("____ TARGET TAG WALL");
             }
-            //else if (target.CompareTag("UI"))
-            // 대상이 없는 상태일 때
-            else
-            {
 
-            }
         }
 
 
