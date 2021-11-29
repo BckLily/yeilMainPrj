@@ -68,14 +68,12 @@ public class GameManager : MonoBehaviour
         {
             ExitGame();
         }
-
         // 윈도우에서 동작
 #elif UNITY_STANDALONE_WIN
         if (Input.GetKeyDown(KeyCode.F12))
         {
             ExitGame();
         }
-
 #endif
 
     }

@@ -165,7 +165,6 @@ public class PlayerAction : MonoBehaviour
         repairSpeed = 5f;
         incRepairSpeed = 0f;
 
-
         CursorState.CursorLockedSetting(true);
 
         LayerMask blueprint = LayerMask.NameToLayer("BLUEPRINT");
@@ -177,7 +176,6 @@ public class PlayerAction : MonoBehaviour
         LayerMask wallLayer = LayerMask.NameToLayer("WALL");
 
         allLayerMask = (1 << blueprint) | (1 << enemyLayer) | (1 << defensiveGoodsLayer) | (1 << storeLayer) | (1 << playerLayer) | (1 << bunkerDoorLayer) | (1 << wallLayer);
-
     }
 
     // Update is called once per frame
@@ -353,7 +351,6 @@ public class PlayerAction : MonoBehaviour
                 }
             }
         }
-
         // 상점에 다가가면 상점이라고 표시가 뜨고 키를 누르면 상점이 열린다.
         else if (selfHealing == false && (targetTag == "STORE" && Vector3.Distance(this.transform.position, target.transform.position) <= 5f))
         {
@@ -450,7 +447,6 @@ public class PlayerAction : MonoBehaviour
                     selfHealing = false;
                     GaugeClear();
                 }
-
             }
             else
             {

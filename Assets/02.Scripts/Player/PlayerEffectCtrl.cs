@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PlayerEffectCtrl : MonoBehaviour
 {
-    [SerializeField]
-    GameObject bloodEffect;
-    [SerializeField]
-    GameObject sparkEffect;
+    [SerializeField] GameObject bloodEffect;
+    [SerializeField] GameObject sparkEffect;
 
 
     public Queue<BloodEffectCtrl> bloodQ = new Queue<BloodEffectCtrl>();

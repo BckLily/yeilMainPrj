@@ -103,7 +103,6 @@ public class PlayerCtrl : LivingEntity
     private float gravity; // 플레이어 적용 중력
 
     private float motionChangeSpeed; // 플레이어의 이동 속도 보간 값.
-
     #endregion
 
     [Space(5)]
@@ -739,9 +738,9 @@ public class PlayerCtrl : LivingEntity
     /// 동일한 UID를 가지는 스킬의 Level을 증가시키는 함수
     /// </summary>
     /// <param name="_skillUID">Level을 증가시킬 스킬의 UID</param>
+    /// SkillLevelUp() 에서 PlayerSkillSetting()으로 넘어간다.
     internal void SkillLevelUp(string _skillUID)
     {
-
         // 동일한 이름의 UID를 찾고
         // 각 스킬이 스킬의 최대 레벨이 아닐 경우 레벨을 증가시키고 증가 값에 따라 세팅을 한다.
         if (_skillUID == classDict["StatusSkill0_UID"])
@@ -935,12 +934,6 @@ public class PlayerCtrl : LivingEntity
             }
             yield return null;
         }
-
-        //foreach (var _skill in _select_SkillList)
-        //{
-
-        //Debug.Log($"Skill List: {_skill}");
-        //}
 
         playerSkillManager.skillSettingComplete = true;
 
@@ -1328,7 +1321,6 @@ public class PlayerCtrl : LivingEntity
     public void CheckLevelUp()
     {
         targetExp = (level == 1 ? 50f : 90f);
-
 
         if (level < playerMaxLevel && _playerExp >= targetExp)
         {

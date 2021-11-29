@@ -27,7 +27,7 @@ public class WeaponManager : MonoBehaviour
     public Animator anim;
 
     bool isFire = false; // 플레이어가 총을 발사하면 true가 된다.
-
+        
     public float dontUseBulletPercent = 0f;
     // 총알 사용 안하는 스킬 활성화 여부
     public bool dontUseBullet = false;
@@ -130,11 +130,9 @@ public class WeaponManager : MonoBehaviour
         // 현재 총의 손잡이 부분을 오른손의 중앙에 맞게 이동
         currWeaponObj.transform.Translate(-currGun.handleTr.localPosition);
 
-
         //weaponTr.LookAt(leftHandTr);
         // 받아온 무기 정보 딕셔너리를 현재 총에 넘겨준다.
         currGun.weaponDict = this.weaponDict;
-
 
         StartCoroutine(WeaponStatusSetting());
         WeaponNameChange();
@@ -244,7 +242,6 @@ public class WeaponManager : MonoBehaviour
             return;
         }
 
-        // 미완성 상태일 때 계속 에러가 나서 에러 발생시 그냥 함수 종료하게 함.
         // 재장전 중이 아닐 때
         if (isReload == false)
         {

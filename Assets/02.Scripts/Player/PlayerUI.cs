@@ -262,9 +262,7 @@ public class PlayerUI : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHan
 #endif
             }
             yield return new WaitForSeconds(0.5f);
-
         }
-
         yield break;
     }
 

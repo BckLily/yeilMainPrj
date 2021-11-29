@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Guns : Weapon
 {
     GameObject fireMuzzle; // 불꽃 이펙트 오브젝트

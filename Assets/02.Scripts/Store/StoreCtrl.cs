@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class StoreCtrl : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Transform originParent;
 
@@ -282,7 +282,7 @@ public class StoreCtrl : MonoBehaviour, UnityEngine.EventSystems.IPointerClickHa
         //nextPointerWatch.Stop();
         //Debug.Log($"____ Next Point Time: {codeWatch.ElapsedMilliseconds.ToString()} ms ____");
         //nextPointerWatch.Reset();
-            
+
 #if UNITY_EDITOR
         //Debug.Log("___ Pointer Enter: " + eventData.pointerCurrentRaycast.gameObject.name + " ____");
 #endif
